@@ -4,3 +4,7 @@
 	path = server
 	url = https://github.com/juniper06/PortfoReady.git
 	branch = server
+[submodule "client"]
+	path = client
+	url = https://github.com/juniper06/PortfoReady.git
+	branch = client
