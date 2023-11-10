@@ -13,6 +13,9 @@ import {
   CardContent,
   CardActions,
   Button,
+  FormControl,
+  InputLabel,
+  Select
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Link } from "react-router-dom";
@@ -25,88 +28,27 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 500,
-  height: 360,
+  width: 700,
+  height: 600,
   bgcolor: "#f0f0f0",
   borderRadius: 3,
   p: 4,
 };
 
-const settings = ["Profile", "Logout"];
 
 const Home = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const date = new Date(new Date().valueOf() - 1000 * 60 * 60);
 
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
 
   return (
     <>
-      <div className="navbar">
-        <div className="search-bar">
-          <SearchIcon />
-          <input id="search-design" type="text" placeholder="Explore" />
-        </div>
-        <div className="btn-links">
-          <Link className="link-btns">Home</Link>
-          <Link className="link-btns">Profile</Link>
-          <Link className="link-btns">Contact Us</Link>
-          <Link className="link-btns">Notification</Link>
-          <Link className="link-btns">Job List</Link>
-        </div>
-        <div className="profile-logo">
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </div>
-      </div>
-
       <div className="home">
         <div className="left-container">
           <div className="user-container">
@@ -128,28 +70,133 @@ const Home = () => {
                 aria-describedby="modal-modal-description"
               >
                 <Card sx={style}>
-                  <CardHeader
-                    avatar={
-                      <Avatar
-                        alt="testing"
-                        src={`https://ui-avatars.com/api/?background=random&name`}
-                      />
-                    }
-                    title="Temporary"
-                  />
-                  <CardContent>
-                    <input id="title-input" type="text" placeholder="Title" />
-                    <textarea
-                      id="description-input"
-                      type="text"
-                      placeholder="Description"
-                    />
-                  </CardContent>
-                  <CardActions
-                    sx={{ display: "flex", justifyContent: "center" }}
+                  <Box
+                    sx={{
+                      textAlign: "center",
+                      borderBottom: "2px solid #808080",
+                      paddingBottom: "10px",
+                    }}
                   >
-                    <button id="post-btn">Post</button>
-                  </CardActions>
+                    <h1>Create Job Posting</h1>
+                  </Box>
+                  <CardHeader
+                    avatar={<Avatar aria-label="recipe">B</Avatar>}
+                    title="John Doe"
+                    subheader="John.doe@cit.edu"
+                  />
+                  <Box
+                    sx={{
+                      width: "697px",
+                      height: "450px",
+                      border: "1px solid #808080",
+                      overflowY: "auto",
+                    }}
+                  >
+                    <form id="job-post" action="#">
+                      <label className="post-labels" htmlFor="title">
+                        Title
+                      </label>
+                      <input
+                        id="input-title"
+                        type="text"
+                        name="title"
+                        placeholder="Title"
+                      />
+                      <br />
+
+                      <FormControl sx={{ width: "300px" }}>
+                        <InputLabel id="demo-simple-select-label">
+                          Job Type
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          label="Job Type"
+                          onChange={handleChange}
+                        >
+                          <MenuItem value={1}>UI/UX Designer</MenuItem>
+                          <MenuItem value={2}>Front-End Developer</MenuItem>
+                          <MenuItem value={3}>Back-End Developer</MenuItem>
+                        </Select>
+                      </FormControl>
+                      <br />
+                      <label className="post-labels" htmlFor="#">
+                        Description
+                      </label>
+                      <textarea
+                        name="descript"
+                        id="job-description"
+                        placeholder="Enter Job Description"
+                      ></textarea>
+                      <br />
+                      <Card
+                        sx={{
+                          width: "563px",
+                          height: "200px",
+                          borderRadius: "12px",
+                          border: "2px solid #bdbdbd",
+                          overflowY: "auto",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            textAlign: "center",
+                            borderBottom: "2px solid #808080",
+                          }}
+                        >
+                          <h1>Create Exam</h1>
+                        </Box>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <input
+                            id="exam-input"
+                            type="text"
+                            name="question1"
+                            placeholder="Question 1"
+                          />
+                          <input
+                            id="exam-input"
+                            type="text"
+                            name="question2"
+                            placeholder="Question 2"
+                          />
+                          <input
+                            id="exam-input"
+                            type="text"
+                            name="question3"
+                            placeholder="Question 3"
+                          />
+                          <input
+                            id="exam-input"
+                            type="text"
+                            name="question4"
+                            placeholder="Question 4"
+                          />
+                          <input
+                            id="exam-input"
+                            type="text"
+                            name="question5"
+                            placeholder="Question 5"
+                          /><br/>
+                        </Box>
+                      </Card>
+                      <br />
+                      <br />
+                      <CardActions
+                        sx={{ display: "flex", justifyContent: "end" }}
+                      >
+                        <button type="submit" id="jobpost-btn">
+                          Post
+                        </button>
+                      </CardActions>
+                    </form>
+                  </Box>
                 </Card>
               </Modal>
             </div>

@@ -41,13 +41,14 @@
     text-decoration: none;
     color: black;
     width: 1000px;
-    transition: background 0.1s cubic-bezier(.33, .66, .66, 1);
 }
 
-.link-btns:nth-child(1){
+
+.link-btns:nth-child:active{
     color: #000000;
     font-size: 18px;
     text-decoration: none;
+
 }
 .link-btns:nth-child(2) {
     color: #000000;
@@ -159,4 +160,62 @@
     border-radius: 50px;
     outline: none;
     cursor: pointer;
+}
+
+#job-post{
+    display: flex;
+    flex-direction: column;
+    padding-left: 50px;
+}
+
+.post-labels{
+    padding-left: 10px;
+    font-size: 20px;
+}
+
+
+#input-title{
+    outline: none;
+    border-radius: 12px;
+    width: 550px;
+    height: 30px;
+    padding-left: 10px;
+    border: 2px solid #bdbdbd;
+}
+
+#exam-input{
+    outline: none;
+    border-radius: 12px;
+    width: 450px;
+    height: 30px;
+    padding-left: 10px;
+    margin-top: 10px;
+    border: 2px solid #bdbdbd;
+}
+
+.exam-labels{
+    padding-left: 10px;
+    font-weight: bold;
+    padding-right: 10px;
+}
+
+#job-description{
+    border: 2px solid #bdbdbd;
+    width: 550px;
+    border-radius: 12px;
+    padding-left: 10px;
+    padding-top: 10px;
+    height: 100px;
+    resize: none;
+}
+
+#jobpost-btn{
+    width: 160px;
+    height: 42px;
+    border-radius: 20px;
+    background-color: #000000;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 24px;
+    margin-right: 50px;
 }
