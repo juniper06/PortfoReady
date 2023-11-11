@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=Edu+TAS+Beginner:wght@500&family=Poppins:ital@1&family=Roboto+Condensed&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Macondo&family=Noto+Serif+Old+Uyghur&family=Roboto+Mono&display=swap');
 * {
     padding: 0;
     margin: 0;
@@ -95,7 +94,7 @@
     color: #FFFFFF;
     display: flex;
     align-items: center;
-    font-family: 'Edu TAS Beginner', cursive;
+    font-family: 'Macondo', cursive;
     font-size: 30px;
     padding: 50px;
     flex-direction: column;
@@ -128,6 +127,8 @@
     height: 500px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 #name {

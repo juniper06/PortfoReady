@@ -10,6 +10,7 @@ import ContactForm from "./pages/ContactForm/ContactForm";
 import RootLayout from "./Layout/RootLayout";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material/styles";
+import StudentProfile from "./pages/Profile/StudentProfile";
 
 
 const router = createBrowserRouter([
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
         path: "/contact",
         element: <ContactForm />,
       },
+      {
+        path: "/studentprofile",
+        element:<StudentProfile/>
+      }
     ],
   },
   {

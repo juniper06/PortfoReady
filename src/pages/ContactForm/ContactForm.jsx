@@ -55,10 +55,15 @@ const ContactForm = () => {
               />
               <br />
               <br />
-              <textarea name="message" id="message"></textarea>
+              <textarea
+                style={{ border: "2px solid #c1c1c1", paddingLeft: "5px", fontSize: "17px" }}
+                placeholder="Message"
+                name="message" id="message"></textarea>
               <br />
               <br />
-              <button>Submit</button>
+              <button
+              style={{width:"136px", height:"55px", backgroundColor:"#000000", color:"#FFFFFF", border:"none", cursor:"pointer"}}
+              >Submit</button>
             </form>
           </Box>
         </div>

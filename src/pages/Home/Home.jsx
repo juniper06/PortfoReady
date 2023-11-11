@@ -15,7 +15,7 @@ import {
   Button,
   FormControl,
   InputLabel,
-  Select
+  Select,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Link } from "react-router-dom";
@@ -183,7 +183,8 @@ const Home = () => {
                             type="text"
                             name="question5"
                             placeholder="Question 5"
-                          /><br/>
+                          />
+                          <br />
                         </Box>
                       </Card>
                       <br />
@@ -260,14 +261,14 @@ const Home = () => {
               <CardHeader
                 avatar={
                   <Avatar
+                    sx={{ width: 56, height: 56 }}
                     alt="testing"
                     src={`https://ui-avatars.com/api/?background=random&name`}
                   />
                 }
               />
-              <CardContent>
+              <CardContent sx={{ textAlign: "center" }}>
                 <h1>John Doe</h1>
-                <br />
                 <h3>Front-End Developer</h3>
               </CardContent>
             </Card>
