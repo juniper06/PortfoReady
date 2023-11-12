@@ -16,27 +16,46 @@ import {
   FormControl,
   InputLabel,
   Select,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Stack,
+  FormLabel,
+  styled,
+  OutlinedInput,
+  TextField,
+  Input
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Link } from "react-router-dom";
 import "./home.css";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import TimeAgo from "react-timeago";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { PostCard } from "../Profile/EmployerProfile";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 700,
-  height: 600,
-  bgcolor: "#f0f0f0",
-  borderRadius: 3,
-  p: 4,
-};
 
+const postSettings = ["Edit", "Delete"];
 
 const Home = () => {
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -44,7 +63,7 @@ const Home = () => {
   const date = new Date(new Date().valueOf() - 1000 * 60 * 60);
 
   const handleChange = (event) => {
-    setAge(event.target.value);
+    setJob(event.target.value);
   };
 
   return (
@@ -63,163 +82,205 @@ const Home = () => {
               >
                 Share a post
               </button>
-              <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                <Card sx={style}>
-                  <Box
-                    sx={{
-                      textAlign: "center",
-                      borderBottom: "2px solid #808080",
-                      paddingBottom: "10px",
-                    }}
-                  >
-                    <h1>Create Job Posting</h1>
-                  </Box>
-                  <CardHeader
-                    avatar={<Avatar aria-label="recipe">B</Avatar>}
-                    title="John Doe"
-                    subheader="John.doe@cit.edu"
-                  />
-                  <Box
-                    sx={{
-                      width: "697px",
-                      height: "450px",
-                      border: "1px solid #808080",
-                      overflowY: "auto",
-                    }}
-                  >
-                    <form id="job-post" action="#">
-                      <label className="post-labels" htmlFor="title">
-                        Title
-                      </label>
-                      <input
-                        id="input-title"
-                        type="text"
-                        name="title"
-                        placeholder="Title"
-                      />
-                      <br />
-
-                      <FormControl sx={{ width: "300px" }}>
-                        <InputLabel id="demo-simple-select-label">
-                          Job Type
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          label="Job Type"
-                          onChange={handleChange}
-                        >
-                          <MenuItem value={1}>UI/UX Designer</MenuItem>
-                          <MenuItem value={2}>Front-End Developer</MenuItem>
-                          <MenuItem value={3}>Back-End Developer</MenuItem>
-                        </Select>
-                      </FormControl>
-                      <br />
-                      <label className="post-labels" htmlFor="#">
-                        Description
-                      </label>
-                      <textarea
-                        name="descript"
-                        id="job-description"
-                        placeholder="Enter Job Description"
-                      ></textarea>
-                      <br />
-                      <Card
+              <Dialog fullWidth maxWidth="md" open={open} onClose={handleClose}>
+                <DialogTitle
+                  textAlign="center"
+                  borderBottom="2px solid #808080"
+                >
+                  <Typography variant="h4" fontWeight="bold">
+                    Create Job Posting
+                  </Typography>
+                </DialogTitle>
+                <DialogContent>
+                  <Box>
+                    <CardHeader
+                      avatar={<Avatar aria-label="recipe">B</Avatar>}
+                      title="John Doe"
+                      subheader="John.doe@cit.edu"
+                    />
+                    <Stack justifyContent="center" alignItems="center">
+                      <FormControl
                         sx={{
-                          width: "563px",
-                          height: "200px",
-                          borderRadius: "12px",
-                          border: "2px solid #bdbdbd",
-                          overflowY: "auto",
+                          display: "flex",
+                          flexDirection: "column",
+                          rowGap: "20px",
                         }}
                       >
-                        <Box
-                          sx={{
-                            textAlign: "center",
-                            borderBottom: "2px solid #808080",
-                          }}
-                        >
-                          <h1>Create Exam</h1>
+                        <Box display="flex" flexDirection="column">
+                          <FormLabel>
+                            <Typography
+                              variant="h7"
+                              fontWeight="bold"
+                              paddingLeft="13px"
+                            >
+                              Title
+                            </Typography>
+                          </FormLabel>
+                          <OutlinedInputStyled onFocus="none" />
+                        </Box>
+                        <Box>
+                          <FormControl sx={{ width: "300px" }}>
+                            <InputLabel>Job Type</InputLabel>
+                            <Select
+                              labelId="demo-simple-select-label"
+                              id="demo-simple-select"
+                              label="Job Type"
+                              onChange={handleChange}
+                            >
+                              <MenuItem value={1}>UI/UX Designer</MenuItem>
+                              <MenuItem value={2}>Front-End Developer</MenuItem>
+                              <MenuItem value={3}>Back-End Developer</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Box>
+                        <Box display="flex" flexDirection="column">
+                          <FormLabel>
+                            <Typography
+                              variant="h7"
+                              fontWeight="bold"
+                              paddingLeft="13px"
+                            >
+                              Description
+                            </Typography>
+                          </FormLabel>
+                          <TextField
+                            multiline
+                            onFocus="none"
+                            rows={5}
+                            maxRows={5}
+                            InputProps={{ sx: { borderRadius: 6 } }}
+                          />
                         </Box>
                         <Box
-                          sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
+                          display="flex"
+                          flexDirection="column"
+                          width="800px"
+                          height="300px"
+                          border="1px solid #c4c4c4"
+                          borderRadius="20px"
                         >
-                          <input
-                            id="exam-input"
-                            type="text"
-                            name="question1"
-                            placeholder="Question 1"
-                          />
-                          <input
-                            id="exam-input"
-                            type="text"
-                            name="question2"
-                            placeholder="Question 2"
-                          />
-                          <input
-                            id="exam-input"
-                            type="text"
-                            name="question3"
-                            placeholder="Question 3"
-                          />
-                          <input
-                            id="exam-input"
-                            type="text"
-                            name="question4"
-                            placeholder="Question 4"
-                          />
-                          <input
-                            id="exam-input"
-                            type="text"
-                            name="question5"
-                            placeholder="Question 5"
-                          />
-                          <br />
+                          <Box>
+                            <Typography
+                              variant="h5"
+                              fontWeight="bold"
+                              textAlign="center"
+                              borderBottom="1px solid #c4c4c4"
+                            >
+                              Create Exam
+                            </Typography>
+                            <Box sx={{ height: "260px", overflowY: "auto" }}>
+                              <Stack
+                                spacing={3}
+                                alignItems="center"
+                                paddingTop="20px"
+                                paddingBottom="20px"
+                              >
+                                <InputStyled
+                                  onFocus="none"
+                                  disableUnderline={true}
+                                  placeholder="Question 1"
+                                />
+                                <InputStyled
+                                  onFocus="none"
+                                  disableUnderline={true}
+                                  placeholder="Question 2"
+                                />
+                                <InputStyled
+                                  onFocus="none"
+                                  disableUnderline={true}
+                                  placeholder="Question 3"
+                                />
+                                <InputStyled
+                                  onFocus="none"
+                                  disableUnderline={true}
+                                  placeholder="Question 4"
+                                />
+                                <InputStyled
+                                  onFocus="none"
+                                  disableUnderline={true}
+                                  placeholder="Question 5"
+                                />
+                              </Stack>
+                            </Box>
+                          </Box>
                         </Box>
-                      </Card>
-                      <br />
-                      <br />
-                      <CardActions
-                        sx={{ display: "flex", justifyContent: "end" }}
-                      >
-                        <button type="submit" id="jobpost-btn">
-                          Post
-                        </button>
-                      </CardActions>
-                    </form>
+                        <Box display="flex" justifyContent="end">
+                          <Button
+                            sx={{
+                              width: "160px",
+                              height: "42px",
+                              borderRadius: "20px",
+                              backgroundColor: "#000000",
+                              color: "#FFFFFF",
+                              "&:hover": { backgroundColor: "#000000" },
+                            }}
+                          >
+                            <Typography variant="h6" fontWeight="bold">
+                              Post
+                            </Typography>
+                          </Button>
+                        </Box>
+                      </FormControl>
+                    </Stack>
                   </Box>
-                </Card>
-              </Modal>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
 
           <div className="job-posts">
             <Card sx={{ maxWidth: 1200 }} variant="outlined">
+              <CardHeader
+                avatar={
+                  <Avatar
+                    alt="testing"
+                    src={`https://ui-avatars.com/api/?background=random&name`}
+                  />
+                }
+                title="John Doe"
+              >
+                Heading
+              </CardHeader>
               <CardContent>
-                <Typography variant="h3" gutterBottom>
-                  Human Resource
-                </Typography>
-                <CardHeader
-                  avatar={
-                    <Avatar
-                      alt="testing"
-                      src={`https://ui-avatars.com/api/?background=random&name`}
-                    />
-                  }
-                  title="John Doe"
-                >
-                  Heading
-                </CardHeader>
+                <Box display="flex">
+                  <Box width="1200px">
+                    <Typography variant="h3">Human Resource</Typography>
+                    <br />
+                    <Typography variant="h5">Job Type:</Typography><br />
+                  </Box>
+                  <Box>
+                    <IconButton onClick={handleOpenUserMenu}>
+                      <MoreHorizIcon />
+                    </IconButton>
+                    <Menu
+                      sx={{ mt: "45px" }}
+                      id="menu-appbar"
+                      anchorEl={anchorElUser}
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      open={Boolean(anchorElUser)}
+                      onClose={handleCloseUserMenu}
+                    >
+                      {postSettings.map((postSettings) => (
+                        <MenuItem
+                          key={postSettings}
+                          onClick={handleCloseUserMenu}
+                        >
+                          <Typography textAlign="center">
+                            {postSettings}
+                          </Typography>
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  </Box>
+                </Box>
                 <Typography variant="body1">
                   We are seeking a highly motivated and experienced Human
                   Resource Officer to join our dynamic team at AMNK FOODTEK
@@ -342,5 +403,19 @@ const Home = () => {
     </>
   );
 };
+
+const OutlinedInputStyled = styled(OutlinedInput)({
+  width: "800px",
+  height: "55px",
+  borderRadius: "20px",
+});
+
+const InputStyled = styled(Input)({
+  width: "700px",
+  height: "60px",
+  borderRadius: "20px",
+  border: "1px solid #c4c4c4",
+  paddingLeft: "10px",
+});
 
 export default Home;

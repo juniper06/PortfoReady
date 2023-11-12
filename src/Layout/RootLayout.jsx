@@ -14,6 +14,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 
+
 const settings = ["Profile", "Logout"];
 
 

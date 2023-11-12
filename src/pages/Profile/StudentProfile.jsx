@@ -26,29 +26,6 @@ import { styled } from "@mui/system";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { Button } from "bootstrap";
 
-// const assessmentstyled = {
-//   position: "absolute",
-//   top: "50%",
-//   left: "50%",
-//   transform: "translate(-50%, -50%)",
-//   width: 900,
-//   height: 675,
-//   bgcolor: "#ffffff",
-//   border: "2px solid #000000",
-//   borderRadius: "15px",
-// };
-
-// const applicaitonstyled = {
-//   position: "absolute",
-//   top: "50%",
-//   left: "50%",
-//   transform: "translate(-50%, -50%)",
-//   width: 900,
-//   height: 675,
-//   bgcolor: "#ffffff",
-//   border: "2px solid #000000",
-//   borderRadius: "15px",
-// };
 
 const StudentProfile = () => {
   return (
@@ -222,24 +199,19 @@ const AssessmentCard = () => {
           Answer
         </button>
         <Dialog fullWidth maxWidth="md" open={open} onClose={handleClose}>
-          <DialogContent>
-            <Box
-              display="flex"
-              justifyContent="center"
-              borderBottom="2px solid #808080"
-              padding="10px"
+          <DialogTitle textAlign="center" borderBottom="2px solid #808080">
+            <Typography
+              variant="h6"
+              component="h2"
+              sx={{
+                fontSize: "32px",
+                fontWeight: "bold",
+              }}
             >
-              <Typography
-                variant="h6"
-                component="h2"
-                sx={{
-                  fontSize: "32px",
-                  fontWeight: "bold",
-                }}
-              >
-                Assesment
-              </Typography>
-            </Box>
+              Assesment
+            </Typography>
+          </DialogTitle>
+          <DialogContent>
             <Box padding="20px">
               <FormControl
                 sx={{

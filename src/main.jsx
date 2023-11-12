@@ -11,6 +11,7 @@ import RootLayout from "./Layout/RootLayout";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material/styles";
 import StudentProfile from "./pages/Profile/StudentProfile";
+import EmployerProfile from "./pages/Profile/EmployerProfile";
 
 
 const router = createBrowserRouter([
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "/studentprofile",
         element:<StudentProfile/>
+      },
+      {
+        path: "/employerprofile",
+        element:<EmployerProfile/>
       }
     ],
   },
