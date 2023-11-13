@@ -7,16 +7,12 @@ import {
   MenuItem,
   Box,
   Typography,
-  ToggleButton,
-  ToggleButtonGroup,
+  Input,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 
-
 const settings = ["Profile", "Logout"];
-
 
 const RootLayout = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -37,98 +33,82 @@ const RootLayout = () => {
     setAnchorElUser(null);
   };
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   const location = useLocation();
-  const [page, setPage] = React.useState(location.pathname);
 
-    return (
-      <>
-        <div className="navbar">
-          <div className="search-bar">
-            <SearchIcon />
-            <input id="search-design" type="text" placeholder="Explore" />
-          </div>
-          <div className="btn-links">
-            <ToggleButtonGroup
-              sx={{ display: "flex", columnGap: "80px" }}
-              selectedColo
-              value={page}
-              exclusive
-              onChange={(event, newPage) => setPage(newPage)}
-            >
-              <Link to="/home" sx={ToggleButtonStyled}>
-                <ToggleButtonStyled value="/home">Home</ToggleButtonStyled>
-              </Link>
-              <Link className="link-btns">
-                <ToggleButtonStyled value="Profile" href="/home">
-                  Profile
-                </ToggleButtonStyled>
-              </Link>
-              <Link to="/contact">
-                <ToggleButtonStyled value="/contact">
-                  Contact Us
-                </ToggleButtonStyled>
-              </Link>
-              <Link>
-                <ToggleButtonStyled value="Notification">
-                  Notification
-                </ToggleButtonStyled>
-              </Link>
-              <Link>
-                <ToggleButtonStyled value="Job List">
-                  Job List
-                </ToggleButtonStyled>
-              </Link>
-            </ToggleButtonGroup>
-          </div>
-          <div className="profile-logo">
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-          </div>
-        </div>
-        <Outlet />
-      </>
-    );
+  return (
+    <>
+      {/* Navbar */}
+      <Box
+        height="80px"
+        display="flex"
+        alignItems="center"
+        justifyContent="space-evenly"
+        columnGap={10}
+        borderBottom="2px solid #000000"
+      >
+        <SearchBarStyled
+          disableUnderline={true}
+          placeholder="Explore"
+          sx={{ paddingLeft: "20px" }}
+        />
+        <LinkStyled to="/home">
+          <Typography>Home</Typography>
+        </LinkStyled>
+        <LinkStyled>
+          <Typography >Profile</Typography>
+        </LinkStyled>
+        <LinkStyled to="/contact">
+          <Typography>Contact Us</Typography>
+        </LinkStyled>
+        <LinkStyled>
+          <Typography >Notification</Typography>
+        </LinkStyled>
+        <LinkStyled>
+          <Typography>Job List</Typography>
+        </LinkStyled>
+        <Tooltip title="Open settings">
+          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+          </IconButton>
+        </Tooltip>
+        <Menu
+          sx={{ mt: "45px" }}
+          id="menu-appbar"
+          anchorEl={anchorElUser}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          open={Boolean(anchorElUser)}
+          onClose={handleCloseUserMenu}
+        >
+          {settings.map((setting) => (
+            <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              <Typography textAlign="center">{setting}</Typography>
+            </MenuItem>
+          ))}
+        </Menu>
+      </Box>
+      <Outlet />
+    </>
+  );
 };
 
-  const ToggleButtonStyled = styled(ToggleButton)({
-    "&.Mui-selected, &.Mui-selected:hover": {
-      backgroundColor: "#c8c8c8",
-    },
-    "&.MuiToggleButton-root": {
-      border: "none",
-      color: "black",
-      fontSize: "17px",
-    },
-  });
+const SearchBarStyled = styled(Input)({
+  width: "444px",
+  height: "43px",
+  backgroundColor: "#e5e5e5",
+  borderRadius: "5px",
+});
+
+const LinkStyled = styled(Link)({
+  textDecoration: "none",
+  color: "#000000",
+});
 
 export default RootLayout;

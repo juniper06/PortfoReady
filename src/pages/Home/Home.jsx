@@ -12,7 +12,6 @@ import {
   styled,
   Card,
 } from "@mui/material";
-import "./home.css";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { PostCard } from "../Profile/EmployerProfile";
 

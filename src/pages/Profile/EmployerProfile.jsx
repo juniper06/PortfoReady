@@ -119,6 +119,7 @@ const EmployerProfile = () => {
                     borderRadius: "15px",
                     border: "3px solid #20A4E6",
                     color: "#20A4E6",
+                    textTransform: "none",
                   }}
                 >
                   <Typography variant="p">Edit Profile</Typography>
@@ -251,11 +252,12 @@ const ApplicantsCard = () => {
       <Button
         onClick={handleOpenApplicant}
         sx={{
-          maxWidth: "200px",
+          width: "150px",
           height: "27px",
           borderRadius: "15px",
           border: "3px solid #20A4E6",
           color: "#000000",
+          textTransform: "none",
         }}
       >
         <Typography variant="p" color="#20A4E6">
