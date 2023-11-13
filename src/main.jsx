@@ -12,7 +12,7 @@ import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material/styles";
 import StudentProfile from "./pages/Profile/StudentProfile";
 import EmployerProfile from "./pages/Profile/EmployerProfile";
-
+import Applicants from "./pages/Profile/Applicants";
 
 const router = createBrowserRouter([
   {
@@ -29,12 +29,16 @@ const router = createBrowserRouter([
       },
       {
         path: "/studentprofile",
-        element:<StudentProfile/>
+        element: <StudentProfile />,
       },
       {
         path: "/employerprofile",
-        element:<EmployerProfile/>
-      }
+        element: <EmployerProfile />,
+      },
+      {
+        path: "/employerprofile/applicants",
+        element: <Applicants />,
+      },
     ],
   },
   {
@@ -54,9 +58,8 @@ const router = createBrowserRouter([
 const theme = createTheme({
   palette: {
     gray: {
-      main: '#000000',
-    }
-    
+      main: "#000000",
+    },
   },
 });
 

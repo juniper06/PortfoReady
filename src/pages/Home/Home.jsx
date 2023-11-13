@@ -2,253 +2,71 @@ import React from "react";
 import {
   IconButton,
   Avatar,
-  Tooltip,
   Menu,
   MenuItem,
   Box,
   Typography,
-  Modal,
-  Card,
   CardHeader,
   CardContent,
-  CardActions,
   Button,
-  FormControl,
-  InputLabel,
-  Select,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Stack,
-  FormLabel,
   styled,
-  OutlinedInput,
-  TextField,
-  Input
+  Card,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import { Link } from "react-router-dom";
 import "./home.css";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import TimeAgo from "react-timeago";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { PostCard } from "../Profile/EmployerProfile";
-
 
 const postSettings = ["Edit", "Delete"];
 
 const Home = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const date = new Date(new Date().valueOf() - 1000 * 60 * 60);
-
-  const handleChange = (event) => {
-    setJob(event.target.value);
-  };
-
   return (
     <>
-      <div className="home">
-        <div className="left-container">
-          <div className="user-container">
-            <h1 id="user">Hello, Juniper</h1>
-            <br />
-            <div className="post-container">
-              <button
-                onClick={handleOpen}
-                id="post-design"
-                type="text"
-                placeholder="Share a post."
+      {/* Container */}
+      <Box
+        display="flex"
+        justifyContent="center"
+        columnGap={5}
+        marginTop="30px"
+        marginBottom="30px"
+      >
+        {/* Left-Container */}
+        <Box width="1100px" display="flex" flexDirection="column" rowGap={13}>
+          <Box
+            display="flex"
+            justifyContent="start"
+            flexDirection="column"
+            rowGap={3}
+          >
+            <Typography variant="h2">Hello, John</Typography>
+            <Box>
+              <PostCard />
+            </Box>
+          </Box>
+          {/* Job-Container */}
+          <Box display="flex" flexDirection="column" rowGap={5}>
+            <JobContainer>
+              <Box
+                display="flex"
+                flexDirection="column"
+                paddingLeft="40px"
+                paddingTop="20px"
+                rowGap={1}
               >
-                Share a post
-              </button>
-              <Dialog fullWidth maxWidth="md" open={open} onClose={handleClose}>
-                <DialogTitle
-                  textAlign="center"
-                  borderBottom="2px solid #808080"
-                >
-                  <Typography variant="h4" fontWeight="bold">
-                    Create Job Posting
-                  </Typography>
-                </DialogTitle>
-                <DialogContent>
-                  <Box>
-                    <CardHeader
-                      avatar={<Avatar aria-label="recipe">B</Avatar>}
-                      title="John Doe"
-                      subheader="John.doe@cit.edu"
-                    />
-                    <Stack justifyContent="center" alignItems="center">
-                      <FormControl
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          rowGap: "20px",
-                        }}
-                      >
-                        <Box display="flex" flexDirection="column">
-                          <FormLabel>
-                            <Typography
-                              variant="h7"
-                              fontWeight="bold"
-                              paddingLeft="13px"
-                            >
-                              Title
-                            </Typography>
-                          </FormLabel>
-                          <OutlinedInputStyled onFocus="none" />
-                        </Box>
-                        <Box>
-                          <FormControl sx={{ width: "300px" }}>
-                            <InputLabel>Job Type</InputLabel>
-                            <Select
-                              labelId="demo-simple-select-label"
-                              id="demo-simple-select"
-                              label="Job Type"
-                              onChange={handleChange}
-                            >
-                              <MenuItem value={1}>UI/UX Designer</MenuItem>
-                              <MenuItem value={2}>Front-End Developer</MenuItem>
-                              <MenuItem value={3}>Back-End Developer</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </Box>
-                        <Box display="flex" flexDirection="column">
-                          <FormLabel>
-                            <Typography
-                              variant="h7"
-                              fontWeight="bold"
-                              paddingLeft="13px"
-                            >
-                              Description
-                            </Typography>
-                          </FormLabel>
-                          <TextField
-                            multiline
-                            onFocus="none"
-                            rows={5}
-                            maxRows={5}
-                            InputProps={{ sx: { borderRadius: 6 } }}
-                          />
-                        </Box>
-                        <Box
-                          display="flex"
-                          flexDirection="column"
-                          width="800px"
-                          height="300px"
-                          border="1px solid #c4c4c4"
-                          borderRadius="20px"
-                        >
-                          <Box>
-                            <Typography
-                              variant="h5"
-                              fontWeight="bold"
-                              textAlign="center"
-                              borderBottom="1px solid #c4c4c4"
-                            >
-                              Create Exam
-                            </Typography>
-                            <Box sx={{ height: "260px", overflowY: "auto" }}>
-                              <Stack
-                                spacing={3}
-                                alignItems="center"
-                                paddingTop="20px"
-                                paddingBottom="20px"
-                              >
-                                <InputStyled
-                                  onFocus="none"
-                                  disableUnderline={true}
-                                  placeholder="Question 1"
-                                />
-                                <InputStyled
-                                  onFocus="none"
-                                  disableUnderline={true}
-                                  placeholder="Question 2"
-                                />
-                                <InputStyled
-                                  onFocus="none"
-                                  disableUnderline={true}
-                                  placeholder="Question 3"
-                                />
-                                <InputStyled
-                                  onFocus="none"
-                                  disableUnderline={true}
-                                  placeholder="Question 4"
-                                />
-                                <InputStyled
-                                  onFocus="none"
-                                  disableUnderline={true}
-                                  placeholder="Question 5"
-                                />
-                              </Stack>
-                            </Box>
-                          </Box>
-                        </Box>
-                        <Box display="flex" justifyContent="end">
-                          <Button
-                            sx={{
-                              width: "160px",
-                              height: "42px",
-                              borderRadius: "20px",
-                              backgroundColor: "#000000",
-                              color: "#FFFFFF",
-                              "&:hover": { backgroundColor: "#000000" },
-                            }}
-                          >
-                            <Typography variant="h6" fontWeight="bold">
-                              Post
-                            </Typography>
-                          </Button>
-                        </Box>
-                      </FormControl>
-                    </Stack>
-                  </Box>
-                </DialogContent>
-              </Dialog>
-            </div>
-          </div>
-
-          <div className="job-posts">
-            <Card sx={{ maxWidth: 1200 }} variant="outlined">
-              <CardHeader
-                avatar={
-                  <Avatar
-                    alt="testing"
-                    src={`https://ui-avatars.com/api/?background=random&name`}
-                  />
-                }
-                title="John Doe"
-              >
-                Heading
-              </CardHeader>
-              <CardContent>
                 <Box display="flex">
-                  <Box width="1200px">
-                    <Typography variant="h3">Human Resource</Typography>
-                    <br />
-                    <Typography variant="h5">Job Type:</Typography><br />
-                  </Box>
                   <Box>
+                    <Typography variant="h3" width="900px">
+                      Title:
+                    </Typography>
+                  </Box>
+                  <Box display="flex" justifyContent="end" width="120px">
                     <IconButton onClick={handleOpenUserMenu}>
                       <MoreHorizIcon />
                     </IconButton>
@@ -281,62 +99,69 @@ const Home = () => {
                     </Menu>
                   </Box>
                 </Box>
-                <Typography variant="body1">
-                  We are seeking a highly motivated and experienced Human
-                  Resource Officer to join our dynamic team at AMNK FOODTEK
-                  CHAIN, INC. As a Human Resource Officer, you will play a
-                  critical role in supporting our organization's human resources
-                  functions and ensuring the smooth operation of our workforce.
-                  Responsibilities: • Implement and manage HR policies and
-                  procedures in compliance with applicable laws and regulations.
-                  • Handle employee onboarding, orientation, and off boarding
-                  processes. • Maintain and update employee records, including
-                  personal information, leave, and attendance records. •
-                  Coordinate recruitment activities, including job posting,
-                  screening resumes, conducting interviews, and making job
-                  offers. • Administer employee benefits programs and handle
-                  employee inquiries related to benefits. • Assist in
-                  performance management processes, including conducting
-                  performance reviews and providing guidance on employee
-                  development. • Address employee relations issues and resolve
-                  conflicts...
-                </Typography>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+                <Typography variant="h5">Job Type:</Typography>
+                <CardHeader
+                  avatar={
+                    <Avatar sx={{}} aria-label="recipe">
+                      B
+                    </Avatar>
+                  }
+                  title="Human Resources"
+                  subheader="John.doe@cit.edu"
+                />
+                <Box width="1020px">
+                  <Typography variant="body1" textAlign="start">
+                    We are seeking a highly motivated and experienced Human
+                    Resource Officer to join our dynamic team at AMNK FOODTEK
+                    CHAIN, INC. As a Human Resource Officer, you will play a
+                    critical role in supporting our organization's human
+                    resources functions and ensuring the smooth operation of our
+                    workforce. Responsibilities: • Implement and manage HR
+                    policies and procedures in compliance with applicable laws
+                    and regulations. • Handle employee onboarding, orientation,
+                    and off boarding processes. • Maintain and update employee
+                    records, including personal information, leave, and
+                    attendance records. • Coordinate recruitment activities,
+                    including job posting, screening resumes, conducting
+                    interviews, and making job offers. • Administer employee
+                    benefits programs and handle employee inquiries related to
+                    benefits. • Assist in performance management processes,
+                    including conducting performance reviews and providing
+                    guidance on employee development. • Address employee
+                    relations issues and resolve conflicts...
+                  </Typography>
+                </Box>
+              </Box>
+            </JobContainer>
+          </Box>
+        </Box>
 
-        <div className="right-container">
-          {/* Profile */}
-          <div className="profile-container">
-            <Card
-              sx={{
-                maxWidth: 600,
-                height: 200,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-              variant="outlined"
-            >
-              <CardHeader
-                avatar={
-                  <Avatar
-                    sx={{ width: 56, height: 56 }}
-                    alt="testing"
-                    src={`https://ui-avatars.com/api/?background=random&name`}
-                  />
-                }
-              />
-              <CardContent sx={{ textAlign: "center" }}>
-                <h1>John Doe</h1>
-                <h3>Front-End Developer</h3>
-              </CardContent>
-            </Card>
-          </div>
-          {/* People Suggestion */}
-          <div className="people-suggestion">
-            <Card sx={{ padding: "20px" }}>
+        {/* Right-Container */}
+        <Box width="500px" display="flex" flexDirection="column" rowGap={5}>
+          <SmallContainer
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <CardHeader
+              avatar={
+                <Avatar
+                  sx={{ width: 56, height: 56 }}
+                  alt="testing"
+                  src={`https://ui-avatars.com/api/?background=random&name`}
+                />
+              }
+            />
+            <CardContent sx={{ textAlign: "center" }}>
+              <Typography variant="h4" fontWeight="bold">
+                John Doe
+              </Typography>
+              <Typography variant="h6">Front-End Developer</Typography>
+            </CardContent>
+          </SmallContainer>
+          <SmallContainer sx={{ height: "270px" }}>
+            <Box sx={{ padding: "20px" }}>
               <Typography>People You May Know</Typography>
               <CardHeader
                 avatar={
@@ -347,75 +172,93 @@ const Home = () => {
                 title="John Doe"
                 subheader="John.doe@cit.edu"
               />
-              <CardActions>
-                <button id="follow-btn">+ Follow</button>
-              </CardActions>
+              <Button
+                sx={{
+                  width: "100px",
+                  height: "30px",
+                  backgroundColor: "#f0f0f0",
+                  borderRadius: "50px",
+                  border: "2px solid #000000",
+                  color: "#000000",
+                  fontWeight: "bold",
+                }}
+              >
+                + Follow
+              </Button>
               <CardHeader
                 avatar={
                   <Avatar sx={{}} aria-label="recipe">
                     B
                   </Avatar>
                 }
-                title="John Smith"
-                subheader="John.smith@cit.edu"
+                title="John Doe"
+                subheader="John.doe@cit.edu"
               />
-              <CardActions>
-                <button id="follow-btn">+ Follow</button>
-              </CardActions>
-            </Card>
-          </div>
-          {/* Recommended Companies */}
-          <div className="recommended-companies">
-            <Card sx={{ padding: "20px" }}>
-              <Typography>Recommended Jobs for you</Typography>
-              <Box sx={{ cursor: "pointer" }}>
+              <Button
+                sx={{
+                  width: "100px",
+                  height: "30px",
+                  backgroundColor: "#f0f0f0",
+                  borderRadius: "50px",
+                  border: "2px solid #000000",
+                  color: "#000000",
+                  fontWeight: "bold",
+                }}
+              >
+                + Follow
+              </Button>
+            </Box>
+          </SmallContainer>
+          <SmallContainer>
+            <Box
+              padding="20px"
+              display="flex"
+              flexDirection="column"
+              rowGap={1}
+            >
+              <Typography>Recommended Jobs</Typography>
+              <Card>
                 <CardHeader
                   avatar={
                     <Avatar sx={{}} aria-label="recipe">
                       B
                     </Avatar>
                   }
-                  title="Human Resources"
-                  subheader="John.doe@cit.edu"
+                  title="Job Title"
+                  subheader="Job Type"
                 />
-                <TimeAgo
-                  date={new Date()}
-                  component={Typography}
-                  minPeriod={60}
-                />
-              </Box>
-              <Box sx={{ cursor: "pointer" }}>
+              </Card>
+              <Card>
                 <CardHeader
                   avatar={
                     <Avatar sx={{}} aria-label="recipe">
-                      J
+                      B
                     </Avatar>
                   }
-                  title="John Smith"
-                  subheader="John.smith@cit.edu"
+                  title="Job Title"
+                  subheader="Job Type"
                 />
-                <TimeAgo date={date} component={Typography} minPeriod={60} />
-              </Box>
-            </Card>
-          </div>
-        </div>
-      </div>
+              </Card>
+            </Box>
+          </SmallContainer>
+        </Box>
+      </Box>
     </>
   );
 };
 
-const OutlinedInputStyled = styled(OutlinedInput)({
-  width: "800px",
-  height: "55px",
-  borderRadius: "20px",
+const JobContainer = styled(Box)({
+  width: "1100px",
+  height: "540px",
+  border: "1px solid #000000",
+  borderRadius: "5px",
 });
 
-const InputStyled = styled(Input)({
-  width: "700px",
-  height: "60px",
-  borderRadius: "20px",
-  border: "1px solid #c4c4c4",
-  paddingLeft: "10px",
+const SmallContainer = styled(Box)({
+  width: "450px",
+  height: "220px",
+  borderRadius: "5px",
+  border: "1px solid #000000",
 });
 
 export default Home;

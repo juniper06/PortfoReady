@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { Link } from "react-router-dom";
 
 const postSettings = ["Edit", "Delete"];
 
@@ -142,7 +143,7 @@ const EmployerProfile = () => {
               <Typography variant="h5" fontWeight="bold" color="#FF0404">
                 2
               </Typography>
-              <ApplicantsCard/>
+              <ApplicantsCard />
             </Box>
           </Box>
           <Box
@@ -240,8 +241,6 @@ const EmployerProfile = () => {
   );
 };
 
-
-
 const ApplicantsCard = () => {
   const [openApplicants, SetOpenApplicants] = React.useState(false);
   const handleOpenApplicant = () => SetOpenApplicants(true);
@@ -304,69 +303,12 @@ const ApplicantsCard = () => {
                       backgroundColor: "#000000",
                       color: "#FFFFFF",
                       borderRadius: "20px",
+                      "&:hover": { backgroundColor: "#000000" },
                     }}
                   >
-                    <Typography fontWeight="bold">View</Typography>
-                  </Button>
-                </Box>
-              </Stack>
-            </Box>
-            <Box
-              width="800px"
-              height="126px"
-              border="2px solid #808080"
-              borderRadius="20px"
-              display="flex"
-              alignItems="center"
-              paddingLeft="30px"
-            >
-              <Stack direction="row" columnGap="180px" alignItems="center">
-                <Box width="400px">
-                  <Typography variant="h4" fontWeight="bold">
-                    John Doe
-                  </Typography>
-                </Box>
-                <Box textAlign="center" marginRight="20px">
-                  <Button
-                    sx={{
-                      width: "190px",
-                      height: "42px",
-                      backgroundColor: "#000000",
-                      color: "#FFFFFF",
-                      borderRadius: "20px",
-                    }}
-                  >
-                    <Typography fontWeight="bold">View</Typography>
-                  </Button>
-                </Box>
-              </Stack>
-            </Box>
-            <Box
-              width="800px"
-              height="126px"
-              border="2px solid #808080"
-              borderRadius="20px"
-              display="flex"
-              alignItems="center"
-              paddingLeft="30px"
-            >
-              <Stack direction="row" columnGap="180px" alignItems="center">
-                <Box width="400px">
-                  <Typography variant="h4" fontWeight="bold">
-                    John Smith
-                  </Typography>
-                </Box>
-                <Box textAlign="center" marginRight="20px">
-                  <Button
-                    sx={{
-                      width: "190px",
-                      height: "42px",
-                      backgroundColor: "#000000",
-                      color: "#FFFFFF",
-                      borderRadius: "20px",
-                    }}
-                  >
-                    <Typography fontWeight="bold">View</Typography>
+                    <Typography fontWeight="bold">
+                      <Link to="applicants">testing</Link>
+                    </Typography>
                   </Button>
                 </Box>
               </Stack>
@@ -376,9 +318,7 @@ const ApplicantsCard = () => {
       </Dialog>
     </>
   );
-}
-
-
+};
 
 export const PostCard = () => {
   const [openPost, setOpenPost] = React.useState(false);
@@ -387,6 +327,7 @@ export const PostCard = () => {
   const handleChange = (event) => {
     setJob(event.target.value);
   };
+
   return (
     <>
       <ButtonStyled onClick={handleOpenPost}>Post a Job</ButtonStyled>
@@ -533,7 +474,6 @@ export const PostCard = () => {
     </>
   );
 };
-
 
 const ButtonStyled = styled(Button)({
   width: "950px",
