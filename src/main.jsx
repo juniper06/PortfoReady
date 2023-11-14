@@ -14,6 +14,7 @@ import StudentProfile from "./pages/Profile/StudentProfile";
 import EmployerProfile from "./pages/Profile/EmployerProfile";
 import Applicants from "./pages/Profile/Applicants";
 import JobPage from "./pages/JobPage/JobPage";
+import LandingPage from "./pages/LandingPage/LandingPage";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
         element:<JobPage/>
       }
     ],
+  },
+  {
+    path:"/landingpage",
+    element:<LandingPage/>
   },
   {
     path: "/login",
