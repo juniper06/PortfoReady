@@ -309,12 +309,13 @@ const ApplicantsCard = () => {
                     }}
                   >
                     <Typography fontWeight="bold">
-                      <Link to="applicants">testing</Link>
+                      <LinkStyled to="applicants">View</LinkStyled>
                     </Typography>
                   </Button>
                 </Box>
               </Stack>
             </Box>
+            
           </Stack>
         </DialogContent>
       </Dialog>
@@ -461,6 +462,7 @@ export const PostCard = () => {
                       backgroundColor: "#000000",
                       color: "#FFFFFF",
                       "&:hover": { backgroundColor: "#000000" },
+                      textTransform: "none",
                     }}
                   >
                     <Typography variant="h6" fontWeight="bold">
@@ -501,5 +503,15 @@ const InputStyled = styled(Input)({
   border: "1px solid #c4c4c4",
   paddingLeft: "10px",
 });
+
+const LinkStyled = styled(Link)({
+  width:"210px",
+  height:"40px",
+  backgroundColor:"#000000",
+  color:"#FFFFFF",
+  textDecoration:"none",
+  textTransform: "none",
+
+})
 
 export default EmployerProfile;

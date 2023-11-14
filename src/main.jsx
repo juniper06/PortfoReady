@@ -13,6 +13,7 @@ import { createTheme } from "@mui/material/styles";
 import StudentProfile from "./pages/Profile/StudentProfile";
 import EmployerProfile from "./pages/Profile/EmployerProfile";
 import Applicants from "./pages/Profile/Applicants";
+import JobPage from "./pages/JobPage/JobPage";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
         path: "/employerprofile/applicants",
         element: <Applicants />,
       },
+      {
+        path:"/jobpage",
+        element:<JobPage/>
+      }
     ],
   },
   {

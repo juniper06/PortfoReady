@@ -259,6 +259,7 @@ const AssessmentCard = () => {
                     backgroundColor: "#000000",
                     color: "#FFFFFF",
                     textTransform: "none",
+                    "&:hover": { backgroundColor: "#000000" },
                   }}
                 >
                   <Typography variant="h6" fontWeight="bold">
@@ -316,8 +317,8 @@ const ApplicationCard = () => {
                   <Typography variant="h6" fontWeight="bold">
                     Status
                   </Typography>
-                  <Typography color="#FF0000" variant="h5" fontWeight="bold">
-                    Pending
+                  <Typography color="#00f700" variant="h5" fontWeight="bold">
+                    Accepted
                   </Typography>
                 </Box>
               </Stack>
@@ -340,7 +341,7 @@ const ApplicationCard = () => {
                     Status
                   </Typography>
                   <Typography color="#FF0000" variant="h5" fontWeight="bold">
-                    Pending
+                    Rejected
                   </Typography>
                 </Box>
               </Stack>
@@ -362,7 +363,7 @@ const ApplicationCard = () => {
                   <Typography variant="h6" fontWeight="bold">
                     Status
                   </Typography>
-                  <Typography color="#FF0000" variant="h5" fontWeight="bold">
+                  <Typography color="#c8c8c8" variant="h5" fontWeight="bold">
                     Pending
                   </Typography>
                 </Box>

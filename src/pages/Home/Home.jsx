@@ -14,10 +14,12 @@ import {
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { PostCard } from "../Profile/EmployerProfile";
+import { Link, useNavigate } from "react-router-dom";
 
 const postSettings = ["Edit", "Delete"];
 
 const Home = () => {
+  const navigate = useNavigate()
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -51,7 +53,7 @@ const Home = () => {
           </Box>
           {/* Job-Container */}
           <Box display="flex" flexDirection="column" rowGap={5}>
-            <JobContainer>
+            <JobContainer >
               <Box
                 display="flex"
                 flexDirection="column"
@@ -60,7 +62,7 @@ const Home = () => {
                 rowGap={1}
               >
                 <Box display="flex">
-                  <Box>
+                  <Box onClick={() => navigate("/jobpage")} sx={{cursor:"pointer"}}>
                     <Typography variant="h3" width="900px">
                       Title:
                     </Typography>
