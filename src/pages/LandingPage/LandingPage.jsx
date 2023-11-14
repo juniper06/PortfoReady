@@ -10,6 +10,17 @@ const LandingPage = () => {
     <Box display="flex" height="100vh">
       {/* Left-Container */}
       <Box
+        position="absolute"
+        borderBottom="3px solid #000000"
+        top={0}
+        left={0}
+        width="100%"
+        height="40px"
+        zIndex="100"
+      >
+      </Box>
+      <Box position="absolute" borderLeft="3px solid #000000" top={0} right={0} width="40px" height="100%" zIndex="100"></Box>
+      <Box
         width="40%"
         display="flex"
         justifyContent="center"
@@ -31,20 +42,46 @@ const LandingPage = () => {
           }}
         >
           {/* Welcome Text */}
-          <Box width="390px" height="255px" display="flex" alignItems="center" textAlign="center">
-            <Typography paddingLeft="10px" fontSize="60px" fontWeight="bold" color="#000000">Welcome to PortfoReady</Typography>
+          <Box
+            width="390px"
+            height="255px"
+            display="flex"
+            alignItems="center"
+            textAlign="center"
+          >
+            <Typography
+              paddingLeft="10px"
+              fontSize="60px"
+              fontWeight="bold"
+              color="#000000"
+            >
+              Welcome to PortfoReady
+            </Typography>
           </Box>
           {/* Logo */}
-          <Box width="230px" height="255px" sx={{
-            backgroundPosition:"center",
-            backgroundImage:`url(${logo})`}}></Box>
+          <Box
+            width="230px"
+            height="255px"
+            sx={{
+              backgroundPosition: "center",
+              backgroundImage: `url(${logo})`,
+            }}
+          ></Box>
         </Box>
         <Box>
-          <Typography variant="h6" fontWeight="bold" >Explore Career Pathways</Typography>
-          <Typography variant="h6" fontWeight="bold">Engage with Potential Employers</Typography>
-          <Typography variant="h6" fontWeight="bold">Seize Oppurtunities</Typography>
+          <Typography variant="h6" fontWeight="bold">
+            Explore Career Pathways
+          </Typography>
+          <Typography variant="h6" fontWeight="bold">
+            Engage with Potential Employers
+          </Typography>
+          <Typography variant="h6" fontWeight="bold">
+            Seize Oppurtunities
+          </Typography>
         </Box>
-        <ButtonStlyed sx={{"&:hover": { backgroundColor: "#000000" },}}>Get Started</ButtonStlyed>
+        <ButtonStlyed sx={{ "&:hover": { backgroundColor: "#000000" } }}>
+          Get Started
+        </ButtonStlyed>
       </Box>
       {/* Right-Container */}
       <Box

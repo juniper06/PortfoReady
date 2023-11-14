@@ -19,7 +19,7 @@ import { Link, useNavigate } from "react-router-dom";
 const postSettings = ["Edit", "Delete"];
 
 const Home = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -38,6 +38,7 @@ const Home = () => {
         marginTop="30px"
         marginBottom="30px"
       >
+        
         {/* Left-Container */}
         <Box width="1100px" display="flex" flexDirection="column" rowGap={13}>
           <Box
@@ -53,7 +54,7 @@ const Home = () => {
           </Box>
           {/* Job-Container */}
           <Box display="flex" flexDirection="column" rowGap={5}>
-            <JobContainer >
+            <JobContainer>
               <Box
                 display="flex"
                 flexDirection="column"
@@ -62,7 +63,10 @@ const Home = () => {
                 rowGap={1}
               >
                 <Box display="flex">
-                  <Box onClick={() => navigate("/jobpage")} sx={{cursor:"pointer"}}>
+                  <Box
+                    onClick={() => navigate("/jobpage")}
+                    sx={{ cursor: "pointer" }}
+                  >
                     <Typography variant="h3" width="900px">
                       Title:
                     </Typography>
