@@ -15,6 +15,8 @@ import JobPage from "./pages/JobPage/JobPage";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import UserRole from "./pages/Register/UserRole";
 import Register from "./pages/Register/Register";
+import JobList from "./pages/JobList/JobList";
+import EditStudent from "./pages/EditProfile/EditStudent";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +46,14 @@ const router = createBrowserRouter([
       {
         path:"/jobpage",
         element:<JobPage/>
+      },
+      {
+        path: "/joblist",
+        element:<JobList/>
+      },
+      {
+        path: "/editstudent",
+        element:<EditStudent/>
       }
     ],
   },
