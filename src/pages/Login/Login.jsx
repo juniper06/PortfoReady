@@ -49,10 +49,10 @@ const Login = () => {
         height="540px"
         borderRadius="40px"
         sx={{
-          opacity: ".8",
+          backdropFilter: "blur(5px)",
           boxShadow: 10,
           bgcolor: (theme) =>
-            theme.palette.mode === "dark" ? "#101010" : "#fff",
+            theme.palette.mode === "dark" ? "#FFF" : "rgb(255, 255, 255,0.5)",
           color: (theme) =>
             theme.palette.mode === "dark" ? "grey.300" : "grey.800",
         }}
@@ -76,15 +76,24 @@ const Login = () => {
             </InputAdornment>
           }
         />
-        <ButtonStyled>
+        <LinkStyled to="/home">
           <Typography variant="h5" fontWeight="bold">
             Log In
           </Typography>
-        </ButtonStyled>
+        </LinkStyled>
         <br />
         or
         <br />
-        <Link><Typography variant="h6" fontWeight="bold" color="#000000" sx={{textDecoration:"underline"}}>Sign Up</Typography></Link>
+        <Link to="/userrole">
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            color="#000000"
+            sx={{ textDecoration: "underline" }}
+          >
+            Sign Up
+          </Typography>
+        </Link>
       </Box>
     </Box>
   );
@@ -111,19 +120,18 @@ const OutlinedInputStyled = styled(OutlinedInput)({
 });
 
 
-const ButtonStyled = styled(Button)({
-  marginTop:"70px",
+
+const LinkStyled = styled(Link)({
+  marginTop: "70px",
   width: "400px",
   height: "60px",
   backgroundColor: "#000000",
   color: "#FFFFFF",
   borderRadius: "40px",
-  textTransform: "none",
-  "&:hover": { backgroundColor: "#000000" },
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  opacity:"1"
+  textDecoration:"none"
 });
 
 

@@ -3,7 +3,6 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Login from "./pages/Login/Login";
-import Regdetails from "./pages/Register/Regdetails";
 import Home from "./pages/Home/Home";
 import ContactForm from "./pages/ContactForm/ContactForm";
 import RootLayout from "./Layout/RootLayout";
@@ -15,6 +14,7 @@ import Applicants from "./pages/Profile/Applicants";
 import JobPage from "./pages/JobPage/JobPage";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import UserRole from "./pages/Register/UserRole";
+import Register from "./pages/Register/Register";
 
 const router = createBrowserRouter([
   {
@@ -60,8 +60,8 @@ const router = createBrowserRouter([
     element: <UserRole />,
   },
   {
-    path: "/register/regdetails",
-    element: <Regdetails />,
+    path: "/userrole/register",
+    element:<Register/>
   },
 ]);
 

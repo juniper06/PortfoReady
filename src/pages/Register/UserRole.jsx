@@ -1,8 +1,24 @@
-import React from "react";
+import React, {useState } from "react";
 import background from "../../assets/bg-img.png";
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+  styled,
+} from "@mui/material";
+import studentlogo from "../../assets/student-logo.png";
+import employerlogo from "../../assets/employer-logo.png";
+import { Link } from "react-router-dom";
 
 const UserRole = () => {
+  const [alignment, setAlignment] = React.useState("left");
+
+  const handleAlignment = (event, newAlignment) => {
+    setAlignment(newAlignment);
+  };
+
   return (
     <Box
       height="100vh"
@@ -22,65 +38,86 @@ const UserRole = () => {
       </Typography>
       <Box
         display="flex"
-        justifyContent="center"
         alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
         width="755px"
         height="450px"
         borderRadius="40px"
         sx={{
-          opacity: ".8",
+          backdropFilter: "blur(7px)",
           boxShadow: 10,
           bgcolor: (theme) =>
-            theme.palette.mode === "dark" ? "#101010" : "#fff",
+            theme.palette.mode === "dark" ? "#" : "rgb(255, 255, 255,0.5)",
           color: (theme) =>
             theme.palette.mode === "dark" ? "grey.300" : "grey.800",
         }}
       >
-        {/* Left-Side */}
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          width="377px"
-          height="220px"
+        <ToggleButtonGroup
+          value={alignment}
+          exclusive
+          onChange={handleAlignment}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "755px",
+          }}
         >
-          {/* Student Box */}
-          <Box
-            width="250px"
-            height="200px"
-            border="1px solid #000000"
-            borderRadius="40px"
-            sx={{ backgroundColor: "#dee0e1" }}
-          ></Box>
-          <br />
-          <Typography variant="h6" fontWeight="bold">
-            Student
-          </Typography>
-        </Box>
-        {/* Right-Side */}
+          <ToggleButton
+            value="left"
+            sx={{
+              width: "245px",
+              height: "170px",
+              border: "2px solid #000000",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <img src={studentlogo} />
+            <Typography>Student</Typography>
+          </ToggleButton>
+
+          <ToggleButton
+            value="right"
+            sx={{
+              width: "245px",
+              height: "170px",
+              border: "2px solid #000000",
+              display: "flex",
+              flexDirection: "column",
+              
+            }}
+          >
+            <img src={employerlogo} />
+            <Typography>Employer</Typography>
+          </ToggleButton>
+        </ToggleButtonGroup>
         <Box
+          width="755px"
           display="flex"
-          flexDirection="column"
-          alignItems="center"
-          width="377px"
-          height="220px"
+          justifyContent="center"
+          marginTop="50px"
         >
-          {/* Employer Box */}
-          <Box
-            width="250px"
-            height="200px"
-            border="1px solid #000000"
-            borderRadius="40px"
-            sx={{ backgroundColor: "#dee0e1" }}
-          ></Box>
-          <br />
-          <Typography variant="h6" fontWeight="bold">
-            Employer
-          </Typography>
+          <LinkStyled to="/userrole/register">
+            <Typography variant="h5">Next</Typography>
+          </LinkStyled>
         </Box>
       </Box>
     </Box>
   );
 };
+
+const LinkStyled = styled(Link)({
+  width: "150px",
+  height: "45px",
+  backgroundColor: "#000000",
+  color: "#FFFFFF",
+  borderRadius: "40px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  textDecoration:"none"
+});
 
 export default UserRole;
