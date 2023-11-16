@@ -22,13 +22,13 @@ public class Post {
     private String title;
     private String description;
     @ManyToOne
-    @JoinColumn(name = "job_id")
+    @JoinColumn(name = "jobId")
     private Job job;
-    @OneToOne
-    @JoinColumn(name = "poster_id")
+    @ManyToOne
+    @JoinColumn(name = "posterId")
     private Employer poster;
     @OneToMany(fetch = FetchType.LAZY)
-    private List<Student> applicants = new ArrayList<>();
+    private List<Application> applicants = new ArrayList<>();
     @OneToOne
     private Exam exam;
 }

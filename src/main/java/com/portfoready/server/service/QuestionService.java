@@ -1,8 +1,10 @@
 package com.portfoready.server.service;
 
 
+import com.portfoready.server.entity.Exam;
 import com.portfoready.server.entity.Question;
 import com.portfoready.server.repository.QuestionRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,19 +15,20 @@ import java.util.List;
 public class QuestionService {
     private final QuestionRepository questionRepository;
 
-    public Question addQuestion(String question) {
-        Question newQuestion = Question.builder().question(question).build();
-        return questionRepository.save(newQuestion);
-    }
 
-    public List<Question> addAllQuestions(List<String> questions) {
-        List<Question> newQuestions = questions.stream().map(question -> Question.builder().question(question).build())
+    public List<Question> addAllQuestions(List<String> questions, Exam exam) {
+        List<Question> newQuestions = questions.stream().map(question -> Question.builder().question(question).exam(exam).build())
                 .toList();
         return questionRepository.saveAll(newQuestions);
     }
 
-    public Question addAnswerQuestion(Question question, String answer) {
-        question.setAnswer(answer);
-        return questionRepository.save(question);
+
+    public Question getQuestionById(Long questionId) {
+        return questionRepository.findById(questionId)
+                .orElseThrow(() -> new EntityNotFoundException("Question Id Not Found"));
+    }
+
+    public void updateQuestions(List<Question> questions){
+        questionRepository.saveAll(questions);
     }
 }

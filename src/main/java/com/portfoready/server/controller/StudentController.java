@@ -1,27 +1,20 @@
 package com.portfoready.server.controller;
 
-import com.portfoready.server.dto.request.AddPostRequest;
 import com.portfoready.server.dto.request.UpdateStudentRequest;
-import com.portfoready.server.dto.response.PostResponse;
 import com.portfoready.server.dto.response.ResponseHandler;
 import com.portfoready.server.dto.response.StudentResponse;
-import com.portfoready.server.entity.Post;
 import com.portfoready.server.entity.Student;
 import com.portfoready.server.entity.User;
-import com.portfoready.server.service.PostService;
 import com.portfoready.server.service.StudentService;
 import com.portfoready.server.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.io.IOException;
 
 @RestController
 @AllArgsConstructor
@@ -47,4 +40,23 @@ public class StudentController {
         return ResponseHandler.generateResponse("Successfully Generated", HttpStatus.OK, response);
     }
 
+
+    @PutMapping("/uploadResume/{studentId}")
+    public ResponseEntity<Object> uploadResume(@RequestParam("file") MultipartFile file, @PathVariable Long studentId) {
+        try {
+            Student student = studentService.getStudentById(studentId);
+            studentService.uploadResume(file, student);
+            return ResponseHandler.generateResponse("Successfully Uploaded", HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/getResume/{studentId}")
+    public ResponseEntity<byte[]> getResume(@PathVariable Long studentId) throws IOException {
+        byte[] resumeData = studentService.getResumeData(studentId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf(studentService.getStudentById(studentId).getResume().getType()))
+                .body(resumeData);
+    }
 }

@@ -22,6 +22,6 @@ public class Exam {
     private Long id;
     @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL)
     private List<Question> questions;
-    @OneToMany
-    private List<Student> respondents;
+    @OneToMany(mappedBy = "exam")
+    private List<StudentExamAnswer> studentExamAnswers;
 }

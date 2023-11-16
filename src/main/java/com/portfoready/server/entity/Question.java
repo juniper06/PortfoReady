@@ -18,8 +18,7 @@ public class Question {
     @GeneratedValue
     private Long id;
     private String question;
-    private String answer;
-
     @ManyToOne
+    @JoinColumn(name = "examId")
     private Exam exam;
 }

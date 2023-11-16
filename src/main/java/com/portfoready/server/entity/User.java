@@ -37,4 +37,5 @@ public class User {
     @OneToMany(mappedBy = "from", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Follower> following = new ArrayList<>();
+
 }

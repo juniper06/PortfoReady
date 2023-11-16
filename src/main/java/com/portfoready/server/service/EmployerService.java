@@ -5,6 +5,7 @@ import com.portfoready.server.dto.request.UpdateEmployerRequest;
 import com.portfoready.server.dto.request.UpdateStudentRequest;
 import com.portfoready.server.entity.Employer;
 import com.portfoready.server.entity.Student;
+import com.portfoready.server.entity.User;
 import com.portfoready.server.repository.EmployerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -23,5 +24,9 @@ public class EmployerService {
     public Employer updateEmployer(UpdateEmployerRequest request, Employer employer){
         Employer updatedStudent = request.updateEmployer(employer);
         return employerRepository.save(updatedStudent);
+    }
+
+    public Employer getEmployerByUser(User user) {
+        return employerRepository.getEmployerByUser(user);
     }
 }

@@ -14,6 +14,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.Objects;
 
 @Service
@@ -30,6 +31,8 @@ public class FileService {
                 .name(file.getOriginalFilename())
                 .type(file.getContentType())
                 .uploader(user)
+                .date(new Date())
+                .size(file.getSize())
                 .filePath(filePath.toString()).build());
     }
 
@@ -40,14 +43,19 @@ public class FileService {
     }
 
     @PostConstruct
-    private void deleteAllFilesInFolder() throws IOException {
-        if (Files.exists(root) && Files.isDirectory(root)) {
-            DirectoryStream<Path> directoryStream = Files.newDirectoryStream(root);
-            for (Path file : directoryStream) {
-                Files.delete(file);
-            }
-        } else {
+    private void init() throws IOException {
+        if (!Files.exists(root) && !Files.isDirectory(root)) {
             Files.createDirectories(Paths.get("uploads"));
+        }
+    }
+
+    public void deleteFile(File file) throws Exception {
+        java.io.File ioFile = new java.io.File(root + "/" + file.getName());
+        boolean isDeleted = ioFile.delete();
+        if (isDeleted) {
+            fileRepository.delete(file);
+        } else {
+            throw new Exception("Failed to Delete File");
         }
     }
 }

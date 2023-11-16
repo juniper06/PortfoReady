@@ -4,11 +4,7 @@ package com.portfoready.server.service;
 import com.portfoready.server.dto.request.UpdateUserRequest;
 import com.portfoready.server.dto.request.UserAuthRequest;
 import com.portfoready.server.dto.request.UserCreationRequest;
-import com.portfoready.server.dto.response.UserResponse;
-import com.portfoready.server.entity.Employer;
-import com.portfoready.server.entity.Follower;
-import com.portfoready.server.entity.Student;
-import com.portfoready.server.entity.User;
+import com.portfoready.server.entity.*;
 import com.portfoready.server.exception.InvalidPasswordException;
 import com.portfoready.server.exception.InvalidUsernameException;
 import com.portfoready.server.repository.EmployerRepository;
@@ -21,10 +17,10 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -35,6 +31,9 @@ public class UserService {
     private final StudentRepository studentRepository;
     private final EmployerRepository employerRepository;
     private final FollowerRepository followerRepository;
+    private final FileService fileService;
+    private final StudentService studentService;
+    private final EmployerService employerService;
 
     public User checkUserAuth(UserAuthRequest request) throws InvalidUsernameException, InvalidPasswordException {
         Optional<User> user = userRepository.findByUsername(request.getUsername());
@@ -99,24 +98,14 @@ public class UserService {
         return userRepository.findById(id).orElseThrow();
     }
 
-    public List<UserResponse> getFollowersByUserId(Long userId) {
+    public void uploadImage(MultipartFile file, Long userId) throws Exception {
         User user = getUserById(userId);
-        return user.getFollowers().stream()
-                .map(follower -> UserResponse.fromUser(follower.getFrom()))
-                .collect(Collectors.toList());
-
-    }
-
-    public Employer getEmployerByUserId(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User Id Not Found!"));
-        return employerRepository.findByUser(user).orElseThrow(() -> new EntityNotFoundException("User Not Found!"));
-    }
-
-    public Student getStudentByUserId(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User Id Not Found!"));
-        return studentRepository.findByUser(user).orElseThrow(() -> new EntityNotFoundException("User Not Found!"));
+        File imageFile = fileService.uploadFile(file, user);
+        if (user.getImage() != null) {
+            fileService.deleteFile(user.getImage());
+        }
+        user.setImage(imageFile);
+        userRepository.save(user);
     }
 
     public List<User> getUsersYouMayKnow(Long userId) {
@@ -125,9 +114,16 @@ public class UserService {
         return userRepository.findRandomUsersNotFollowing(user, userId, Pageable.unpaged());
     }
 
-    public User updateUser(UpdateUserRequest request, User user){
+    public User updateUser(UpdateUserRequest request, User user) {
         User updatedUser = request.updateUser(user);
         return userRepository.save(updatedUser);
     }
 
+    public Student getStudentByUser(User user){
+        return studentService.getStudentByUser(user);
+    }
+
+    public Employer getEmployerByUser(User user) {
+        return employerService.getEmployerByUser(user);
+    }
 }

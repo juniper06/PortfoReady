@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -21,18 +22,8 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private File imageFile;
-
-    public static UserResponse fromUser(User user) {
-        return UserResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .phoneNumber(user.getPhoneNumber())
-                .build();
-    }
+    private FileResponse imageFile;
+    private List<String> links;
 
     public UserResponse(User user) {
         id = user.getId();
@@ -41,5 +32,8 @@ public class UserResponse {
         firstName = user.getFirstName();
         lastName = user.getLastName();
         phoneNumber = user.getPhoneNumber();
+        links = user.getLinks();
+        if(user.getImage() != null)
+            imageFile = new FileResponse(user.getImage());
     }
 }

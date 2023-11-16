@@ -14,17 +14,17 @@ public class ExamResponse {
 
     public ExamResponse(Exam exam){
         id = exam.getId();
-        questions = exam.getQuestions().stream().map(QuestionResponse::new).collect(Collectors.toList());
+        questions = exam.getQuestions().stream().map(QuestionResponse::new).toList();
     }
 
     @Data
     static class QuestionResponse{
+        private Long id;
         private String question;
-        private String answer;
 
         QuestionResponse(Question question){
+            id = question.getId();
             this.question = question.getQuestion();
-            answer = question.getAnswer();
         }
     }
 }

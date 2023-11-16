@@ -1,7 +1,6 @@
 package com.portfoready.server.service;
 
 
-import com.portfoready.server.dto.request.AddCertificateRequest;
 import com.portfoready.server.entity.Certificate;
 import com.portfoready.server.entity.File;
 import com.portfoready.server.entity.Student;
@@ -22,7 +21,7 @@ public class CertificateService {
     private final StudentService studentService;
     private final FileService fileService;
 
-    public Certificate addCertificate(String name, MultipartFile file, User user) throws IOException {
+    public void addCertificate(String name, MultipartFile file, User user) throws IOException {
         Student student = studentService.getStudentByUser(user);
         Date date = new Date();
         File imageFile = fileService.uploadFile(file, user);
@@ -32,7 +31,7 @@ public class CertificateService {
                 .date(date)
                 .image(imageFile)
                 .build();
-        return certificateRepository.save(certificate);
+        certificateRepository.save(certificate);
     }
 
     public List<Certificate> getCertificatesByStudent(User user) {

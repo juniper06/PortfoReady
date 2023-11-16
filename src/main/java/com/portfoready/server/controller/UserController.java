@@ -5,6 +5,10 @@ import com.portfoready.server.dto.request.UserAuthRequest;
 import com.portfoready.server.dto.request.UserCreationRequest;
 import com.portfoready.server.dto.response.LoginResponse;
 import com.portfoready.server.dto.response.ResponseHandler;
+import com.portfoready.server.dto.response.StudentResponse;
+import com.portfoready.server.dto.response.UserResponse;
+import com.portfoready.server.entity.Employer;
+import com.portfoready.server.entity.Student;
 import com.portfoready.server.entity.User;
 import com.portfoready.server.exception.InvalidPasswordException;
 import com.portfoready.server.exception.InvalidUsernameException;
@@ -15,6 +19,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @AllArgsConstructor
@@ -42,10 +47,19 @@ public class UserController {
     public ResponseEntity<Object> login(@RequestBody UserAuthRequest request) {
         try {
             User user = userService.checkUserAuth(request);
+            Long id;
+            if(userService.getUserType(user).equals("student")){
+                Student student = userService.getStudentByUser(user);
+                id = student.getId();
+            } else {
+                Employer employer = userService.getEmployerByUser(user);
+                id = employer.getId();
+            }
             LoginResponse response = LoginResponse.builder()
                     .username(user.getUsername())
-                    .id(user.getId())
+                    .userId(user.getId())
                     .type(userService.getUserType(user))
+                    .id(id)
                     .build();
             return ResponseHandler.generateResponse("Successfully Created", HttpStatus.OK, response);
         } catch (InvalidUsernameException | InvalidPasswordException ex) {
@@ -53,11 +67,11 @@ public class UserController {
         }
     }
 
-    @PostMapping("/followUser")
-    private ResponseEntity<Object> followUser(@RequestParam(name = "userId") Long userId,
-                                              @RequestParam(name = "followerId") Long followerId) {
+    @PutMapping("/followUser")
+    public ResponseEntity<Object> followUser(@RequestParam(name = "to") Long to,
+                                             @RequestParam(name = "from") Long from) {
         try {
-            userService.followUser(userId, followerId);
+            userService.followUser(to, from);
             return ResponseHandler.generateResponse("Successfully Generated", HttpStatus.OK);
         } catch (EntityNotFoundException ex) {
             return ResponseHandler.generateResponse("Failed Generated", HttpStatus.NOT_FOUND);
@@ -65,7 +79,7 @@ public class UserController {
     }
 
     @GetMapping("/getPeopleYouMayKnow")
-    private ResponseEntity<Object> getPeopleYouMayKnow(@RequestParam(name = "userId") Long userId) {
+    public ResponseEntity<Object> getPeopleYouMayKnow(@RequestParam(name = "userId") Long userId) {
         try {
             return ResponseHandler.generateResponse(
                     "Successfully Generated", HttpStatus.OK, userService.getUsersYouMayKnow(userId));
@@ -74,11 +88,32 @@ public class UserController {
         }
     }
 
-    @PostMapping("/updateUser")
-    public ResponseEntity<Object> updateUser(@RequestParam(name = "userId") Long userId,
-                                             @RequestBody UpdateUserRequest request) {
+    @PutMapping("/updateUser/{userId}")
+    public ResponseEntity<Object> updateUser(@RequestBody UpdateUserRequest request, @PathVariable Long userId) {
         User user = userService.getUserById(userId);
         return ResponseHandler.generateResponse(
                 "Update Successfully", HttpStatus.OK, userService.updateUser(request, user));
+    }
+
+    @PutMapping("/uploadImage/{userId}")
+    public ResponseEntity<Object> uploadImage(@RequestParam(name = "file") MultipartFile file,
+                                              @PathVariable Long userId) {
+        try {
+            userService.uploadImage(file, userId);
+            return ResponseHandler.generateResponse("Successfully Uploaded", HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/getUser")
+    public ResponseEntity<Object> getUser(@RequestParam(name = "userId") Long userId) {
+        try {
+            User user = userService.getUserById(userId);
+            UserResponse response = new UserResponse(user);
+            return ResponseHandler.generateResponse("Successfully Generated", HttpStatus.OK, response);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 }

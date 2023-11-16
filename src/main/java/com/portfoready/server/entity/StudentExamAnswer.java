@@ -1,13 +1,10 @@
 package com.portfoready.server.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 @Data
 @Builder
@@ -15,15 +12,15 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 @Table
-public class Certificate {
+public class StudentExamAnswer {
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
     @ManyToOne
-    @JoinColumn(name = "studentId")
+    private Exam exam;
+    @ManyToOne
     private Student student;
-    private Date date;
-    @OneToOne(orphanRemoval = true)
-    private File image;
+    @ManyToOne
+    private Question question;
+    private String studentAnswer;
 }

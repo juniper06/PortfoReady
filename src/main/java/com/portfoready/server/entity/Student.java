@@ -24,8 +24,12 @@ public class Student {
     private String skills;
     private String experience;
     private String language;
-    @OneToOne
+    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
+    private File resume;
+    @OneToOne(orphanRemoval = true)
     private User user;
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Certificate> certificates = new ArrayList<>();
+    @OneToMany(mappedBy = "applicant", fetch = FetchType.LAZY)
+    private List<Application> applications = new ArrayList<>();
 }

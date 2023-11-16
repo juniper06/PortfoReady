@@ -14,6 +14,7 @@ public class PostResponse {
     private String description;
     private Job job;
     private Long posterId;
+    private Long examId;
     private boolean followed;
 
     public PostResponse(Post post, User user) {
@@ -22,6 +23,7 @@ public class PostResponse {
         description = post.getDescription();
         posterId = post.getPoster().getId();
         job = post.getJob();
+        examId = post.getExam().getId();
         followed = user.getFollowing().stream()
                 .anyMatch(follower -> follower.getFrom().equals(user) &&
                         follower.getTo().getId().equals(post.getPoster().getId()));
@@ -32,6 +34,7 @@ public class PostResponse {
         title = post.getTitle();
         description = post.getDescription();
         posterId = post.getPoster().getId();
+        examId = post.getExam().getId();
         job = post.getJob();
         followed = false;
     }
