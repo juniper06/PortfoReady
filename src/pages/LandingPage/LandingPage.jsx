@@ -3,6 +3,7 @@ import React from "react";
 import landingbg from "../../assets/landing-bg.png";
 import logo from "../../assets/logo.png";
 import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 
 const LandingPage = () => {
   return (
@@ -79,9 +80,9 @@ const LandingPage = () => {
             Seize Oppurtunities
           </Typography>
         </Box>
-        <ButtonStlyed sx={{ "&:hover": { backgroundColor: "#000000" } }}>
+        <LinkStyled to="/login">
           Get Started
-        </ButtonStlyed>
+        </LinkStyled>
       </Box>
       {/* Right-Container */}
       <Box
@@ -105,6 +106,20 @@ const ButtonStlyed = styled(Button)({
   fontWeight:"bold",
   fontSize:"35px",
   textTransform: "none",
+})
+
+const LinkStyled = styled(Link)({
+  display:"flex",
+  justifyContent:"center",
+  alignItems:"center",
+  width:"377px",
+  height:"74px",
+  borderRadius:"10px",
+  backgroundColor:"#000000",
+  color:"#FFFFFF",
+  fontWeight:"bold",
+  fontSize:"35px",
+  textDecoration:"none"
 })
 
 export default LandingPage;

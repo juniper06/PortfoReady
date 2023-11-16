@@ -17,6 +17,7 @@ import UserRole from "./pages/Register/UserRole";
 import Register from "./pages/Register/Register";
 import JobList from "./pages/JobList/JobList";
 import EditStudent from "./pages/EditProfile/EditStudent";
+import EditEmployer from "./pages/EditProfile/EditEmployer";
 
 const router = createBrowserRouter([
   {
@@ -44,22 +45,26 @@ const router = createBrowserRouter([
         element: <Applicants />,
       },
       {
-        path:"/jobpage",
-        element:<JobPage/>
+        path: "/jobpage",
+        element: <JobPage />,
       },
       {
         path: "/joblist",
-        element:<JobList/>
+        element: <JobList />,
       },
       {
         path: "/editstudent",
-        element:<EditStudent/>
-      }
+        element: <EditStudent />,
+      },
+      {
+        path: "/editemployer",
+        element: <EditEmployer />,
+      },
     ],
   },
   {
-    path:"/landingpage",
-    element:<LandingPage/>
+    path: "/landingpage",
+    element: <LandingPage />,
   },
   {
     path: "/login",
@@ -71,7 +76,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/userrole/register",
-    element:<Register/>
+    element: <Register />,
   },
 ]);
 
