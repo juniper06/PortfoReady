@@ -60,8 +60,8 @@ public class PostController {
         }
     }
 
-    @PostMapping("/deletePost")
-    public ResponseEntity<Object> addPost(@RequestParam(name = "postId") Long postId) {
+    @DeleteMapping("/deletePost")
+    public ResponseEntity<Object> deletePost(@RequestParam(name = "postId") Long postId) {
         try {
             postService.deletePost(postId);
             return ResponseHandler.generateResponse("Successfully Deleted", HttpStatus.OK);
