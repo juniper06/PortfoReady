@@ -21,21 +21,32 @@ import {
   Menu,
   CardContent,
 } from "@mui/material";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Link } from "react-router-dom";
+import { PostCard } from "../Home/Home";
+import { JobPost } from "../Home/Home";
 
-const postSettings = ["Edit", "Delete"];
+
 
 const EmployerProfile = () => {
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [posts, setPosts] = useState([]);
 
-  const handleOpenMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
+  const getPosts = async () => {
+    await axios
+      .get("http://localhost:8080/post/posts?userId=3")
+      .then((response) => {
+        setPosts(response.data.data.content);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
   };
-  const handleCloseMenu = () => {
-    setAnchorElUser(null);
-  };
+  
+
+  useEffect(() => {
+    getPosts();
+  }, []);
 
   return (
     <>
@@ -158,83 +169,10 @@ const EmployerProfile = () => {
           >
             <PostCard />
           </Box>
-
-          <Box
-            borderRadius="15px"
-            border="2px solid #000000"
-            width="1300px"
-            maxHeight="1000px"
-            display="flex"
-            marginBottom="20px"
-            flexDirection="column"
-            paddingLeft="30px"
-            paddingBottom="20px"
-          >
-            <Box display="flex">
-              <CardHeader
-                avatar={<Avatar aria-label="recipe">B</Avatar>}
-                title="John Doe"
-                subheader="John.doe@cit.edu"
-              />
-              <Box marginLeft="1020px">
-                <IconButton onClick={handleOpenMenu}>
-                  <MoreHorizIcon />
-                </IconButton>
-              </Box>
-            </Box>
-            <Box display="flex">
-              <Box width="1200px" paddingTop="20px" paddingLeft="20px">
-                <Typography variant="h4">Human Resources</Typography>
-                <br />
-                <Typography variant="h5">Job Type:</Typography>
-                <br />
-              </Box>
-              <Box>
-                <Menu
-                  sx={{ mt: "45px" }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseMenu}
-                >
-                  {postSettings.map((postSettings) => (
-                    <MenuItem key={postSettings} onClick={handleCloseMenu}>
-                      <Typography textAlign="center">{postSettings}</Typography>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Box>
-            </Box>
-            <Box paddingLeft="20px" paddingRight="40px">
-              <Typography variant="h6" textAlign="justify">
-                We are seeking a highly motivated and experienced Human Resource
-                Officer to join our dynamic team at AMNK FOODTEK CHAIN, INC. As
-                a Human Resource Officer, you will play a critical role in
-                supporting our organization's human resources functions and
-                ensuring the smooth operation of our workforce.
-                Responsibilities: • Implement and manage HR policies and
-                procedures in compliance with applicable laws and regulations. •
-                Handle employee onboarding, orientation, and off boarding
-                processes. • Maintain and update employee records, including
-                personal information, leave, and attendance records. •
-                Coordinate recruitment activities, including job posting,
-                screening resumes, conducting interviews, and making job offers.
-                • Administer employee benefits programs and handle employee
-                inquiries related to benefits. • Assist in performance
-                management processes, including conducting performance reviews
-                and providing guidance on employee development. • Address
-                employee relations issues and resolve conflicts...
-              </Typography>
-            </Box>
+          <Box display="flex" flexDirection="column" rowGap={5}>
+            {posts.map((post) => (
+              <JobPost post={post} getPosts={getPosts} />
+            ))}
           </Box>
         </Box>
       </Box>
@@ -315,7 +253,6 @@ const ApplicantsCard = () => {
                 </Box>
               </Stack>
             </Box>
-            
           </Stack>
         </DialogContent>
       </Dialog>
@@ -323,161 +260,7 @@ const ApplicantsCard = () => {
   );
 };
 
-export const PostCard = () => {
-  const [openPost, setOpenPost] = React.useState(false);
-  const handleOpenPost = () => setOpenPost(true);
-  const handleClosePost = () => setOpenPost(false);
-  const handleChange = (event) => {
-    setJob(event.target.value);
-  };
-
-  return (
-    <>
-      <ButtonStyled onClick={handleOpenPost}>Post a Job</ButtonStyled>
-      <Dialog fullWidth maxWidth="md" open={openPost} onClose={handleClosePost}>
-        <DialogTitle textAlign="center" borderBottom="2px solid #808080">
-          <Typography variant="h4" fontWeight="bold">
-            Create Job Posting
-          </Typography>
-        </DialogTitle>
-        <DialogContent>
-          <Box>
-            <CardHeader
-              avatar={<Avatar aria-label="recipe">B</Avatar>}
-              title="John Doe"
-              subheader="John.doe@cit.edu"
-            />
-            <Stack justifyContent="center" alignItems="center">
-              <FormControl
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  rowGap: "20px",
-                }}
-              >
-                <Box display="flex" flexDirection="column">
-                  <FormLabel>
-                    <Typography
-                      variant="h7"
-                      fontWeight="bold"
-                      paddingLeft="13px"
-                    >
-                      Title
-                    </Typography>
-                  </FormLabel>
-                  <OutlinedInputStyled onFocus="none" />
-                </Box>
-                <Box>
-                  <FormControl sx={{ width: "300px" }}>
-                    <InputLabel>Job Type</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Job Type"
-                      onChange={handleChange}
-                    >
-                      <MenuItem value={1}>UI/UX Designer</MenuItem>
-                      <MenuItem value={2}>Front-End Developer</MenuItem>
-                      <MenuItem value={3}>Back-End Developer</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-                <Box display="flex" flexDirection="column">
-                  <FormLabel>
-                    <Typography
-                      variant="h7"
-                      fontWeight="bold"
-                      paddingLeft="13px"
-                    >
-                      Description
-                    </Typography>
-                  </FormLabel>
-                  <TextField
-                    multiline
-                    onFocus="none"
-                    rows={5}
-                    maxRows={5}
-                    InputProps={{ sx: { borderRadius: 6 } }}
-                  />
-                </Box>
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  width="800px"
-                  height="300px"
-                  border="1px solid #c4c4c4"
-                  borderRadius="20px"
-                >
-                  <Box>
-                    <Typography
-                      variant="h5"
-                      fontWeight="bold"
-                      textAlign="center"
-                      borderBottom="1px solid #c4c4c4"
-                    >
-                      Create Exam
-                    </Typography>
-                    <Box sx={{ height: "260px", overflowY: "auto" }}>
-                      <Stack
-                        spacing={3}
-                        alignItems="center"
-                        paddingTop="20px"
-                        paddingBottom="20px"
-                      >
-                        <InputStyled
-                          onFocus="none"
-                          disableUnderline={true}
-                          placeholder="Question 1"
-                        />
-                        <InputStyled
-                          onFocus="none"
-                          disableUnderline={true}
-                          placeholder="Question 2"
-                        />
-                        <InputStyled
-                          onFocus="none"
-                          disableUnderline={true}
-                          placeholder="Question 3"
-                        />
-                        <InputStyled
-                          onFocus="none"
-                          disableUnderline={true}
-                          placeholder="Question 4"
-                        />
-                        <InputStyled
-                          onFocus="none"
-                          disableUnderline={true}
-                          placeholder="Question 5"
-                        />
-                      </Stack>
-                    </Box>
-                  </Box>
-                </Box>
-                <Box display="flex" justifyContent="end">
-                  <Button
-                    sx={{
-                      width: "160px",
-                      height: "42px",
-                      borderRadius: "20px",
-                      backgroundColor: "#000000",
-                      color: "#FFFFFF",
-                      "&:hover": { backgroundColor: "#000000" },
-                      textTransform: "none",
-                    }}
-                  >
-                    <Typography variant="h6" fontWeight="bold">
-                      Post
-                    </Typography>
-                  </Button>
-                </Box>
-              </FormControl>
-            </Stack>
-          </Box>
-        </DialogContent>
-      </Dialog>
-    </>
-  );
-};
+export 
 
 const ButtonStyled = styled(Button)({
   width: "950px",
@@ -490,28 +273,14 @@ const ButtonStyled = styled(Button)({
   color: "#808080",
 });
 
-const OutlinedInputStyled = styled(OutlinedInput)({
-  width: "800px",
-  height: "55px",
-  borderRadius: "20px",
-});
-
-const InputStyled = styled(Input)({
-  width: "700px",
-  height: "60px",
-  borderRadius: "20px",
-  border: "1px solid #c4c4c4",
-  paddingLeft: "10px",
-});
 
 const LinkStyled = styled(Link)({
-  width:"210px",
-  height:"40px",
-  backgroundColor:"#000000",
-  color:"#FFFFFF",
-  textDecoration:"none",
+  width: "210px",
+  height: "40px",
+  backgroundColor: "#000000",
+  color: "#FFFFFF",
+  textDecoration: "none",
   textTransform: "none",
-
-})
+});
 
 export default EmployerProfile;
