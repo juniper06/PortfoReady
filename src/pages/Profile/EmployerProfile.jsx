@@ -3,39 +3,30 @@ import {
   Button,
   DialogContent,
   DialogTitle,
-  OutlinedInput,
   Typography,
   styled,
   Dialog,
   CardHeader,
   Avatar,
   Stack,
-  FormLabel,
-  FormControl,
-  Select,
-  MenuItem,
-  InputLabel,
-  TextField,
-  Input,
-  IconButton,
-  Menu,
   CardContent,
 } from "@mui/material";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Link } from "react-router-dom";
 import { PostCard } from "../Home/Home";
 import { JobPost } from "../Home/Home";
+import useAuth from "../../hooks/useAuth";
 
 
 
 const EmployerProfile = () => {
   const [posts, setPosts] = useState([]);
+  const { user, isLoading } = useAuth();
 
   const getPosts = async () => {
     await axios
-      .get("http://localhost:8080/post/posts?userId=3")
+      .get(`http://localhost:8080/post/posts?userId=${user.userId}`)
       .then((response) => {
         setPosts(response.data.data.content);
         console.log(response);
@@ -45,8 +36,10 @@ const EmployerProfile = () => {
   
 
   useEffect(() => {
-    getPosts();
-  }, []);
+    if (user.isAuthenticated) {
+      getPosts();
+    }
+  }, [isLoading, user]);
 
   return (
     <>
@@ -171,7 +164,7 @@ const EmployerProfile = () => {
           </Box>
           <Box display="flex" flexDirection="column" rowGap={5}>
             {posts.map((post) => (
-              <JobPost post={post} getPosts={getPosts} />
+              <JobPost post={post} getPosts={getPosts}/>
             ))}
           </Box>
         </Box>

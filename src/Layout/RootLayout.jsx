@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   IconButton,
   Avatar,
@@ -9,14 +9,19 @@ import {
   Typography,
   Input,
 } from "@mui/material";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-
-const settings = ["Profile", "Logout"];
+import useAuth from "../hooks/useAuth";
 
 const RootLayout = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const { user, onLogout, isLoading } = useAuth();
+  const navigate = useNavigate();
+  if (!user.isAuthenticated && !isLoading) {
+    navigate("/login");
+  }
+
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -32,8 +37,6 @@ const RootLayout = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  const location = useLocation();
 
   return (
     <>
@@ -51,19 +54,19 @@ const RootLayout = () => {
           placeholder="Explore"
           sx={{ paddingLeft: "20px" }}
         />
-        <LinkStyled to="/home">
+        <LinkStyled to="/">
           <Typography>Home</Typography>
         </LinkStyled>
         <LinkStyled>
-          <Typography >Profile</Typography>
+          <Typography>Profile</Typography>
         </LinkStyled>
         <LinkStyled to="/contact">
           <Typography>Contact Us</Typography>
         </LinkStyled>
         <LinkStyled>
-          <Typography >Notification</Typography>
+          <Typography>Notification</Typography>
         </LinkStyled>
-        <LinkStyled>
+        <LinkStyled to="/joblist">
           <Typography>Job List</Typography>
         </LinkStyled>
         <Tooltip title="Open settings">
@@ -87,11 +90,17 @@ const RootLayout = () => {
           open={Boolean(anchorElUser)}
           onClose={handleCloseUserMenu}
         >
-          {settings.map((setting) => (
-            <MenuItem key={setting} onClick={handleCloseUserMenu}>
-              <Typography textAlign="center">{setting}</Typography>
-            </MenuItem>
-          ))}
+          <MenuItem onClick={handleCloseUserMenu}>
+            <Typography textAlign="center">Profile</Typography>
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleCloseUserMenu();
+              onLogout();
+            }}
+          >
+            <Typography textAlign="center">Logout</Typography>
+          </MenuItem>
         </Menu>
       </Box>
       <Outlet />

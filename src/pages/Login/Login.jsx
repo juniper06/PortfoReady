@@ -3,8 +3,6 @@ import {
   Input,
   Typography,
   styled,
-  FormControl,
-  InputLabel,
   OutlinedInput,
   InputAdornment,
   Button,
@@ -14,13 +12,33 @@ import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import background from "../../assets/bg-img.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
+  };
+  const [usernameValue, setUsernameValue] = React.useState("");
+  const [passwordValue, setPasswordValue] = React.useState("");
+  const { onLogin } = useAuth();
+  const navigate = useNavigate()
+
+  // function to login
+  const loginUser = async () => {
+    await axios
+      .post("http://localhost:8080/user/login", {
+        username: usernameValue,
+        password: passwordValue
+      })
+      .then((response) => {
+          const data = response.data.data
+          onLogin(data.username, data.userId, data.id, data.type);
+          navigate("/");
+      });
   };
 
   return (
@@ -57,13 +75,20 @@ const Login = () => {
             theme.palette.mode === "dark" ? "grey.300" : "grey.800",
         }}
       >
-        <InputStyled disableUnderline={true} placeholder="Username" />
+        <InputStyled
+          disableUnderline={true}
+          placeholder="Username"
+          value={usernameValue}
+          onChange={(e) => setUsernameValue(e.target.value)}
+        />
         <br />
         <OutlinedInputStyled
           placeholder="Password"
           sx={{
             "& fieldset": { border: "none" },
           }}
+          value={passwordValue}
+          onChange={(e) => setPasswordValue(e.target.value)}
           type={showPassword ? "text" : "password"}
           endAdornment={
             <InputAdornment position="start">
@@ -76,11 +101,11 @@ const Login = () => {
             </InputAdornment>
           }
         />
-        <LinkStyled to="/home">
+        <LoginBtnStyled onClick={loginUser}>
           <Typography variant="h5" fontWeight="bold">
             Log In
           </Typography>
-        </LinkStyled>
+        </LoginBtnStyled>
         <br />
         or
         <br />
@@ -119,9 +144,7 @@ const OutlinedInputStyled = styled(OutlinedInput)({
   paddingLeft: "12px",
 });
 
-
-
-const LinkStyled = styled(Link)({
+const LoginBtnStyled = styled(Button)({
   marginTop: "70px",
   width: "400px",
   height: "60px",
@@ -131,9 +154,7 @@ const LinkStyled = styled(Link)({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  textDecoration:"none"
+  textDecoration: "none",
 });
-
-
 
 export default Login;

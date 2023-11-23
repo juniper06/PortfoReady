@@ -12,7 +12,8 @@ import background from "../../assets/bg-img.png";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Register = () => {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -25,6 +26,24 @@ const Register = () => {
     setShowConfirmPassword((show) => !show);
   const handleMouseDownConfirmPassword = (event) => {
     event.preventDefault();
+  };
+
+  const [usernameValue, setUsernameValue] = React.useState("");
+  const [emailValue, setEmailValue] = React.useState("");
+  const [passwordValue, setPasswordValue] = React.useState("");
+  const [confirmPasswordValue, setConfirmPasswordValue] = React.useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const registerUser = async () => {
+    await axios.post("http://localhost:8080/user/register", {
+      username: usernameValue,
+      email: emailValue,
+      password: passwordValue,
+      type: location.state
+    }).then(() => {
+      navigate("/login")
+    });
   };
 
   return (
@@ -67,12 +86,16 @@ const Register = () => {
           inputProps={{ min: 0, style: { textAlign: "center" } }}
           disableUnderline={true}
           sx={{ width: "662px", height: "56px" }}
+          value={usernameValue}
+          onChange={(e) => setUsernameValue(e.target.value)}
         />
         <InputStyled
           placeholder="Email"
           inputProps={{ min: 0, style: { textAlign: "center" } }}
           disableUnderline={true}
           sx={{ width: "662px", height: "56px" }}
+          value={emailValue}
+          onChange={(e) => setEmailValue(e.target.value)}
         />
         <Box
           display="flex"
@@ -86,6 +109,8 @@ const Register = () => {
             sx={{
               "& fieldset": { border: "none" },
             }}
+            value={passwordValue}
+            onChange={(e) => setPasswordValue(e.target.value)}
             type={showPassword ? "text" : "password"}
             endAdornment={
               <InputAdornment position="start">
@@ -104,6 +129,8 @@ const Register = () => {
             sx={{
               "& fieldset": { border: "none" },
             }}
+            value={confirmPasswordValue}
+            onChange={(e) => setConfirmPasswordValue(e.target.value)}
             type={showConfirmPassword ? "text" : "password"}
             endAdornment={
               <InputAdornment position="start">
@@ -117,17 +144,17 @@ const Register = () => {
             }
           />
         </Box>
-        <LinkStyled to="/login">
+        <RegisterBtnStyled onClick={registerUser}>
           <Typography variant="h6" fontWeight="bold">
             Create Account
           </Typography>
-        </LinkStyled>
+        </RegisterBtnStyled>
       </Box>
     </Box>
   );
 };
 
-const LinkStyled = styled(Link)({
+const RegisterBtnStyled = styled(Button)({
   marginTop: "20px",
   width: "224px",
   height: "44px",
@@ -138,7 +165,7 @@ const LinkStyled = styled(Link)({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  textDecoration:"none"
+  textDecoration: "none",
 });
 
 const InputStyled = styled(Input)({

@@ -13,7 +13,7 @@ import employerlogo from "../../assets/employer-logo.png";
 import { Link } from "react-router-dom";
 
 const UserRole = () => {
-  const [alignment, setAlignment] = React.useState("left");
+  const [alignment, setAlignment] = React.useState("student");
 
   const handleAlignment = (event, newAlignment) => {
     setAlignment(newAlignment);
@@ -65,7 +65,7 @@ const UserRole = () => {
           }}
         >
           <ToggleButton
-            value="left"
+            value="student"
             sx={{
               width: "245px",
               height: "170px",
@@ -79,7 +79,7 @@ const UserRole = () => {
           </ToggleButton>
 
           <ToggleButton
-            value="right"
+            value="employer"
             sx={{
               width: "245px",
               height: "170px",
@@ -99,7 +99,7 @@ const UserRole = () => {
           justifyContent="center"
           marginTop="50px"
         >
-          <LinkStyled to="/userrole/register">
+          <LinkStyled to="/userrole/register" state={alignment}>
             <Typography variant="h5">Next</Typography>
           </LinkStyled>
         </Box>

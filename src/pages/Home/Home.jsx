@@ -17,25 +17,25 @@ import {
   DialogContent,
   Stack,
   FormControl,
-  FormLabel,
   OutlinedInput,
   InputLabel,
   Select,
   TextField,
-  Input
+  Input,
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
-const postSettings = ["Edit", "Delete"];
+const postSettings = ["Delete"];
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
-
+  const { user, isLoading } = useAuth();
 
   const getPosts = async () => {
     await axios
-      .get("http://localhost:8080/post/posts?userId=3")
+      .get(`http://localhost:8080/post/posts?userId=${user.userId}`)
       .then((response) => {
         setPosts(response.data.data.content);
         console.log(response);
@@ -43,19 +43,24 @@ const Home = () => {
       .catch((err) => console.log(err));
   };
 
-    const AddPost = async () => {
-    await axios.post("http://localhost:8080/post/addPost", {
-      title: titleValue,
-      jobId: 1,
-      description: descriptionValue,
-      posterId: 1,
-      questions: [question1, question2, question3, question4, question5],
-    });
-  }
-
   useEffect(() => {
-    getPosts();
-  }, []);
+    if (user.isAuthenticated) {
+      getPosts();
+    }
+  }, [isLoading, user]);
+
+  useEffect(() =>{
+    const getUser = async() => {
+      await axios
+      .get(`http://localhost:8080/user/getUser?userId=${152}`)
+      .then((response) => {
+        setUser(response.data.data);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
+    }
+    getUser();
+  },[])
 
   return (
     <>
@@ -75,15 +80,15 @@ const Home = () => {
             flexDirection="column"
             rowGap={3}
           >
-            <Typography variant="h2">Hello, John</Typography>
+            <Typography variant="h2">Hello, {user.username}</Typography>
             <Box>
-              <PostCard />
+              <PostCard getPosts={getPosts} />
             </Box>
           </Box>
           {/* Job-Container */}
           <Box display="flex" flexDirection="column" rowGap={5}>
             {posts.map((post) => (
-              <JobPost post={post} getPosts={getPosts} />
+              <JobPost post={post} getPosts={getPosts} key={post.id}/>
             ))}
           </Box>
         </Box>
@@ -199,10 +204,12 @@ const Home = () => {
   );
 };
 
-export const PostCard = () => {
-  const [openPost, setOpenPost] = React.useState(false);
+export const PostCard = ({ getPosts }) => {
+  const [openPost, setOpenPost] = useState(false);
   const handleOpenPost = () => setOpenPost(true);
   const handleClosePost = () => setOpenPost(false);
+
+  const [job, setJob] = useState("");
   const handleChange = (event) => {
     setJob(event.target.value);
   };
@@ -215,164 +222,171 @@ export const PostCard = () => {
   const [question4, setquestion4] = useState("");
   const [question5, setquestion5] = useState("");
 
+  const { user } = useAuth();
+
+  const AddPost = async () => {
+    await axios
+      .post("http://localhost:8080/post/addPost", {
+        title: titleValue,
+        jobId: job,
+        description: descriptionValue,
+        posterId: 102,
+        questions: [question1, question2, question3, question4, question5],
+      })
+      .then(() => {
+        getPosts();
+        setTitleValue("")
+        setdescriptionValue("")
+        setJob("")
+        setquestion1("")
+        setquestion2("")
+        setquestion3("")
+        setquestion4("")
+        setquestion5("")
+      })
+      setquestion1("")
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <ButtonStyled onClick={handleOpenPost}>Post a Job</ButtonStyled>
       <Dialog fullWidth maxWidth="md" open={openPost} onClose={handleClosePost}>
-        <DialogTitle textAlign="center" borderBottom="2px solid #808080">
-          <Typography variant="h4" fontWeight="bold">
-            Create Job Posting
-          </Typography>
+        <DialogTitle
+          textAlign="center"
+          borderBottom="2px solid #808080"
+          fontSize={30}
+          fontWeight="bold"
+        >
+          Create Job Posting
         </DialogTitle>
         <DialogContent>
-          <Box>
-            <CardHeader
-              avatar={<Avatar aria-label="recipe">B</Avatar>}
-              title="John Doe"
-              subheader="John.doe@cit.edu"
-            />
-            <Stack justifyContent="center" alignItems="center">
-              <FormControl
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  rowGap: "20px",
-                }}
+          <CardHeader
+            avatar={
+              <Avatar
+                sx={{ height: "60px", width: "60px" }}
+                aria-label="recipe"
               >
-                <Box display="flex" flexDirection="column">
-                  <FormLabel>
-                    <Typography
-                      variant="h7"
-                      fontWeight="bold"
-                      paddingLeft="13px"
-                    >
-                      Title
-                    </Typography>
-                  </FormLabel>
-                  <OutlinedInputStyled
-                    value={titleValue}
-                    onChange={(e) => setTitleValue(e.target.value)}
-                    onFocus="none"
-                  />
-                </Box>
-                <Box>
-                  <FormControl sx={{ width: "300px" }}>
-                    <InputLabel>Job Type</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Job Type"
-                      onChange={handleChange}
-                    >
-                      <MenuItem value={1}>UI/UX Designer</MenuItem>
-                      <MenuItem value={2}>Front-End Developer</MenuItem>
-                      <MenuItem value={3}>Back-End Developer</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-                <Box display="flex" flexDirection="column">
-                  <FormLabel>
-                    <Typography
-                      variant="h7"
-                      fontWeight="bold"
-                      paddingLeft="13px"
-                    >
-                      Description
-                    </Typography>
-                  </FormLabel>
-                  <TextField
-                    value={descriptionValue}
-                    onChange={(e) => setdescriptionValue(e.target.value)}
-                    multiline
-                    onFocus="none"
-                    rows={5}
-                    maxRows={5}
-                    InputProps={{ sx: { borderRadius: 6 } }}
-                  />
-                </Box>
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  width="800px"
-                  height="300px"
-                  border="1px solid #c4c4c4"
-                  borderRadius="20px"
+                B
+              </Avatar>
+            }
+            title="John Doe"
+            subheader="John.doe@cit.edu"
+          />
+          <Stack
+            justifyContent="center"
+            alignItems="center"
+            rowGap={2}
+            zIndex={100}
+          >
+            <Box>
+              <Typography fontWeight="bold">Title</Typography>
+              <InputStyled
+                value={titleValue}
+                onChange={(e) => setTitleValue(e.target.value)}
+                disableUnderline={true}
+              />
+            </Box>
+            <FormControl sx={{ width: "300px" }}>
+              <InputLabel>Job Type</InputLabel>
+              <Select value={job} label="job type" onChange={handleChange}>
+                <MenuItem value={1}>UI/UX Designer</MenuItem>
+                <MenuItem value={2}>Front-End Developer</MenuItem>
+                <MenuItem value={3}>Back-End Developer</MenuItem>
+              </Select>
+            </FormControl>
+            <Box>
+              <Typography fontWeight="bold">Description</Typography>
+              <textarea
+                value={descriptionValue}
+                onChange={(e) => setdescriptionValue(e.target.value)}
+                style={{
+                  width: "650px",
+                  height: "150px",
+                  resize: "none",
+                  borderRadius: "20px",
+                  fontSize: "15px",
+                  padding: "20px",
+                }}
+              />
+            </Box>
+            <Box
+              display="flex"
+              flexDirection="column"
+              width="800px"
+              height="300px"
+              border="1px solid #c4c4c4"
+              borderRadius="20px"
+            >
+              <Box>
+                <Typography
+                  variant="h5"
+                  fontWeight="bold"
+                  textAlign="center"
+                  borderBottom="1px solid #c4c4c4"
                 >
-                  <Box>
-                    <Typography
-                      variant="h5"
-                      fontWeight="bold"
-                      textAlign="center"
-                      borderBottom="1px solid #c4c4c4"
-                    >
-                      Create Exam
-                    </Typography>
-                    <Box sx={{ height: "260px", overflowY: "auto" }}>
-                      <Stack
-                        spacing={3}
-                        alignItems="center"
-                        paddingTop="20px"
-                        paddingBottom="20px"
-                      >
-                        <InputStyled
-                          value={question1}
-                          onChange={(e) => setquestion1(e.target.value)}
-                          onFocus="none"
-                          disableUnderline={true}
-                          placeholder="Question 1"
-                        />
-                        <InputStyled
-                          value={question2}
-                          onChange={(e) => question2(e.target.value)}
-                          onFocus="none"
-                          disableUnderline={true}
-                          placeholder="Question 2"
-                        />
-                        <InputStyled
-                          value={question3}
-                          onChange={(e) => setquestion3(e.target.value)}
-                          onFocus="none"
-                          disableUnderline={true}
-                          placeholder="Question 3"
-                        />
-                        <InputStyled
-                          value={question4}
-                          onChange={(e) => setquestion4(e.target.value)}
-                          onFocus="none"
-                          disableUnderline={true}
-                          placeholder="Question 4"
-                        />
-                        <InputStyled
-                          value={question5}
-                          onChange={(e) => setquestion5(e.target.value)}
-                          onFocus="none"
-                          disableUnderline={true}
-                          placeholder="Question 5"
-                        />
-                      </Stack>
-                    </Box>
-                  </Box>
-                </Box>
-                <Box display="flex" justifyContent="end">
-                  <Button
-                    sx={{
-                      width: "160px",
-                      height: "42px",
-                      borderRadius: "20px",
-                      backgroundColor: "#000000",
-                      color: "#FFFFFF",
-                      "&:hover": { backgroundColor: "#000000" },
-                      textTransform: "none",
-                    }}
+                  Create Exam
+                </Typography>
+                <Box sx={{ height: "260px", overflowY: "auto" }}>
+                  <Stack
+                    spacing={3}
+                    alignItems="center"
+                    paddingTop="20px"
+                    paddingBottom="20px"
                   >
-                    <Typography variant="h6" fontWeight="bold">
-                      Post
-                    </Typography>
-                  </Button>
+                    <InputStyled
+                      value={question1}
+                      onChange={(e) => setquestion1(e.target.value)}
+                      disableUnderline={true}
+                      placeholder="Question 1"
+                    />
+                    <InputStyled
+                      value={question2}
+                      onChange={(e) => setquestion2(e.target.value)}
+                      disableUnderline={true}
+                      placeholder="Question 2"
+                    />
+                    <InputStyled
+                      value={question3}
+                      onChange={(e) => setquestion3(e.target.value)}
+                      disableUnderline={true}
+                      placeholder="Question 3"
+                    />
+                    <InputStyled
+                      value={question4}
+                      onChange={(e) => setquestion4(e.target.value)}
+                      disableUnderline={true}
+                      placeholder="Question 4"
+                    />
+                    <InputStyled
+                      value={question5}
+                      onChange={(e) => setquestion5(e.target.value)}
+                      disableUnderline={true}
+                      placeholder="Question 5"
+                    />
+                  </Stack>
                 </Box>
-              </FormControl>
-            </Stack>
-          </Box>
+              </Box>
+              <Box display="flex" justifyContent="end" marginTop="20px">
+                <Button
+                  onClick={AddPost}
+                  sx={{
+                    width: "160px",
+                    height: "42px",
+                    borderRadius: "20px",
+                    backgroundColor: "#000000",
+                    color: "#FFFFFF",
+                    "&:hover": { backgroundColor: "#000000" },
+                    textTransform: "none",
+                  }}
+                >
+                  <Typography variant="h6" fontWeight="bold">
+                    Post
+                  </Typography>
+                </Button>
+              </Box>
+            </Box>
+          </Stack>
         </DialogContent>
       </Dialog>
     </>
@@ -381,7 +395,9 @@ export const PostCard = () => {
 
 export const JobPost = ({ post, getPosts }) => {
   const navigate = useNavigate();
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [user, setUser] = useState({});
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -397,6 +413,19 @@ export const JobPost = ({ post, getPosts }) => {
       })
       .catch((err) => console.log(err));
   };
+
+  useEffect(() =>{
+    const getUser = async() => {
+      await axios
+      .get(`http://localhost:8080/user/getUser?userId=${152}`)
+      .then((response) => {
+        setUser(response.data.data);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
+    }
+    getUser();
+  },[])
 
   return (
     <JobContainer key={post.id}>
@@ -444,8 +473,8 @@ export const JobPost = ({ post, getPosts }) => {
         <Typography variant="h5">{post.job.name}</Typography>
         <CardHeader
           avatar={<Avatar>B</Avatar>}
-          title="Human Resources"
-          subheader="John.doe@cit.edu"
+          title={user.username}
+          subheader={user.email}
         />
         <Box width="1020px">
           <Typography variant="body1" textAlign="start">
@@ -493,6 +522,12 @@ const InputStyled = styled(Input)({
   height: "60px",
   borderRadius: "20px",
   border: "1px solid #c4c4c4",
+  paddingLeft: "10px",
+});
+
+const TextFieldStyled = styled(TextField)({
+  width: "700px",
+  height: "60px",
   paddingLeft: "10px",
 });
 
