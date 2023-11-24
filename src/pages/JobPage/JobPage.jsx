@@ -14,8 +14,11 @@ import {
 } from "@mui/material";
 import React from "react";
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
+import { useParams } from "react-router-dom";
 
 const JobPage = () => {
+  // const { postId } = useParams();
+
   return (
     // Container
     <Box display="flex" justifyContent="center">

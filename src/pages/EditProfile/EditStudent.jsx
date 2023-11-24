@@ -315,7 +315,6 @@ const EditStudentProfile = () => {
           InputProps={{
             sx: {
               borderRadius: 4,
-              width: "390px",
               border: "1px solid #000000",
               width: "425px",
               "& fieldset": { border: "none" },
@@ -333,7 +332,6 @@ const EditStudentProfile = () => {
           InputProps={{
             sx: {
               borderRadius: 4,
-              width: "390px",
               border: "1px solid #000000",
               width: "425px",
               "& fieldset": { border: "none" },

@@ -57,7 +57,7 @@ const RootLayout = () => {
         <LinkStyled to="/">
           <Typography>Home</Typography>
         </LinkStyled>
-        <LinkStyled>
+        <LinkStyled to={user.type === "employer" ? "/employerprofile" : "/studentprofile"}>
           <Typography>Profile</Typography>
         </LinkStyled>
         <LinkStyled to="/contact">

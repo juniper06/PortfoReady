@@ -3,21 +3,27 @@ import {
   Typography,
   Avatar,
   Button,
-  styled,
   FormControl,
   FormLabel,
   TextField,
   Tabs,
   Tab,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from "../../assets/portfoready-logo.png";
+import { styled } from "@mui/material/styles";
+import AddPhotoIcon from "@mui/icons-material/AddPhotoAlternate";
+import axios from "axios";
+import useAuth from "../../hooks/useAuth";
+
 
 const EditEmployer = () => {
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
   const handleTabChange = (e, tabIndex) => {
     setCurrentTabIndex(tabIndex);
   };
+  
+
   return (
     <>
       {/* Header */}
@@ -261,6 +267,71 @@ const EditUserProfile = () => {
 };
 
 const EditStudentProfile = () => {
+  const [images, setImages] = useState(null);
+  const { user, isLoading } = useAuth();
+  const [posts, setPosts] = useState([]);
+  const [imageFile, setImageFile] = useState(null);
+
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
+
+  const getPosts = async () => {
+    await axios
+      .get(`http://localhost:8080/post/posts?userId=${user.userId}`)
+      .then((response) => {
+        setPosts(response.data.data.content);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    if (user.isAuthenticated) {
+      getPosts();
+      getImageFile();
+    }
+  }, [isLoading, user]);
+  
+
+  const handleAddProfile = async () => {
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("file", images);
+
+      await axios
+        .put(
+        `http://localhost:8080/user/uploadImage/${user.userId}`,
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      ); 
+    } catch (error) {
+      console.error("Error adding profile:", error);
+    }
+  };
+
+  const getImageFile = async () => {
+    await axios
+      .get(`http://localhost:8080/user/getUser?userId=${user.userId}`)
+      .then((response) => {
+        setImageFile(response.data.data.imageFile.name);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <Box
@@ -270,11 +341,31 @@ const EditStudentProfile = () => {
         columnGap={2}
       >
         <Avatar sx={{ height: "70px", width: "70px" }} aria-label="recipe">
-          B
+          <img src={imageFile} alt="Profile Picture" />
         </Avatar>
-        <ButtonStyled>
-          <Typography>Upload New Picture</Typography>
-        </ButtonStyled>
+        <Button
+          component="label"
+          color="primary"
+          variant="contained"
+          startIcon={<AddPhotoIcon />}
+          sx={{
+            backgroundColor: "white",
+            color: "#27374D",
+            "&:hover": { backgroundColor: "#142132", color: "white" },
+            borderRadius: "20px",
+            border: ".1px solid #27374D",
+            display: "flex",
+            width: 150,
+            whiteSpace: "nowrap",
+            fontSize: "10",
+          }}
+        >
+          add photo
+          <VisuallyHiddenInput
+            type="file"
+            onChange={(e) => setImages(e.target.files[0])}
+          />
+        </Button>
         <ButtonStyled sx={{ width: "120px" }}>
           <Typography>Delete</Typography>
         </ButtonStyled>
@@ -313,8 +404,7 @@ const EditStudentProfile = () => {
           maxRows={5}
           InputProps={{
             sx: {
-              borderRadius: 4,
-              width: "390px",
+              borderRadius: "4",
               border: "1px solid #000000",
               width: "425px",
               "& fieldset": { border: "none" },
@@ -324,6 +414,7 @@ const EditStudentProfile = () => {
         <br />
         <Box marginTop="20px" display="flex" justifyContent="space-between">
           <Button
+            onClick={handleAddProfile}
             sx={{
               width: "200px",
               height: "43px",

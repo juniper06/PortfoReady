@@ -49,18 +49,6 @@ const Home = () => {
     }
   }, [isLoading, user]);
 
-  useEffect(() =>{
-    const getUser = async() => {
-      await axios
-      .get(`http://localhost:8080/user/getUser?userId=${152}`)
-      .then((response) => {
-        setUser(response.data.data);
-        console.log(response);
-      })
-      .catch((err) => console.log(err));
-    }
-    getUser();
-  },[])
 
   return (
     <>
@@ -82,13 +70,13 @@ const Home = () => {
           >
             <Typography variant="h2">Hello, {user.username}</Typography>
             <Box>
-              <PostCard getPosts={getPosts} />
+              {user.type === "employer" && <PostCard getPosts={getPosts} />}
             </Box>
           </Box>
           {/* Job-Container */}
           <Box display="flex" flexDirection="column" rowGap={5}>
             {posts.map((post) => (
-              <JobPost post={post} getPosts={getPosts} key={post.id}/>
+              <JobPost post={post} getPosts={getPosts} key={post.id} />
             ))}
           </Box>
         </Box>
@@ -230,22 +218,20 @@ export const PostCard = ({ getPosts }) => {
         title: titleValue,
         jobId: job,
         description: descriptionValue,
-        posterId: 102,
+        posterId: user.id,
         questions: [question1, question2, question3, question4, question5],
       })
       .then(() => {
         getPosts();
-        setTitleValue("")
-        setdescriptionValue("")
-        setJob("")
-        setquestion1("")
-        setquestion2("")
-        setquestion3("")
-        setquestion4("")
-        setquestion5("")
-      })
-      setquestion1("")
-      .catch((err) => console.log(err));
+        setTitleValue("");
+        setdescriptionValue("");
+        setJob("");
+        setquestion1("");
+        setquestion2("");
+        setquestion3("");
+        setquestion4("");
+        setquestion5("");
+      });
   };
 
   return (
@@ -396,7 +382,10 @@ export const PostCard = ({ getPosts }) => {
 export const JobPost = ({ post, getPosts }) => {
   const navigate = useNavigate();
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [user, setUser] = useState({});
+  const [openEditPost, setOpenEditPost] = useState(false);
+  const handleOpenEditPost = () => setOpenEditPost(true);
+  const handleCloseEditPost = () => setOpenEditPost(false);
+  const { user, isLoading } = useAuth();
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -414,18 +403,6 @@ export const JobPost = ({ post, getPosts }) => {
       .catch((err) => console.log(err));
   };
 
-  useEffect(() =>{
-    const getUser = async() => {
-      await axios
-      .get(`http://localhost:8080/user/getUser?userId=${152}`)
-      .then((response) => {
-        setUser(response.data.data);
-        console.log(response);
-      })
-      .catch((err) => console.log(err));
-    }
-    getUser();
-  },[])
 
   return (
     <JobContainer key={post.id}>
@@ -437,10 +414,10 @@ export const JobPost = ({ post, getPosts }) => {
         rowGap={1}
       >
         <Box display="flex">
-          <Box onClick={() => navigate("/jobpage")} sx={{ cursor: "pointer" }}>
+          <Box onClick={() => navigate(`/jobpage/${post.id}`)} sx={{ cursor: "pointer" }}>
             <Typography variant="h3" width="900px">
               {post.title}
-            </Typography>
+            </Typography> 
           </Box>
           <Box display="flex" justifyContent="end" width="120px">
             <IconButton onClick={handleOpenUserMenu}>
@@ -463,11 +440,150 @@ export const JobPost = ({ post, getPosts }) => {
               onClose={handleCloseUserMenu}
             >
               {postSettings.map((postSettings) => (
-                <MenuItem key={postSettings} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={postSettings}
+                  onClick={handleCloseUserMenu}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    rowGap: "10px",
+                  }}
+                >
                   <button onClick={deletePost}>Delete</button>
+                  <button onClick={handleOpenEditPost}>Edit</button>
                 </MenuItem>
               ))}
             </Menu>
+            <Dialog
+              fullWidth
+              maxWidth="md"
+              open={openEditPost}
+              onClose={handleCloseEditPost}
+            >
+              <DialogTitle
+                textAlign="center"
+                borderBottom="2px solid #808080"
+                fontSize={30}
+                fontWeight="bold"
+              >
+                Edit Job Posting
+              </DialogTitle>
+              <DialogContent>
+                <CardHeader
+                  avatar={
+                    <Avatar
+                      sx={{ height: "60px", width: "60px" }}
+                      aria-label="recipe"
+                    >
+                      B
+                    </Avatar>
+                  }
+                  title="John Doe"
+                  subheader="John.doe@cit.edu"
+                />
+                <Stack
+                  justifyContent="center"
+                  alignItems="center"
+                  rowGap={2}
+                  zIndex={100}
+                >
+                  <Box>
+                    <Typography fontWeight="bold">Title</Typography>
+                    <InputStyled
+                      disableUnderline={true}
+                    />
+                  </Box>
+                  <FormControl sx={{ width: "300px" }}>
+                    <InputLabel>Job Type</InputLabel>
+                    <Select
+                      label="job type"
+                    >
+                      <MenuItem value={1}>UI/UX Designer</MenuItem>
+                      <MenuItem value={2}>Front-End Developer</MenuItem>
+                      <MenuItem value={3}>Back-End Developer</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <Box>
+                    <Typography fontWeight="bold">Description</Typography>
+                    <textarea
+                      style={{
+                        width: "650px",
+                        height: "150px",
+                        resize: "none",
+                        borderRadius: "20px",
+                        fontSize: "15px",
+                        padding: "20px",
+                      }}
+                    />
+                  </Box>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    width="800px"
+                    height="300px"
+                    border="1px solid #c4c4c4"
+                    borderRadius="20px"
+                  >
+                    <Box>
+                      <Typography
+                        variant="h5"
+                        fontWeight="bold"
+                        textAlign="center"
+                        borderBottom="1px solid #c4c4c4"
+                      >
+                        Create Exam
+                      </Typography>
+                      <Box sx={{ height: "260px", overflowY: "auto" }}>
+                        <Stack
+                          spacing={3}
+                          alignItems="center"
+                          paddingTop="20px"
+                          paddingBottom="20px"
+                        >
+                          <InputStyled
+                            disableUnderline={true}
+                            placeholder="Question 1"
+                          />
+                          <InputStyled
+                            disableUnderline={true}
+                            placeholder="Question 2"
+                          />
+                          <InputStyled
+                            disableUnderline={true}
+                            placeholder="Question 3"
+                          />
+                          <InputStyled
+                            disableUnderline={true}
+                            placeholder="Question 4"
+                          />
+                          <InputStyled
+                            disableUnderline={true}
+                            placeholder="Question 5"
+                          />
+                        </Stack>
+                      </Box>
+                    </Box>
+                    <Box display="flex" justifyContent="end" marginTop="20px">
+                      <Button
+                        sx={{
+                          width: "160px",
+                          height: "42px",
+                          borderRadius: "20px",
+                          backgroundColor: "#000000",
+                          color: "#FFFFFF",
+                          "&:hover": { backgroundColor: "#000000" },
+                          textTransform: "none",
+                        }}
+                      >
+                        <Typography variant="h6" fontWeight="bold">
+                          Post
+                        </Typography>
+                      </Button>
+                    </Box>
+                  </Box>
+                </Stack>
+              </DialogContent>
+            </Dialog>
           </Box>
         </Box>
         <Typography variant="h5">{post.job.name}</Typography>

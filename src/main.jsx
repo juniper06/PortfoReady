@@ -46,7 +46,7 @@ const router = createBrowserRouter([
         element: <Applicants />,
       },
       {
-        path: "/jobpage",
+        path: "/jobpage/:postId",
         element: <JobPage />,
       },
       {

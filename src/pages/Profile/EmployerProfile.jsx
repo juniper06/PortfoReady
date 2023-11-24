@@ -117,6 +117,8 @@ const EmployerProfile = () => {
                   John.Doe@email.com
                 </Typography>
                 <Button
+                  component={Link}
+                  to="/editemployer"
                   sx={{
                     maxWidth: "200px",
                     height: "27px",
@@ -160,11 +162,11 @@ const EmployerProfile = () => {
             justifyContent="center"
             alignItems="center"
           >
-            <PostCard />
+            <PostCard getPosts={getPosts} />
           </Box>
           <Box display="flex" flexDirection="column" rowGap={5}>
             {posts.map((post) => (
-              <JobPost post={post} getPosts={getPosts}/>
+              <JobPost post={post} getPosts={getPosts} key={post.id} />
             ))}
           </Box>
         </Box>
@@ -253,18 +255,6 @@ const ApplicantsCard = () => {
   );
 };
 
-export 
-
-const ButtonStyled = styled(Button)({
-  width: "950px",
-  height: "60px",
-  borderRadius: "20px",
-  border: "1px solid #000000",
-  display: "flex",
-  justifyContent: "start",
-  paddingLeft: "30px",
-  color: "#808080",
-});
 
 
 const LinkStyled = styled(Link)({

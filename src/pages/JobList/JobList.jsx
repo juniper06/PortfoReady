@@ -12,19 +12,42 @@ import {
   styled,
   Avatar,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import WorkIcon from "@mui/icons-material/Work";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import PersonIcon from "@mui/icons-material/Person";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import axios from "axios";
+
 
 const JobList = () => {
   const [open, setOpen] = React.useState(true);
+  const [posts, setPosts] = useState([]);
+  const { user, isLoading } = useAuth();
 
   const handleClick = () => {
     setOpen(!open);
   };
+  const navigate = useNavigate();
+
+  const getPosts = async () => {
+    await axios
+      .get(`http://localhost:8080/post/posts?userId=${user.userId}`)
+      .then((response) => {
+        setPosts(response.data.data.content);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    if (user.isAuthenticated) {
+      getPosts();
+    }
+  }, [isLoading, user]);
 
   return (
     // Container
@@ -116,10 +139,15 @@ const JobList = () => {
             container
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
+
           >
-            {Array.from(Array(12)).map((_, index) => (
-              <Grid item xs={2} sm={4} md={4} key={index}>
-                <JobContainer display="flex">
+            {posts.map((post) => (
+              <Grid item xs={2} sm={4} md={4} key={post.id}>
+                <JobContainer
+                  display="flex"
+                  onClick={() => navigate(`/jobpage/${post.id}`)}
+                  sx={{ cursor: "pointer" }}
+                >
                   <Box
                     width="130px"
                     sx={{
@@ -130,9 +158,18 @@ const JobList = () => {
                   >
                     <Avatar sx={{ width: "50px", height: "50px" }}>B</Avatar>
                   </Box>
-                  <Box width="370px" display="flex" paddingLeft="20px" paddingTop="10px" flexDirection="column" rowGap={1}>
-                    <Typography variant="h5" fontWeight="bold">Job Title</Typography>
-                    <Typography>Job Type:</Typography>
+                  <Box
+                    width="370px"
+                    display="flex"
+                    paddingLeft="20px"
+                    paddingTop="10px"
+                    flexDirection="column"
+                    rowGap={1}
+                  >
+                    <Typography variant="h5" fontWeight="bold">
+                      {post.title}
+                    </Typography>
+                    <Typography>Job Type: {post.job.name}</Typography>
                   </Box>
                 </JobContainer>
               </Grid>

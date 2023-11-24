@@ -79,7 +79,10 @@ const StudentProfile = () => {
                 John.Doe@gmail.com
               </Typography>
               <br />
-              <ButtonStyled>Edit Profile</ButtonStyled>
+              <ButtonStyled
+                component={Link}
+                to="/editstudent"
+              >Edit Profile</ButtonStyled>
             </Box>
           </BoxStyled>
           {/* Certificates */}
