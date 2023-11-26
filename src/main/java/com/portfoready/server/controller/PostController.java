@@ -12,6 +12,7 @@ import com.portfoready.server.entity.User;
 import com.portfoready.server.service.PostService;
 import com.portfoready.server.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/post")
+@Slf4j
 public class PostController {
     private final PostService postService;
     private final UserService userService;

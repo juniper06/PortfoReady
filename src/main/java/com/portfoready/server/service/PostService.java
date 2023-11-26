@@ -82,6 +82,7 @@ public class PostService {
     }
 
     public List<Post> getPostByJobId(Long jobId){
-        return postRepository.findAllByJobId(jobId);
+        Job job = jobService.getJobById(jobId);
+        return postRepository.findAllByJob(job);
     }
 }
