@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -125,5 +126,9 @@ public class UserService {
 
     public Employer getEmployerByUser(User user) {
         return employerService.getEmployerByUser(user);
+    }
+
+    public byte[] getImage(User user) throws IOException {
+        return fileService.downloadImageFromFileSystem(user.getImage().getName());
     }
 }

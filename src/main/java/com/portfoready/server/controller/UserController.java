@@ -16,7 +16,9 @@ import com.portfoready.server.service.UserService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -112,6 +114,19 @@ public class UserController {
             User user = userService.getUserById(userId);
             UserResponse response = new UserResponse(user);
             return ResponseHandler.generateResponse("Successfully Generated", HttpStatus.OK, response);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/{userId}/image")
+    public ResponseEntity<Object> getImage(@PathVariable Long userId) {
+        try {
+            User user = userService.getUserById(userId);
+            byte[] image = userService.getImage(user);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+            return new ResponseEntity<>(image, headers, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
