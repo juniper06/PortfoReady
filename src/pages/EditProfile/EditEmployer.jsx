@@ -8,6 +8,7 @@ import {
   TextField,
   Tabs,
   Tab,
+  Input,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import logo from "../../assets/portfoready-logo.png";
@@ -16,13 +17,11 @@ import AddPhotoIcon from "@mui/icons-material/AddPhotoAlternate";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 
-
 const EditEmployer = () => {
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
   const handleTabChange = (e, tabIndex) => {
     setCurrentTabIndex(tabIndex);
   };
-  
 
   return (
     <>
@@ -92,6 +91,61 @@ const EditEmployer = () => {
 };
 
 const EditUserProfile = () => {
+  const { user, isLoading } = useAuth();
+  const [posts, setPosts] = useState([]);
+  const [images, setImages] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+
+  const getPosts = async () => {
+    await axios
+      .get(`http://localhost:8080/post/posts?userId=${user.userId}`)
+      .then((response) => {
+        setPosts(response.data.data.content);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    if (user.isAuthenticated) {
+      getPosts();
+      getImageFile();
+    }
+  }, [isLoading, user]);
+
+  const handleAddProfile = async () => {
+    try {
+      const formDataForImage = new FormData();
+      formDataForImage.append("file", images);
+      const image = await axios.put(
+        `http://localhost:8080/user/uploadImage/${user.userId}`,
+        formDataForImage,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (image.status === 200) {
+        console.log("Image uploaded successfully!");
+      } else {
+        console.error("Error uploading image:", image.statusText);
+      }
+    } catch (error) {
+      console.error("Error adding profile picture", error.message);
+    }
+  };
+
+  const getImageFile = async () => {
+    await axios
+      .get(`http://localhost:8080/user/getUser?userId=${user.userId}`)
+      .then((response) => {
+        setImageFile(response.data.data.imageFile.name);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <Box
@@ -107,11 +161,14 @@ const EditUserProfile = () => {
           alignItems="center"
           columnGap={2}
         >
-          <Avatar sx={{ height: "70px", width: "70px" }} aria-label="recipe">
-            B
-          </Avatar>
+          <Avatar sx={{ height: "70px", width: "70px" }}>B</Avatar>
           <ButtonStyled>
-            <Typography>Upload New Picture</Typography>
+            <Typography>
+              <Input
+                type="file"
+                onChange={(e) => setImages(e.target.files[0])}
+              />
+            </Typography>
           </ButtonStyled>
           <ButtonStyled sx={{ width: "120px" }}>
             <Typography>Delete</Typography>
@@ -134,6 +191,7 @@ const EditUserProfile = () => {
                 Name:
               </FormLabelStyled>
               <TextField
+                placeholder="firstname"
                 InputProps={{
                   sx: {
                     borderRadius: 20,
@@ -148,6 +206,7 @@ const EditUserProfile = () => {
                 }}
               />
               <TextField
+                placeholder="lastname"
                 InputProps={{
                   sx: {
                     borderRadius: 20,
@@ -236,6 +295,7 @@ const EditUserProfile = () => {
           </Box>
           <Box marginTop="20px" display="flex" justifyContent="space-between">
             <Button
+              onClick={handleAddProfile}
               sx={{
                 width: "200px",
                 height: "43px",
@@ -300,25 +360,27 @@ const EditStudentProfile = () => {
       getImageFile();
     }
   }, [isLoading, user]);
-  
 
   const handleAddProfile = async () => {
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append("file", images);
-
-      await axios
-        .put(
+      const formDataForImage = new FormData();
+      formDataForImage.append("file", images);
+      const image = await axios.put(
         `http://localhost:8080/user/uploadImage/${user.userId}`,
-        formDataToSend,
+        formDataForImage,
         {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         }
-      ); 
+      );
+      if (image.status === 200) {
+        console.log("Image uploaded successfully!");
+      } else {
+        console.error("Error uploading image:", image.statusText);
+      }
     } catch (error) {
-      console.error("Error adding profile:", error);
+      console.error("Error adding profile picture", error.message);
     }
   };
 
@@ -340,8 +402,8 @@ const EditStudentProfile = () => {
         alignItems="center"
         columnGap={2}
       >
-        <Avatar sx={{ height: "70px", width: "70px" }} aria-label="recipe">
-          <img src={imageFile} alt="Profile Picture" />
+        <Avatar sx={{ height: "70px", width: "70px" }}>
+          <img src={images} alt="Profile Picture" />
         </Avatar>
         <Button
           component="label"
@@ -362,6 +424,7 @@ const EditStudentProfile = () => {
         >
           add photo
           <VisuallyHiddenInput
+            name="images"
             type="file"
             onChange={(e) => setImages(e.target.files[0])}
           />
@@ -396,19 +459,12 @@ const EditStudentProfile = () => {
         />
         <br />
         <FormLabelStyled>Company Description:</FormLabelStyled>
-        <TextField
-          variant="outlined"
-          multiline
-          onFocus="none"
-          rows={4}
-          maxRows={5}
-          InputProps={{
-            sx: {
-              borderRadius: "4",
-              border: "1px solid #000000",
-              width: "425px",
-              "& fieldset": { border: "none" },
-            },
+        <textarea
+          style={{
+            height: "130px",
+            resize: "none",
+            borderRadius: "20px",
+            border: "1px solid #000000",
           }}
         />
         <br />
@@ -458,5 +514,7 @@ const FormLabelStyled = styled(FormLabel)({
   fontWeight: "bold",
   color: "#000000",
 });
+
+
 
 export default EditEmployer;

@@ -4,7 +4,7 @@ import landingbg from "../../assets/landing-bg.png";
 import logo from "../../assets/logo.png";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
-import palo from "../../assets/palo.png"
+import palo from "../../assets/palo.png";
 import nino from "../../assets/nino.png";
 import gab from "../../assets/gab.png";
 import bianca from "../../assets/bianca.png";
