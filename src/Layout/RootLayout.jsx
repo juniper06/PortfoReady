@@ -57,7 +57,9 @@ const RootLayout = () => {
         <LinkStyled to="/">
           <Typography>Home</Typography>
         </LinkStyled>
-        <LinkStyled to={user.type === "employer" ? "/employerprofile" : "/studentprofile"}>
+        <LinkStyled
+          to={user.type === "employer" ? "/employerprofile" : "/studentprofile"}
+        >
           <Typography>Profile</Typography>
         </LinkStyled>
         <LinkStyled to="/contact">
@@ -71,7 +73,10 @@ const RootLayout = () => {
         </LinkStyled>
         <Tooltip title="Open settings">
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            <Avatar
+              alt="Remy Sharp"
+              src={`http://localhost:8080/user/${user.userId}/image`}
+            />
           </IconButton>
         </Tooltip>
         <Menu

@@ -37,8 +37,8 @@ const Login = () => {
       .then((response) => {
           const data = response.data.data
           onLogin(data.username, data.userId, data.id, data.type);
-        navigate("/");
-        console.log(response);
+        navigate("/"); 
+        console.log(data);
       });
   };
 

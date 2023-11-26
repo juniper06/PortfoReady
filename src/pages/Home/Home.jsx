@@ -94,7 +94,7 @@ const Home = () => {
                 <Avatar
                   sx={{ width: 56, height: 56 }}
                   alt="testing"
-                  src={`https://ui-avatars.com/api/?background=random&name`}
+                  src={`http://localhost:8080/user/${user.userId}/image`}
                 />
               }
             />
@@ -110,9 +110,11 @@ const Home = () => {
               <Typography>People You May Know</Typography>
               <CardHeader
                 avatar={
-                  <Avatar sx={{}} aria-label="recipe">
-                    B
-                  </Avatar>
+                  <Avatar
+                    sx={{}}
+                    aria-label="recipe"
+                    src={`http://localhost:8080/user/${user.userId}/image`}
+                  ></Avatar>
                 }
                 title="John Doe"
                 subheader="John.doe@cit.edu"
@@ -132,9 +134,11 @@ const Home = () => {
               </Button>
               <CardHeader
                 avatar={
-                  <Avatar sx={{}} aria-label="recipe">
-                    B
-                  </Avatar>
+                  <Avatar
+                    sx={{}}
+                    aria-label="recipe"
+                    src={`http://localhost:8080/user/${user.userId}/image`}
+                  ></Avatar>
                 }
                 title="John Doe"
                 subheader="John.doe@cit.edu"
@@ -250,6 +254,7 @@ export const PostCard = ({ getPosts }) => {
           <CardHeader
             avatar={
               <Avatar
+                src={`http://localhost:8080/user/${user.userId}/image`}
                 sx={{ height: "60px", width: "60px" }}
                 aria-label="recipe"
               >
@@ -414,10 +419,13 @@ export const JobPost = ({ post, getPosts }) => {
         rowGap={1}
       >
         <Box display="flex">
-          <Box onClick={() => navigate(`/jobpage/${post.id}`)} sx={{ cursor: "pointer" }}>
+          <Box
+            onClick={() => navigate(`/jobpage/${post.id}`)}
+            sx={{ cursor: "pointer" }}
+          >
             <Typography variant="h3" width="900px">
               {post.title}
-            </Typography> 
+            </Typography>
           </Box>
           <Box display="flex" justifyContent="end" width="120px">
             <IconButton onClick={handleOpenUserMenu}>
@@ -472,11 +480,9 @@ export const JobPost = ({ post, getPosts }) => {
                 <CardHeader
                   avatar={
                     <Avatar
+                      src={`http://localhost:8080/user/${post.userId}/image`}
                       sx={{ height: "60px", width: "60px" }}
-                      aria-label="recipe"
-                    >
-                      B
-                    </Avatar>
+                    ></Avatar>
                   }
                   title="John Doe"
                   subheader="John.doe@cit.edu"
@@ -489,15 +495,11 @@ export const JobPost = ({ post, getPosts }) => {
                 >
                   <Box>
                     <Typography fontWeight="bold">Title</Typography>
-                    <InputStyled
-                      disableUnderline={true}
-                    />
+                    <InputStyled disableUnderline={true} />
                   </Box>
                   <FormControl sx={{ width: "300px" }}>
                     <InputLabel>Job Type</InputLabel>
-                    <Select
-                      label="job type"
-                    >
+                    <Select label="job type">
                       <MenuItem value={1}>UI/UX Designer</MenuItem>
                       <MenuItem value={2}>Front-End Developer</MenuItem>
                       <MenuItem value={3}>Back-End Developer</MenuItem>
@@ -588,9 +590,13 @@ export const JobPost = ({ post, getPosts }) => {
         </Box>
         <Typography variant="h5">{post.job.name}</Typography>
         <CardHeader
-          avatar={<Avatar>B</Avatar>}
-          title={user.username}
-          subheader={user.email}
+          avatar={
+            <Avatar
+              src={`http://localhost:8080/user/${post.user.id}/image`}
+            ></Avatar>
+          }
+          title={post.user.username}
+          subheader={post.user.email}
         />
         <Box width="1020px">
           <Typography variant="body1" textAlign="start">

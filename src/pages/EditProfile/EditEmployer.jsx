@@ -16,6 +16,7 @@ import { styled } from "@mui/material/styles";
 import AddPhotoIcon from "@mui/icons-material/AddPhotoAlternate";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 const EditEmployer = () => {
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
@@ -70,7 +71,7 @@ const EditEmployer = () => {
             onChange={handleTabChange}
           >
             <Tab label="Edit User" />
-            <Tab label="Edit Student Profile" />
+            <Tab label="Edit Employer Profile" />
           </Tabs>
         </Box>
         {/* Right- Side */}
@@ -83,7 +84,7 @@ const EditEmployer = () => {
           rowGap={1}
         >
           {currentTabIndex === 0 && <EditUserProfile />}
-          {currentTabIndex === 1 && <EditStudentProfile />}
+          {currentTabIndex === 1 && <EditEmployerProfile />}
         </Box>
       </Box>
     </>
@@ -95,6 +96,48 @@ const EditUserProfile = () => {
   const [posts, setPosts] = useState([]);
   const [images, setImages] = useState(null);
   const [imageFile, setImageFile] = useState(null);
+
+  const [firstNameValue, setFirstNameValue] = useState("");
+  const [lastNameValue, setLastNameValue] = useState("");
+  const [usernameValue, setUsernameValue] = useState("");
+  const [emailvalue, setEmailValue] = useState("");
+  const [passwordvalue, setPassowrdValue] = useState("");
+  const [phoneNumbervalue, setPhoneNumberValue] = useState("");
+  const [contactLinksvalue, setContactLinksValue] = useState("");
+
+  const updateUser = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/user/updateUser/${user.userId}`,
+        {
+          firstName: firstNameValue,
+          lastName: lastNameValue,
+          username: usernameValue,
+          email: emailvalue,
+          password: passwordvalue,
+          phoneNumber: phoneNumbervalue,
+          contactLinks: contactLinksvalue,
+        }
+      );
+
+      console.log(response.data); // Assuming the response data is what you want to log
+    } catch (error) {
+      console.error("Error updating user:", error);
+      // Handle the error, display a user-friendly message, or log more details
+    }
+  };
+
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
 
   const getPosts = async () => {
     await axios
@@ -109,7 +152,6 @@ const EditUserProfile = () => {
   useEffect(() => {
     if (user.isAuthenticated) {
       getPosts();
-      getImageFile();
     }
   }, [isLoading, user]);
 
@@ -136,14 +178,16 @@ const EditUserProfile = () => {
     }
   };
 
-  const getImageFile = async () => {
-    await axios
-      .get(`http://localhost:8080/user/getUser?userId=${user.userId}`)
-      .then((response) => {
-        setImageFile(response.data.data.imageFile.name);
-        console.log(response);
-      })
-      .catch((err) => console.log(err));
+  const handleSave = async () => {
+    try {
+      updateUser();
+      handleAddProfile();
+      console.log(firstNameValue);
+      console.log(lastNameValue);
+      console.log(usernameValue);
+    } catch (error) {
+      console.error("Error Update Profile", error.message);
+    }
   };
 
   return (
@@ -161,175 +205,174 @@ const EditUserProfile = () => {
           alignItems="center"
           columnGap={2}
         >
-          <Avatar sx={{ height: "70px", width: "70px" }}>B</Avatar>
-          <ButtonStyled>
-            <Typography>
-              <Input
-                type="file"
-                onChange={(e) => setImages(e.target.files[0])}
-              />
-            </Typography>
-          </ButtonStyled>
-          <ButtonStyled sx={{ width: "120px" }}>
-            <Typography>Delete</Typography>
-          </ButtonStyled>
+          <Avatar
+            src={`http://localhost:8080/user/${user.userId}/image`}
+            sx={{ height: "70px", width: "70px" }}
+          ></Avatar>
+          <Button
+            component="label"
+            color="primary"
+            variant="contained"
+            startIcon={<AddPhotoIcon />}
+            sx={{
+              backgroundColor: "white",
+              color: "#27374D",
+              "&:hover": { backgroundColor: "#142132", color: "white" },
+              borderRadius: "20px",
+              border: ".1px solid #27374D",
+              display: "flex",
+              width: 150,
+              whiteSpace: "nowrap",
+              fontSize: "10",
+            }}
+          >
+            add photo
+            <VisuallyHiddenInput
+              name="images"
+              type="file"
+              onChange={(e) => setImages(e.target.files[0])}
+            />
+          </Button>
         </Box>
         <br />
-        <FormControl>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="start"
-            rowGap={3}
-          >
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <FormLabelStyled sx={{ paddingRight: "95px" }}>
-                Name:
-              </FormLabelStyled>
-              <TextField
-                placeholder="firstname"
+        <Box sx={{ width: "600px", height: "525px", display: "flex" }}>
+          <Box width="200px" display="flex" flexDirection="column" rowGap={6}>
+            <Typography fontWeight="bold" variant="h5" marginTop="10px">
+              Name:
+            </Typography>
+            <Typography fontWeight="bold" variant="h5">
+              Username:
+            </Typography>
+            <Typography fontWeight="bold" variant="h5">
+              Email:
+            </Typography>
+            <Typography fontWeight="bold" variant="h5">
+              Password:
+            </Typography>
+            <Typography fontWeight="bold" variant="h5">
+              Phone Number:
+            </Typography>
+            <Typography fontWeight="bold" variant="h5">
+              Contact Links:
+            </Typography>
+          </Box>
+          <Box width="400px" display="flex" flexDirection="column" rowGap={3}>
+            <Box height="50px" display="flex">
+              <TextFeidStyled
+                value={firstNameValue}
+                onChange={(e) => setFirstNameValue(e.target.value)}
+                placeholder="First Name"
+                size="medium"
+                sx={{ marginRight: "20px" }}
                 InputProps={{
-                  sx: {
-                    borderRadius: 20,
-                    height: "39px",
-                    border: "1px solid #000000",
+                  style: {
+                    borderRadius: "20px",
                   },
                 }}
+              />
+              <TextFeidStyled
+                value={lastNameValue}
+                onChange={(e) => setLastNameValue(e.target.value)}
+                placeholder="Last Name"
+                size="medium"
+                InputProps={{
+                  style: {
+                    borderRadius: "20px",
+                  },
+                }}
+              />
+            </Box>
+            <TextFeidStyled
+              value={usernameValue}
+              onChange={(e) => setUsernameValue(e.target.value)}
+              placeholder="e.g. John123"
+              InputProps={{
+                style: {
+                  borderRadius: "20px",
+                },
+              }}
+            />
+            <TextFeidStyled
+              value={emailvalue}
+              onChange={(e) => setEmailValue(e.target.value)}
+              placeholder="e.g. JohnDoe@email.com"
+              InputProps={{
+                style: {
+                  borderRadius: "20px",
+                },
+              }}
+            />
+            <TextFeidStyled
+              value={passwordvalue}
+              onChange={(e) => setPassowrdValue(e.target.value)}
+              placeholder="*******"
+              InputProps={{
+                style: {
+                  borderRadius: "20px",
+                },
+              }}
+            />
+            <TextFeidStyled
+              value={phoneNumbervalue}
+              onChange={(e) => setPhoneNumberValue(e.target.value)}
+              placeholder="e.g. +63342345312"
+              InputProps={{
+                style: {
+                  borderRadius: "20px",
+                },
+              }}
+            />
+            <TextFeidStyled
+              value={contactLinksvalue}
+              onChange={(e) => setContactLinksValue(e.target.value)}
+              placeholder="e.g. https://www.Instagram.com/portfoready/"
+              InputProps={{
+                style: {
+                  borderRadius: "20px",
+                },
+              }}
+            />
+            <Box marginTop="10px" display="flex">
+              <Button
+                component={Link}
+                to="/employerprofile"
+                onClick={handleSave}
                 sx={{
-                  width: "205px",
-                  "& fieldset": { border: "none" },
-                  paddingRight: "15px",
+                  width: "200px",
+                  height: "43px",
+                  borderRadius: "20px",
+                  backgroundColor: "#000000",
+                  color: "#FFFFFF",
+                  textTransform: "none",
+                  marginRight: "30px",
                 }}
-              />
-              <TextField
-                placeholder="lastname"
-                InputProps={{
-                  sx: {
-                    borderRadius: 20,
-                    height: "39px",
-                    border: "1px solid #000000",
-                  },
+              >
+                <Typography>Save</Typography>
+              </Button>
+              <Button
+                sx={{
+                  width: "200px",
+                  height: "43px",
+                  borderRadius: "20px",
+                  backgroundColor: "#000000",
+                  color: "#FFFFFF",
+                  textTransform: "none",
                 }}
-                sx={{ width: "205px", "& fieldset": { border: "none" } }}
-              />
-            </Box>
-            <Box display="flex" alignItems="center">
-              <FormLabelStyled sx={{ paddingRight: "50px" }}>
-                Username:
-              </FormLabelStyled>
-              <TextField
-                InputProps={{
-                  sx: {
-                    borderRadius: 20,
-                    height: "39px",
-                    border: "1px solid #000000",
-                  },
-                }}
-                sx={{ width: "425px", "& fieldset": { border: "none" } }}
-              />
-            </Box>
-            <Box display="flex" alignItems="center">
-              <FormLabelStyled sx={{ paddingRight: "93px" }}>
-                Email:
-              </FormLabelStyled>
-              <TextField
-                InputProps={{
-                  sx: {
-                    borderRadius: 20,
-                    height: "39px",
-                    border: "1px solid #000000",
-                  },
-                }}
-                sx={{ width: "425px", "& fieldset": { border: "none" } }}
-              />
-            </Box>
-            <Box display="flex" alignItems="center">
-              <FormLabelStyled sx={{ paddingRight: "56px" }}>
-                Password:
-              </FormLabelStyled>
-              <TextField
-                InputProps={{
-                  sx: {
-                    borderRadius: 20,
-                    height: "39px",
-                    border: "1px solid #000000",
-                  },
-                }}
-                sx={{ width: "425px", "& fieldset": { border: "none" } }}
-              />
-            </Box>
-            <Box display="flex" alignItems="center">
-              <FormLabelStyled sx={{ paddingRight: "10px" }}>
-                Phone Number:
-              </FormLabelStyled>
-              <TextField
-                InputProps={{
-                  sx: {
-                    borderRadius: 20,
-                    height: "39px",
-                    border: "1px solid #000000",
-                  },
-                }}
-                sx={{ width: "425px", "& fieldset": { border: "none" } }}
-              />
-            </Box>
-            <Box display="flex" alignItems="center">
-              <FormLabelStyled sx={{ paddingRight: "20px" }}>
-                Contact Links:
-              </FormLabelStyled>
-              <TextField
-                InputProps={{
-                  sx: {
-                    borderRadius: 20,
-                    height: "39px",
-                    border: "1px solid #000000",
-                  },
-                }}
-                sx={{ width: "425px", "& fieldset": { border: "none" } }}
-              />
+              >
+                <Typography>Cancel</Typography>
+              </Button>
             </Box>
           </Box>
-          <Box marginTop="20px" display="flex" justifyContent="space-between">
-            <Button
-              onClick={handleAddProfile}
-              sx={{
-                width: "200px",
-                height: "43px",
-                borderRadius: "20px",
-                backgroundColor: "#000000",
-                color: "#FFFFFF",
-                textTransform: "none",
-              }}
-            >
-              <Typography>Save</Typography>
-            </Button>
-            <Button
-              sx={{
-                width: "200px",
-                height: "43px",
-                borderRadius: "20px",
-                backgroundColor: "#000000",
-                color: "#FFFFFF",
-                textTransform: "none",
-              }}
-            >
-              <Typography>Cancel</Typography>
-            </Button>
-          </Box>
-        </FormControl>
+        </Box>
       </Box>
     </>
   );
 };
 
-const EditStudentProfile = () => {
-  const [images, setImages] = useState(null);
+const EditEmployerProfile = () => {
   const { user, isLoading } = useAuth();
   const [posts, setPosts] = useState([]);
+  const [images, setImages] = useState(null);
   const [imageFile, setImageFile] = useState(null);
 
   const VisuallyHiddenInput = styled("input")({
@@ -396,43 +439,6 @@ const EditStudentProfile = () => {
 
   return (
     <>
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        columnGap={2}
-      >
-        <Avatar sx={{ height: "70px", width: "70px" }}>
-          <img src={images} alt="Profile Picture" />
-        </Avatar>
-        <Button
-          component="label"
-          color="primary"
-          variant="contained"
-          startIcon={<AddPhotoIcon />}
-          sx={{
-            backgroundColor: "white",
-            color: "#27374D",
-            "&:hover": { backgroundColor: "#142132", color: "white" },
-            borderRadius: "20px",
-            border: ".1px solid #27374D",
-            display: "flex",
-            width: 150,
-            whiteSpace: "nowrap",
-            fontSize: "10",
-          }}
-        >
-          add photo
-          <VisuallyHiddenInput
-            name="images"
-            type="file"
-            onChange={(e) => setImages(e.target.files[0])}
-          />
-        </Button>
-        <ButtonStyled sx={{ width: "120px" }}>
-          <Typography>Delete</Typography>
-        </ButtonStyled>
-      </Box>
       <FormControl>
         <FormLabelStyled>Company Name:</FormLabelStyled>
         <TextField
@@ -500,6 +506,10 @@ const EditStudentProfile = () => {
   );
 };
 
+const TextFeidStyled = styled(TextField)({
+  width: "400px",
+});
+
 const ButtonStyled = styled(Button)({
   width: "190px",
   height: "38px",
@@ -514,7 +524,5 @@ const FormLabelStyled = styled(FormLabel)({
   fontWeight: "bold",
   color: "#000000",
 });
-
-
 
 export default EditEmployer;
