@@ -94,7 +94,6 @@ const EmployerProfile = () => {
                         src={`http://localhost:8080/user/${user.userId}/image`}
                         sx={{ width: 70, height: 70, marginTop: "35px" }}
                       >
-                        B
                       </Avatar>
                     }
                   />

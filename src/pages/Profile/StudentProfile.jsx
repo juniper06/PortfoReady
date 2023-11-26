@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Box,
@@ -15,8 +15,46 @@ import {
   Button,
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import axios from "axios";
+import useAuth from "../../hooks/useAuth";
+
 
 const StudentProfile = () => {
+  const [posts, setPosts] = useState([]);
+  const { user, isLoading } = useAuth();
+  const [userDetails, setUserDetails] = useState();
+
+  const getPosts = async () => {
+    await axios
+      .get(`http://localhost:8080/post/posts?userId=${user.userId}`)
+      .then((response) => {
+        setPosts(response.data.data.content);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
+  };
+  
+
+  useEffect(() => {
+    if (user.isAuthenticated) {
+      getPosts();
+      const fetchUserDetails = async () => {
+        await axios.get(`http://localhost:8080/user/getUser?userId=${user.id}`)
+        .then(response => {
+          setUserDetails(response.data.data);
+          console.log(response.data.data)
+        }).catch(error => {
+          console.log("Fetching UserDetails Error: ", error);
+        })
+      }
+      fetchUserDetails();
+    }
+  }, [isLoading, user]);
+
+  if(!userDetails){
+    return "..."
+  }
+
   return (
     <>
       <Box display="flex" justifyContent="center">
@@ -41,11 +79,11 @@ const StudentProfile = () => {
             >
               <Avatar
                 alt="Remy Sharp"
-                src="/static/images/avatar/1.jpg"
+                src={`http://localhost:8080/user/${user.userId}/image`}
                 sx={{ width: 60, height: 60 }}
               />
               <Typography variant="h5" fontWeight="bold">
-                Student Name
+              {userDetails.firstName} {userDetails.lastName}
               </Typography>
               <Typography variant="h6" fontWeight="bold">
                 Front-End Developer

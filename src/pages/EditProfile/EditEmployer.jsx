@@ -92,7 +92,7 @@ const EditEmployer = () => {
 };
 
 const EditUserProfile = () => {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, onLogout } = useAuth();
   const [posts, setPosts] = useState([]);
   const [images, setImages] = useState(null);
   const [imageFile, setImageFile] = useState(null);
@@ -120,10 +120,9 @@ const EditUserProfile = () => {
         }
       );
 
-      console.log(response.data); // Assuming the response data is what you want to log
+      console.log(response.data);
     } catch (error) {
       console.error("Error updating user:", error);
-      // Handle the error, display a user-friendly message, or log more details
     }
   };
 
@@ -182,9 +181,7 @@ const EditUserProfile = () => {
     try {
       updateUser();
       handleAddProfile();
-      console.log(firstNameValue);
-      console.log(lastNameValue);
-      console.log(usernameValue);
+      onLogout();
     } catch (error) {
       console.error("Error Update Profile", error.message);
     }
