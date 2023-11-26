@@ -22,6 +22,7 @@ const EmployerProfile = () => {
   const [posts, setPosts] = useState([]);
   const { user, isLoading } = useAuth();
   const [userDetails, setUserDetails] = useState();
+  const [employerDetails, setEmployerDetails] = useState();
 
   const getPosts = async () => {
     await axios
@@ -32,25 +33,36 @@ const EmployerProfile = () => {
       })
       .catch((err) => console.log(err));
   };
-  
 
   useEffect(() => {
     if (user.isAuthenticated) {
       getPosts();
       const fetchUserDetails = async () => {
-        await axios.get(`http://localhost:8080/user/getUser?userId=${user.id}`)
-        .then(response => {
-          setUserDetails(response.data.data);
-        }).catch(error => {
-          console.log("Fetching UserDetails Error: ", error);
-        })
-      }
+        await axios
+          .get(`http://localhost:8080/user/getUser?userId=${user.id}`)
+          .then((response) => {
+            setUserDetails(response.data.data);
+          })
+          .catch((error) => {
+            console.log("Fetching UserDetails Error: ", error);
+          });
+        await axios
+          .get(
+            `http://localhost:8080/employer/getEmployerByUserId?userId=${user.id}`
+          )
+          .then((response) => {
+            setEmployerDetails(response.data.data);
+          })
+          .catch((error) => {
+            console.log("Fetching EmployerDetails Error: ", error);
+          });
+      };
       fetchUserDetails();
     }
   }, [isLoading, user]);
 
-  if(!userDetails){
-    return "..."
+  if (!userDetails || !employerDetails) {
+    return "...";
   }
 
   return (
@@ -93,14 +105,15 @@ const EmployerProfile = () => {
                       <Avatar
                         src={`http://localhost:8080/user/${user.userId}/image`}
                         sx={{ width: 70, height: 70, marginTop: "35px" }}
-                      >
-                      </Avatar>
+                      ></Avatar>
                     }
                   />
-                  <CardContent sx={{ textAlign: "center" }}>{
-                    <Typography variant="h4">{userDetails.firstName} {userDetails.lastName}</Typography>
-                  }
-                   
+                  <CardContent sx={{ textAlign: "center" }}>
+                    {
+                      <Typography variant="h4">
+                        {userDetails.firstName} {userDetails.lastName}
+                      </Typography>
+                    }
                   </CardContent>
                 </Box>
               </Box>
@@ -116,12 +129,8 @@ const EmployerProfile = () => {
                 <Typography variant="h5" fontWeight="bold">
                   About Us
                 </Typography>
-                <Typography variant="p" paddingBottom="15px">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                  dictum, nisi vel dapibus cursus, nulla nibh iaculis felis, a
-                  cursus arcu diam eu arcu. Vestibulum facilisis, diam at
-                  eleifend fringilla, justo lorem porta mi, ac hendrerit nunc
-                  massa ut quam.
+                <Typography variant="p" paddingBottom="15px"  sx={{wordBreak:"break-word"}}>
+                  {employerDetails.companyDescription}
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
                   Employer Email
@@ -147,25 +156,51 @@ const EmployerProfile = () => {
             </Box>
 
             {/* Application Status */}
-            <Box
-              borderRadius="15px"
-              border="2px solid #000000"
-              width="320px"
-              height="128px"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              flexDirection="column"
-            >
-              <Typography variant="h6" fontWeight="bold">
-                Number of Applicants
-              </Typography>
-              <Typography variant="h5" fontWeight="bold" color="#FF0404">
-                2
-              </Typography>
-              <ApplicantsCard />
+            <Box display="flex" flexDirection="column" rowGap={5}>
+              <Box
+                borderRadius="15px"
+                border="2px solid #000000"
+                width="320px"
+                height="128px"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                flexDirection="column"
+              >
+                <Typography variant="h6" fontWeight="bold">
+                  Number of Applicants
+                </Typography>
+                <Typography variant="h5" fontWeight="bold" color="#FF0404">
+                  2
+                </Typography>
+                <ApplicantsCard />
+              </Box>
+              <Box
+                borderRadius="15px"
+                border="2px solid #000000"
+                width="320px"
+                height="128px"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                flexDirection="column"
+              >
+                <Typography variant="h6" fontWeight="bold">
+                  Company Name
+                </Typography>
+                <Typography variant="p" paddingBottom="10px">
+                  {employerDetails.companyName}
+                </Typography>
+                <Typography variant="h6" fontWeight="bold">
+                  Company Email
+                </Typography>
+                <Typography variant="p" paddingBottom="10px">
+                  {employerDetails.companyEmail}
+                </Typography>
+              </Box>
             </Box>
           </Box>
+
           <Box
             borderRadius="15px"
             border="2px solid #000000"
@@ -267,8 +302,6 @@ const ApplicantsCard = () => {
     </>
   );
 };
-
-
 
 const LinkStyled = styled(Link)({
   width: "210px",

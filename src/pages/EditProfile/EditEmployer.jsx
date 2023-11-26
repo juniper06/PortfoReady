@@ -20,9 +20,43 @@ import { Link } from "react-router-dom";
 
 const EditEmployer = () => {
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
+  const { user, isLoading } = useAuth();
+  const [userDetails, setUserDetails] = useState();
+
   const handleTabChange = (e, tabIndex) => {
     setCurrentTabIndex(tabIndex);
   };
+
+  const getPosts = async () => {
+    await axios
+      .get(`http://localhost:8080/post/posts?userId=${user.userId}`)
+      .then((response) => {
+        setPosts(response.data.data.content);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    if (user.isAuthenticated) {
+      getPosts();
+      const fetchUserDetails = async () => {
+        await axios
+          .get(`http://localhost:8080/user/getUser?userId=${user.id}`)
+          .then((response) => {
+            setUserDetails(response.data.data);
+          })
+          .catch((error) => {
+            console.log("Fetching UserDetails Error: ", error);
+          });
+      };
+      fetchUserDetails();
+    }
+  }, [isLoading, user]);
+
+  if (!userDetails) {
+    return "...";
+  }
 
   return (
     <>
@@ -49,7 +83,8 @@ const EditEmployer = () => {
       {/* Name Text */}
       <Box marginLeft="400px" marginTop="50px">
         <Typography variant="h4" fontWeight="bold">
-          John Doe/Employer Profile
+          {`${userDetails.firstName} ${userDetails.lastName}`} / Employer
+          Profile
         </Typography>
       </Box>
       <Box marginTop="50px" display="flex">
@@ -347,6 +382,8 @@ const EditUserProfile = () => {
                 <Typography>Save</Typography>
               </Button>
               <Button
+              component={Link}
+              to="employerprofile"
                 sx={{
                   width: "200px",
                   height: "43px",
@@ -367,78 +404,46 @@ const EditUserProfile = () => {
 };
 
 const EditEmployerProfile = () => {
-  const { user, isLoading } = useAuth();
-  const [posts, setPosts] = useState([]);
-  const [images, setImages] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
+  const [companyNameValue, setCompanyNameValue] = useState("");
+  const [companyEmailValue, setCompanyEmailValue] = useState("");
+  const [companyDescriptionValue, setCompanyDescriptionValue] = useState("");
+  const { user, isLoading, onLogout } = useAuth();
 
-  const VisuallyHiddenInput = styled("input")({
-    clip: "rect(0 0 0 0)",
-    clipPath: "inset(50%)",
-    height: 1,
-    overflow: "hidden",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    whiteSpace: "nowrap",
-    width: 1,
-  });
-
-  const getPosts = async () => {
-    await axios
-      .get(`http://localhost:8080/post/posts?userId=${user.userId}`)
-      .then((response) => {
-        setPosts(response.data.data.content);
-        console.log(response);
-      })
-      .catch((err) => console.log(err));
-  };
-
-  useEffect(() => {
-    if (user.isAuthenticated) {
-      getPosts();
-      getImageFile();
-    }
-  }, [isLoading, user]);
-
-  const handleAddProfile = async () => {
+  const updateCompanyProfile = async () => {
     try {
-      const formDataForImage = new FormData();
-      formDataForImage.append("file", images);
-      const image = await axios.put(
-        `http://localhost:8080/user/uploadImage/${user.userId}`,
-        formDataForImage,
+      const response = await axios.put(
+        `http://localhost:8080/employer/updateEmployer?userId=${user.userId}`,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          companyName: companyNameValue,
+          companyEmail: companyEmailValue,
+          companyDescription: companyDescriptionValue,
         }
       );
-      if (image.status === 200) {
-        console.log("Image uploaded successfully!");
-      } else {
-        console.error("Error uploading image:", image.statusText);
-      }
+      console.log(response.data);
     } catch (error) {
-      console.error("Error adding profile picture", error.message);
+      console.error("Error updating Employer Profile");
     }
   };
 
-  const getImageFile = async () => {
-    await axios
-      .get(`http://localhost:8080/user/getUser?userId=${user.userId}`)
-      .then((response) => {
-        setImageFile(response.data.data.imageFile.name);
-        console.log(response);
-      })
-      .catch((err) => console.log(err));
+  const handleSave = async () => {
+    try {
+      updateCompanyProfile();
+    } catch (error) {
+      console.error("Error Update Profile", error.message);
+    }
   };
+
+    if (isLoading) {
+      return "..."
+    } 
 
   return (
     <>
       <FormControl>
         <FormLabelStyled>Company Name:</FormLabelStyled>
         <TextField
+          value={companyNameValue}
+          onChange={(e) => setCompanyNameValue(e.target.value)}
           InputProps={{
             sx: {
               borderRadius: 20,
@@ -451,6 +456,8 @@ const EditEmployerProfile = () => {
         <br />
         <FormLabelStyled>Company Email:</FormLabelStyled>
         <TextField
+          value={companyEmailValue}
+          onChange={(e) => setCompanyEmailValue(e.target.value)}
           InputProps={{
             sx: {
               borderRadius: 20,
@@ -463,7 +470,11 @@ const EditEmployerProfile = () => {
         <br />
         <FormLabelStyled>Company Description:</FormLabelStyled>
         <textarea
+          value={companyDescriptionValue}
+          onChange={(e) => setCompanyDescriptionValue(e.target.value)}
           style={{
+            padding:"20px",
+            fontSize:"15px",
             height: "130px",
             resize: "none",
             borderRadius: "20px",
@@ -473,7 +484,9 @@ const EditEmployerProfile = () => {
         <br />
         <Box marginTop="20px" display="flex" justifyContent="space-between">
           <Button
-            onClick={handleAddProfile}
+            component={Link}
+            to="/employerprofile"
+            onClick={handleSave}
             sx={{
               width: "200px",
               height: "43px",
@@ -486,6 +499,8 @@ const EditEmployerProfile = () => {
             <Typography>Save</Typography>
           </Button>
           <Button
+            component={Link}
+            to="employerprofile"
             sx={{
               width: "200px",
               height: "43px",

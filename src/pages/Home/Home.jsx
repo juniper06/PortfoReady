@@ -32,6 +32,8 @@ const postSettings = ["Delete"];
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const { user, isLoading } = useAuth();
+  const [userDetails, setUserDetails] = useState();
+
 
   const getPosts = async () => {
     await axios
@@ -46,8 +48,21 @@ const Home = () => {
   useEffect(() => {
     if (user.isAuthenticated) {
       getPosts();
+      const fetchUserDetails = async () => {
+        await axios.get(`http://localhost:8080/user/getUser?userId=${user.id}`)
+        .then(response => {
+          setUserDetails(response.data.data);
+        }).catch(error => {
+          console.log("Fetching UserDetails Error: ", error);
+        })
+      }
+      fetchUserDetails();
     }
   }, [isLoading, user]);
+
+  if(!userDetails){
+    return "..."
+  }
 
 
   return (
@@ -68,7 +83,7 @@ const Home = () => {
             flexDirection="column"
             rowGap={3}
           >
-            <Typography variant="h2">Hello, {user.username}</Typography>
+            <Typography variant="h2">Hello, {userDetails.firstName} {userDetails.lastName}</Typography>
             <Box>
               {user.type === "employer" && <PostCard getPosts={getPosts} />}
             </Box>
@@ -100,7 +115,7 @@ const Home = () => {
             />
             <CardContent sx={{ textAlign: "center" }}>
               <Typography variant="h4" fontWeight="bold">
-                John Doe
+              {userDetails.firstName} {userDetails.lastName}
               </Typography>
               <Typography variant="h6">Front-End Developer</Typography>
             </CardContent>
@@ -200,6 +215,7 @@ export const PostCard = ({ getPosts }) => {
   const [openPost, setOpenPost] = useState(false);
   const handleOpenPost = () => setOpenPost(true);
   const handleClosePost = () => setOpenPost(false);
+  const [userDetails, setUserDetails] = useState();
 
   const [job, setJob] = useState("");
   const handleChange = (event) => {
@@ -214,7 +230,7 @@ export const PostCard = ({ getPosts }) => {
   const [question4, setquestion4] = useState("");
   const [question5, setquestion5] = useState("");
 
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
   const AddPost = async () => {
     await axios
@@ -238,12 +254,31 @@ export const PostCard = ({ getPosts }) => {
       });
   };
 
+  useEffect(() => {
+    if (user.isAuthenticated) {
+      getPosts();
+      const fetchUserDetails = async () => {
+        await axios.get(`http://localhost:8080/user/getUser?userId=${user.id}`)
+        .then(response => {
+          setUserDetails(response.data.data);
+        }).catch(error => {
+          console.log("Fetching UserDetails Error: ", error);
+        })
+      }
+      fetchUserDetails();
+    }
+  }, [isLoading, user]);
+
+  if(!userDetails){
+    return "..."
+  }
+
   return (
     <>
       <ButtonStyled onClick={handleOpenPost}>Post a Job</ButtonStyled>
       <Dialog fullWidth maxWidth="md" open={openPost} onClose={handleClosePost}>
         <DialogTitle
-          textAlign="center"
+          textAlign="center" 
           borderBottom="2px solid #808080"
           fontSize={30}
           fontWeight="bold"
@@ -258,11 +293,10 @@ export const PostCard = ({ getPosts }) => {
                 sx={{ height: "60px", width: "60px" }}
                 aria-label="recipe"
               >
-                B
               </Avatar>
             }
-            title="John Doe"
-            subheader="John.doe@cit.edu"
+            title={`${userDetails.firstName} ${userDetails.lastName}`}
+            subheader={userDetails.email}
           />
           <Stack
             justifyContent="center"
@@ -391,7 +425,7 @@ export const JobPost = ({ post, getPosts }) => {
   const handleOpenEditPost = () => setOpenEditPost(true);
   const handleCloseEditPost = () => setOpenEditPost(false);
   const { user, isLoading } = useAuth();
-  console.log(post)
+  const [userDetails, setUserDetails] = useState();
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -408,6 +442,26 @@ export const JobPost = ({ post, getPosts }) => {
       })
       .catch((err) => console.log(err));
   };
+
+
+  useEffect(() => {
+    if (user.isAuthenticated) {
+      getPosts();
+      const fetchUserDetails = async () => {
+        await axios.get(`http://localhost:8080/user/getUser?userId=${user.id}`)
+        .then(response => {
+          setUserDetails(response.data.data);
+        }).catch(error => {
+          console.log("Fetching UserDetails Error: ", error);
+        })
+      }
+      fetchUserDetails();
+    }
+  }, [isLoading, user]);
+
+  if(!userDetails){
+    return "..."
+  }
 
 
   return (
@@ -596,11 +650,11 @@ export const JobPost = ({ post, getPosts }) => {
               src={`http://localhost:8080/user/${post.user.id}/image`}
             ></Avatar>
           }
-          title={post.user.username}
+          title={`${userDetails.firstName} ${userDetails.lastName}`}
           subheader={post.user.email}
         />
         <Box width="1020px">
-          <Typography variant="body1" textAlign="start">
+          <Typography variant="body1" textAlign="start" sx={{wordBreak:"break-word", whiteSpace:"pre-line"}}>
             {post.description}
           </Typography>
         </Box>
