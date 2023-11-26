@@ -100,10 +100,10 @@ public class UserService {
 
     public void uploadImage(MultipartFile file, Long userId) throws Exception {
         User user = getUserById(userId);
-        File imageFile = fileService.uploadFile(file, user);
         if (user.getImage() != null) {
             fileService.deleteFile(user.getImage());
         }
+        File imageFile = fileService.uploadFile(file, user);
         user.setImage(imageFile);
         userRepository.save(user);
     }
@@ -119,7 +119,7 @@ public class UserService {
         return userRepository.save(updatedUser);
     }
 
-    public Student getStudentByUser(User user){
+    public Student getStudentByUser(User user) {
         return studentService.getStudentByUser(user);
     }
 

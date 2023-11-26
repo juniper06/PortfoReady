@@ -39,6 +39,8 @@ public class CertificateController {
             return ResponseHandler.generateResponse("Successfully Added", HttpStatus.OK);
         } catch (IOException e) {
             return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

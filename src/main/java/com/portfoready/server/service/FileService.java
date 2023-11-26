@@ -44,8 +44,19 @@ public class FileService {
 
     @PostConstruct
     private void init() throws IOException {
+        Path uploads = Paths.get("uploads");
         if (!Files.exists(root) && !Files.isDirectory(root)) {
-            Files.createDirectories(Paths.get("uploads"));
+            Files.createDirectories(uploads);
+        }
+
+//        Comment this if you are using production
+        if (Files.exists(root) && Files.isDirectory(root)) {
+            DirectoryStream<Path> directoryStream = Files.newDirectoryStream(root);
+            for (Path file : directoryStream) {
+                Files.delete(file);
+            }
+        } else {
+            Files.createDirectories(uploads);
         }
     }
 
