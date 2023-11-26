@@ -15,6 +15,7 @@ public class StudentResponse {
     private List<CertificateResponse> certificates;
     private String experiences;
     private String skills;
+    private String education;
 
     public StudentResponse(Student student) {
         id = student.getId();
@@ -23,5 +24,6 @@ public class StudentResponse {
                 Collectors.toList());
         experiences = student.getExperience();
         skills = student.getSkills();
+        education = student.getEducation();
     }
 }

@@ -23,7 +23,7 @@ public class StudentController {
     private final StudentService studentService;
     private final UserService userService;
 
-    @PostMapping("/updateStudent")
+    @PutMapping("/updateStudent")
     public ResponseEntity<Object> updateStudent(@RequestParam(name = "userId") Long userId,
                                                 @RequestBody UpdateStudentRequest request) {
         User user = userService.getUserById(userId);

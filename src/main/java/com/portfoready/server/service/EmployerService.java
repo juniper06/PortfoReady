@@ -11,6 +11,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class EmployerService {
@@ -28,5 +30,9 @@ public class EmployerService {
 
     public Employer getEmployerByUser(User user) {
         return employerRepository.getEmployerByUser(user);
+    }
+
+    public List<Employer> getAllEmployer(String companyName){
+        return employerRepository.findAllByCompanyNameContains(companyName);
     }
 }
