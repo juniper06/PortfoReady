@@ -18,11 +18,10 @@ import { PostCard } from "../Home/Home";
 import { JobPost } from "../Home/Home";
 import useAuth from "../../hooks/useAuth";
 
-
-
 const EmployerProfile = () => {
   const [posts, setPosts] = useState([]);
   const { user, isLoading } = useAuth();
+  const [userDetails, setUserDetails] = useState();
 
   const getPosts = async () => {
     await axios
@@ -38,8 +37,21 @@ const EmployerProfile = () => {
   useEffect(() => {
     if (user.isAuthenticated) {
       getPosts();
+      const fetchUserDetails = async () => {
+        await axios.get(`http://localhost:8080/user/getUser?userId=${user.id}`)
+        .then(response => {
+          setUserDetails(response.data.data);
+        }).catch(error => {
+          console.log("Fetching UserDetails Error: ", error);
+        })
+      }
+      fetchUserDetails();
     }
   }, [isLoading, user]);
+
+  if(!userDetails){
+    return "..."
+  }
 
   return (
     <>
@@ -86,8 +98,10 @@ const EmployerProfile = () => {
                       </Avatar>
                     }
                   />
-                  <CardContent sx={{ textAlign: "center" }}>
-                    <Typography variant="h4">Employer Name</Typography>
+                  <CardContent sx={{ textAlign: "center" }}>{
+                    <Typography variant="h4">{userDetails.firstName} {userDetails.lastName}</Typography>
+                  }
+                   
                   </CardContent>
                 </Box>
               </Box>
@@ -114,7 +128,7 @@ const EmployerProfile = () => {
                   Employer Email
                 </Typography>
                 <Typography variant="p" paddingBottom="10px">
-                  John.Doe@email.com
+                  {userDetails.email}
                 </Typography>
                 <Button
                   component={Link}
