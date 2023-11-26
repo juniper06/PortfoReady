@@ -16,9 +16,7 @@ public class PostResponse {
     private Long posterId;
     private Long examId;
     private boolean followed;
-    private String username;
-    private String email;
-    private Long userId;
+    private UserResponse user;
 
     public PostResponse(Post post, User user) {
         id = post.getId();
@@ -27,9 +25,7 @@ public class PostResponse {
         posterId = post.getPoster().getId();
         job = post.getJob();
         examId = post.getExam().getId();
-        username = user.getUsername();
-        userId = user.getId();
-        email = user.getEmail();
+        this.user = new UserResponse(user);
         followed = user.getFollowing().stream()
                 .anyMatch(follower -> follower.getFrom().equals(user) &&
                         follower.getTo().getId().equals(post.getPoster().getId()));

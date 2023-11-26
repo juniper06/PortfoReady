@@ -102,4 +102,15 @@ public class PostController {
             return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping
+    public ResponseEntity<Object> getPostByJobId(@RequestParam("jobId") Long jobId){
+        try{
+            List<Post> posts = postService.getPostByJobId(jobId);
+            List<PostResponse> response = posts.stream().map(PostResponse::new).toList();
+            return ResponseHandler.generateResponse("Successfully Generated", HttpStatus.OK, response);
+        } catch (Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

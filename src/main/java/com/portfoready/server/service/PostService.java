@@ -80,4 +80,8 @@ public class PostService {
         return applicationService.getApplicationsByPost(postId).stream().map(Application::getApplicant)
                 .toList();
     }
+
+    public List<Post> getPostByJobId(Long jobId){
+        return postRepository.findAllByJobId(jobId);
+    }
 }
