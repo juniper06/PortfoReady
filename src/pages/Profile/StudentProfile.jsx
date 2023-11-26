@@ -29,7 +29,7 @@ const StudentProfile = () => {
       .get(`http://localhost:8080/post/posts?userId=${user.userId}`)
       .then((response) => {
         setPosts(response.data.data.content);
-        console.log(response);
+        console.log("UserDetails " + user.userId, response);
       })
       .catch((err) => console.log(err));
   };
@@ -39,10 +39,10 @@ const StudentProfile = () => {
     if (user.isAuthenticated) {
       getPosts();
       const fetchUserDetails = async () => {
-        await axios.get(`http://localhost:8080/user/getUser?userId=${user.id}`)
+        await axios.get(`http://localhost:8080/user/getUser?userId=${user.userId}`)
         .then(response => {
           setUserDetails(response.data.data);
-          console.log(response.data.data)
+          console.log("UserDetails", response.data.data)
         }).catch(error => {
           console.log("Fetching UserDetails Error: ", error);
         })

@@ -391,6 +391,7 @@ export const JobPost = ({ post, getPosts }) => {
   const handleOpenEditPost = () => setOpenEditPost(true);
   const handleCloseEditPost = () => setOpenEditPost(false);
   const { user, isLoading } = useAuth();
+  console.log(post)
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);

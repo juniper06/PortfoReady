@@ -19,6 +19,7 @@ import JobList from "./pages/JobList/JobList";
 import EditStudent from "./pages/EditProfile/EditStudent";
 import EditEmployer from "./pages/EditProfile/EditEmployer";
 import { AuthProvider } from "./hooks/useAuth";
+import axios from "axios";
 
 const router = createBrowserRouter([
   {
@@ -88,6 +89,12 @@ const theme = createTheme({
     },
   },
 });
+
+axios.defaults.headers = {
+  'Cache-Control': 'no-cache',
+  'Pragma': 'no-cache',
+  'Expires': '0',
+};
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
