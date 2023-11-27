@@ -35,10 +35,10 @@ public class StudentService {
 
     public void uploadResume(MultipartFile file, Student student) throws Exception {
         User user = student.getUser();
-        File imageFile = fileService.uploadFile(file, user);
         if (student.getResume() != null) {
             fileService.deleteFile(student.getResume());
         }
+        File imageFile = fileService.uploadFile(file, user);
         student.setResume(imageFile);
         studentRepository.save(student);
     }

@@ -21,7 +21,8 @@ import java.util.Objects;
 @AllArgsConstructor
 public class FileService {
     private final FileRepository fileRepository;
-    private final Path root = Paths.get("uploads");
+    private final String userHome = System.getProperty("user.home");
+    private final Path root = Paths.get(userHome, "Downloads/PortfoReady");
 
     public File uploadFile(MultipartFile file, User user) throws IOException {
         String originalFilename = Objects.requireNonNull(file.getOriginalFilename());
