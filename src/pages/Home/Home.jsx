@@ -27,12 +27,13 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 
-const postSettings = ["Delete"];
+const postSettings = ["Update"];
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const { user, isLoading } = useAuth();
   const [userDetails, setUserDetails] = useState();
+  const [employerDetails, setEmployerDetails] = useState();
 
 
   const getPosts = async () => {
@@ -49,19 +50,31 @@ const Home = () => {
     if (user.isAuthenticated) {
       getPosts();
       const fetchUserDetails = async () => {
-        await axios.get(`http://localhost:8080/user/getUser?userId=${user.id}`)
-        .then(response => {
-          setUserDetails(response.data.data);
-        }).catch(error => {
-          console.log("Fetching UserDetails Error: ", error);
-        })
-      }
+        await axios
+          .get(`http://localhost:8080/user/getUser?userId=${user.id}`)
+          .then((response) => {
+            setUserDetails(response.data.data);
+          })
+          .catch((error) => {
+            console.log("Fetching UserDetails Error: ", error);
+          });
+        await axios
+          .get(
+            `http://localhost:8080/employer/getEmployerByUserId?userId=${user.id}`
+          )
+          .then((response) => {
+            setEmployerDetails(response.data.data);
+          })
+          .catch((error) => {
+            console.log("Fetching EmployerDetails Error: ", error);
+          });
+      };
       fetchUserDetails();
     }
   }, [isLoading, user]);
 
-  if(!userDetails){
-    return "..."
+  if (!userDetails || !employerDetails) {
+    return "...";
   }
 
 
@@ -117,7 +130,7 @@ const Home = () => {
               <Typography variant="h4" fontWeight="bold">
               {userDetails.firstName} {userDetails.lastName}
               </Typography>
-              <Typography variant="h6">Front-End Developer</Typography>
+              <Typography variant="h6">{employerDetails.companyEmail}</Typography>
             </CardContent>
           </SmallContainer>
           <SmallContainer sx={{ height: "270px" }}>
@@ -216,6 +229,7 @@ export const PostCard = ({ getPosts }) => {
   const handleOpenPost = () => setOpenPost(true);
   const handleClosePost = () => setOpenPost(false);
   const [userDetails, setUserDetails] = useState();
+  
 
   const [job, setJob] = useState("");
   const handleChange = (event) => {
@@ -427,6 +441,14 @@ export const JobPost = ({ post, getPosts }) => {
   const { user, isLoading } = useAuth();
   const [userDetails, setUserDetails] = useState();
 
+  const [titleValue, setTitleValue] = useState("");
+  const [descriptionValue, setdescriptionValue] = useState("");
+  const [question1, setquestion1] = useState("");
+  const [question2, setquestion2] = useState("");
+  const [question3, setquestion3] = useState("");
+  const [question4, setquestion4] = useState("");
+  const [question5, setquestion5] = useState("");
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -462,6 +484,14 @@ export const JobPost = ({ post, getPosts }) => {
   if(!userDetails){
     return "..."
   }
+
+  // const updatePost = async () => {
+  //   try{
+  //     const response = await axios.put(
+  //       ``
+  //     )
+  //   }
+  // }
 
 
   return (
@@ -532,16 +562,16 @@ export const JobPost = ({ post, getPosts }) => {
                 Edit Job Posting
               </DialogTitle>
               <DialogContent>
-                <CardHeader
-                  avatar={
-                    <Avatar
-                      src={`http://localhost:8080/user/${post.userId}/image`}
-                      sx={{ height: "60px", width: "60px" }}
-                    ></Avatar>
-                  }
-                  title="John Doe"
-                  subheader="John.doe@cit.edu"
-                />
+              <CardHeader
+          avatar={
+            <Avatar
+            sx={{height:"80px", width:"80px"}}
+              src={`http://localhost:8080/user/${post.user.id}/image`}
+            ></Avatar>
+          }
+          title={`${userDetails.firstName} ${userDetails.lastName}`}
+          subheader={post.user.email}
+        />
                 <Stack
                   justifyContent="center"
                   alignItems="center"

@@ -12,12 +12,60 @@ import {
   Input,
   InputLabel,
 } from "@mui/material";
-import React from "react";
+import React, {useState, useEffect} from "react";
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
 import { useParams } from "react-router-dom";
+import axios from "axios";
+import useAuth from "../../hooks/useAuth";
+
 
 const JobPage = () => {
-  // const { postId } = useParams();
+  const [posts, setPosts] = useState([]);
+  const { user, isLoading } = useAuth();
+  const [userDetails, setUserDetails] = useState();
+  const [employerDetails, setEmployerDetails] = useState();
+
+
+  const getPosts = async () => {
+    await axios
+      .get(`http://localhost:8080/post/posts?userId=${user.userId}`)
+      .then((response) => {
+        setPosts(response.data.data.content);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    if (user.isAuthenticated) {
+      getPosts();
+      const fetchUserDetails = async () => {
+        await axios
+          .get(`http://localhost:8080/user/getUser?userId=${user.id}`)
+          .then((response) => {
+            setUserDetails(response.data.data);
+          })
+          .catch((error) => {
+            console.log("Fetching UserDetails Error: ", error);
+          });
+        await axios
+          .get(
+            `http://localhost:8080/employer/getEmployerByUserId?userId=${user.id}`
+          )
+          .then((response) => {
+            setEmployerDetails(response.data.data);
+          })
+          .catch((error) => {
+            console.log("Fetching EmployerDetails Error: ", error);
+          });
+      };
+      fetchUserDetails();
+    }
+  }, [isLoading, user]);
+
+  if (!userDetails || !employerDetails) {
+    return "...";
+  }
 
   return (
     // Container
@@ -31,12 +79,12 @@ const JobPage = () => {
             </Avatar>
           }
           titleTypographyProps={{ variant: "h4", fontWeight: "bold" }}
-          title="Employer Name"
+          title={`${userDetails.firstName} ${userDetails.lastName}`}
           subheaderTypographyProps={{ variant: "h6" }}
-          subheader="John.doe@cit.edu"
+          subheader={userDetails.email}
         />
         <Typography variant="h4" fontWeight="bold">
-          Need a Front End Designer for New Project
+          TITLE NI SIYA ARI
         </Typography>
         <Typography variant="h5" fontWeight="bold">
           Job Type:
