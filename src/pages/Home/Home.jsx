@@ -34,6 +34,7 @@ const Home = () => {
   const { user, isLoading } = useAuth();
   const [userDetails, setUserDetails] = useState();
   const [employerDetails, setEmployerDetails] = useState();
+  const [studentDetails, setStudentDetails] = useState();
 
 
   const getPosts = async () => {
@@ -66,7 +67,7 @@ const Home = () => {
             setEmployerDetails(response.data.data);
           })
           .catch((error) => {
-            console.log("Fetching EmployerDetails Error: ", error);
+            console.log("Fetching Employer Details Error: ", error);
           });
       };
       fetchUserDetails();

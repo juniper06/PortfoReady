@@ -138,7 +138,6 @@ const EditUserProfile = () => {
   const [emailvalue, setEmailValue] = useState("");
   const [passwordvalue, setPassowrdValue] = useState("");
   const [phoneNumbervalue, setPhoneNumberValue] = useState("");
-  const [contactLinksvalue, setContactLinksValue] = useState("");
 
   const updateUser = async () => {
     try {
@@ -151,7 +150,6 @@ const EditUserProfile = () => {
           email: emailvalue,
           password: passwordvalue,
           phoneNumber: phoneNumbervalue,
-          contactLinks: contactLinksvalue,
         }
       );
 
@@ -284,9 +282,6 @@ const EditUserProfile = () => {
             <Typography fontWeight="bold" variant="h5">
               Phone Number:
             </Typography>
-            <Typography fontWeight="bold" variant="h5">
-              Contact Links:
-            </Typography>
           </Box>
           <Box width="400px" display="flex" flexDirection="column" rowGap={3}>
             <Box height="50px" display="flex">
@@ -348,16 +343,6 @@ const EditUserProfile = () => {
               value={phoneNumbervalue}
               onChange={(e) => setPhoneNumberValue(e.target.value)}
               placeholder="e.g. +63342345312"
-              InputProps={{
-                style: {
-                  borderRadius: "20px",
-                },
-              }}
-            />
-            <TextFeidStyled
-              value={contactLinksvalue}
-              onChange={(e) => setContactLinksValue(e.target.value)}
-              placeholder="e.g. https://www.Instagram.com/portfoready/"
               InputProps={{
                 style: {
                   borderRadius: "20px",
