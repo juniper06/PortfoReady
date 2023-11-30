@@ -588,7 +588,7 @@ export const JobPost = ({ post, getPosts }) => {
                       src={`http://localhost:8080/user/${post.user.id}/image`}
                     ></Avatar>
                   }
-                  title={`${userDetails.firstName} ${userDetails.lastName}`}
+                  title={`${post.user.firstName} ${post.user.lastName}`}
                   subheader={post.user.email}
                 />
                 <Stack
