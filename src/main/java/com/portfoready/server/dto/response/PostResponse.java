@@ -38,6 +38,7 @@ public class PostResponse {
         posterId = post.getPoster().getId();
         examId = post.getExam().getId();
         job = post.getJob();
+        this.user = new UserResponse(post.getPoster().getUser());
         followed = false;
     }
 }
