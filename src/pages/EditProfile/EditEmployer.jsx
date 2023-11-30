@@ -382,8 +382,7 @@ const EditUserProfile = () => {
                 <Typography>Save</Typography>
               </Button>
               <Button
-              component={Link}
-              to="employerprofile"
+
                 sx={{
                   width: "200px",
                   height: "43px",
@@ -429,7 +428,7 @@ const EditEmployerProfile = () => {
     try {
       updateCompanyProfile();
     } catch (error) {
-      console.error("Error Update Profile", error.message);
+      console.error("Error Updating Profile", error.message);
     }
   };
 

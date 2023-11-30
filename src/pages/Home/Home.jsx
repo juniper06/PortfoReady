@@ -51,7 +51,7 @@ const Home = () => {
       getPosts();
       const fetchUserDetails = async () => {
         await axios
-          .get(`http://localhost:8080/user/getUser?userId=${user.id}`)
+          .get(`http://localhost:8080/user/getUser?userId=${user.userId}`)
           .then((response) => {
             setUserDetails(response.data.data);
           })
@@ -130,7 +130,7 @@ const Home = () => {
               <Typography variant="h4" fontWeight="bold">
               {userDetails.firstName} {userDetails.lastName}
               </Typography>
-              <Typography variant="h6">{employerDetails.companyEmail}</Typography>
+              <Typography variant="h6">{userDetails.Email}</Typography>
             </CardContent>
           </SmallContainer>
           <SmallContainer sx={{ height: "270px" }}>

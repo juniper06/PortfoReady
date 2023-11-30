@@ -20,39 +20,39 @@ import useAuth from "../../hooks/useAuth";
 
 
 const StudentProfile = () => {
-  const [posts, setPosts] = useState([]);
   const { user, isLoading } = useAuth();
   const [userDetails, setUserDetails] = useState();
+  const [studentDetails, setStudentDetails] = useState();
 
-  const getPosts = async () => {
-    await axios
-      .get(`http://localhost:8080/post/posts?userId=${user.userId}`)
-      .then((response) => {
-        setPosts(response.data.data.content);
-        console.log("UserDetails " + user.userId, response);
-      })
-      .catch((err) => console.log(err));
-  };
-  
 
   useEffect(() => {
     if (user.isAuthenticated) {
-      getPosts();
       const fetchUserDetails = async () => {
-        await axios.get(`http://localhost:8080/user/getUser?userId=${user.userId}`)
-        .then(response => {
-          setUserDetails(response.data.data);
-          console.log("UserDetails", response.data.data)
-        }).catch(error => {
-          console.log("Fetching UserDetails Error: ", error);
-        })
-      }
+        await axios
+          .get(`http://localhost:8080/user/getUser?userId=${user.userId}`)
+          .then((response) => {
+            setUserDetails(response.data.data);
+          })
+          .catch((error) => {
+            console.log("Fetching UserDetails Error: ", error);
+          });
+        await axios
+          .get(
+            `http://localhost:8080/student/getStudentByUserId?userId=${user.userId}`
+          )
+          .then((response) => {
+            setStudentDetails(response.data);
+          })
+          .catch((error) => {
+            console.log("Fetching Student Details Error: ", error);
+          });
+      };
       fetchUserDetails();
     }
   }, [isLoading, user]);
 
-  if(!userDetails){
-    return "..."
+  if (!userDetails || !studentDetails) {
+    return "...";
   }
 
   return (
@@ -78,15 +78,11 @@ const StudentProfile = () => {
               rowGap={2}
             >
               <Avatar
-                alt="Remy Sharp"
                 src={`http://localhost:8080/user/${user.userId}/image`}
                 sx={{ width: 60, height: 60 }}
               />
               <Typography variant="h5" fontWeight="bold">
               {userDetails.firstName} {userDetails.lastName}
-              </Typography>
-              <Typography variant="h6" fontWeight="bold">
-                Front-End Developer
               </Typography>
             </Box>
             {/* Left-Side */}
@@ -100,21 +96,21 @@ const StudentProfile = () => {
                 Skills
               </Typography>
               <Typography variant="h6" fontSize="17px">
-                Front-End Development, Graphic Design
+                {studentDetails.skills}
               </Typography>
               <br />
               <Typography variant="h6" fontWeight="bold">
                 Education
               </Typography>
               <Typography variant="h6" fontSize="17px">
-                Cebu Institute of Technology
+                {studentDetails.education}
               </Typography>
               <br />
               <Typography variant="h6" fontWeight="bold">
                 Email
               </Typography>
               <Typography variant="h6" fontSize="17px">
-                John.Doe@gmail.com
+                {userDetails.email}
               </Typography>
               <br />
               <ButtonStyled
