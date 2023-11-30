@@ -88,7 +88,7 @@ const JobPage = () => {
             <Avatar
               sx={{ width: 80, height: 80 }}
               aria-label="recipe"
-              src={`http://localhost:8080/user/${user.userId}/image`}
+              src={`http://localhost:8080/user/${postDetails.posterId}/image`}
             ></Avatar>
           }
           titleTypographyProps={{ variant: "h4", fontWeight: "bold" }}
