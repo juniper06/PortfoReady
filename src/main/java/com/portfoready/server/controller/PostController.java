@@ -115,4 +115,15 @@ public class PostController {
             return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<Object> getPostById(@PathVariable Long postId){
+        try{
+            Post post = postService.getPostById(postId);
+            PostResponse response = new PostResponse(post);
+            return ResponseHandler.generateResponse("Successfully Generated", HttpStatus.OK, response);
+        } catch (Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
