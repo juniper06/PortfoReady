@@ -111,7 +111,7 @@ const RootLayout = () => {
         position="relative"
       >
         <SearchBarStyled
-           disableUnderline={true}
+          disableUnderline={true}
           placeholder="Explore"
           sx={{ paddingLeft: "20px" }}
           onChange={handleSearchInputChange}
@@ -119,40 +119,40 @@ const RootLayout = () => {
           value={searchQuery}
         />
         <Dialog
-  open={searchBarDialogOpen}
-  onClose={handleCloseSearchBarDialog}
-  PaperProps={{
-    style: {
-      width: '600px', // Set a max-width if needed
-    },
-  }}
->
-  <DialogTitle>Search Results</DialogTitle>
-  <DialogContent>
-    <List>
-      {filteredPosts.map((post) => (
-        <ListItem
-          key={post.id}
-          button
-          onClick={() => navigate(`/jobpage/${post.id}`)}
+          open={searchBarDialogOpen}
+          onClose={handleCloseSearchBarDialog}
+          PaperProps={{
+            style: {
+              width: "600px", // Set a max-width if needed
+            },
+          }}
         >
-          <Avatar sx={{ width: "50px", height: "50px" }}>B</Avatar>
-          <Box
-            ml={2} // Adjust the margin as needed
-            display="flex"
-            flexDirection="column"
-            rowGap={1}
-          >
-            <Typography variant="h5" fontWeight="bold">
-              {post.title}
-            </Typography>
-            <Typography>Job Type: {post.job.name}</Typography>
-          </Box>
-        </ListItem>
-      ))}
-    </List>
-  </DialogContent>
-</Dialog>
+          <DialogTitle>Search Results</DialogTitle>
+          <DialogContent>
+            <List>
+              {filteredPosts.map((post) => (
+                <ListItem
+                  key={post.id}
+                  button
+                  onClick={() => navigate(`/jobpage/${post.id}`)}
+                >
+                  <Avatar sx={{ width: "50px", height: "50px" }}>B</Avatar>
+                  <Box
+                    ml={2} // Adjust the margin as needed
+                    display="flex"
+                    flexDirection="column"
+                    rowGap={1}
+                  >
+                    <Typography variant="h5" fontWeight="bold">
+                      {post.title}
+                    </Typography>
+                    <Typography>Job Type: {post.job.name}</Typography>
+                  </Box>
+                </ListItem>
+              ))}
+            </List>
+          </DialogContent>
+        </Dialog>
 
         <LinkStyled to="/">
           <Typography>Home</Typography>
@@ -165,8 +165,8 @@ const RootLayout = () => {
         <LinkStyled to="/contact">
           <Typography>Contact Us</Typography>
         </LinkStyled>
-        <LinkStyled>
-          <Typography>Notification</Typography>
+        <LinkStyled to="/dashboard">
+          <Typography>Dashboard</Typography>
         </LinkStyled>
         <LinkStyled to="/joblist">
           <Typography>Job List</Typography>
@@ -206,7 +206,7 @@ const RootLayout = () => {
           >
             <Typography textAlign="center">Logout</Typography>
           </MenuItem>
-        </Menu> 
+        </Menu>
       </Box>
       <Outlet />
     </>

@@ -20,6 +20,9 @@ import EditStudent from "./pages/EditProfile/EditStudent";
 import EditEmployer from "./pages/EditProfile/EditEmployer";
 import { AuthProvider } from "./hooks/useAuth";
 import axios from "axios";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Analytics from "./pages/Dashboard/Analytics";
+import Dingdongbitch from "./pages/Dashboard/Dingdongbitch";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +52,18 @@ const router = createBrowserRouter([
       {
         path: "/jobpage/:postId",
         element: <JobPage />,
+      },
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/analytics",
+        element: <Analytics />,
+      },
+      {
+        path: "/dashboard/dingdongbitch",
+        element: <Dingdongbitch />,
       },
       {
         path: "/joblist",
@@ -91,9 +106,9 @@ const theme = createTheme({
 });
 
 axios.defaults.headers = {
-  'Cache-Control': 'no-cache',
-  'Pragma': 'no-cache',
-  'Expires': '0',
+  "Cache-Control": "no-cache",
+  Pragma: "no-cache",
+  Expires: "0",
 };
 
 ReactDOM.createRoot(document.getElementById("root")).render(
