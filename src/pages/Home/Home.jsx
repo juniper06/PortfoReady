@@ -36,7 +36,6 @@ const Home = () => {
   const [employerDetails, setEmployerDetails] = useState();
   const [studentDetails, setStudentDetails] = useState();
 
-
   const getPosts = async () => {
     await axios
       .get(`http://localhost:8080/post/posts?userId=${user.userId}`)
@@ -52,7 +51,7 @@ const Home = () => {
       getPosts();
       const fetchUserDetails = async () => {
         await axios
-          .get(`http://localhost:8080/user/getUser?userId=${user.id}`)
+          .get(`http://localhost:8080/user/getUser?userId=${user.userId}`)
           .then((response) => {
             setUserDetails(response.data.data);
           })
@@ -78,7 +77,6 @@ const Home = () => {
     return "...";
   }
 
-
   return (
     <>
       {/* Container */}
@@ -97,7 +95,9 @@ const Home = () => {
             flexDirection="column"
             rowGap={3}
           >
-            <Typography variant="h2">Hello, {userDetails.firstName} {userDetails.lastName}</Typography>
+            <Typography variant="h2">
+              Hello, {userDetails.firstName} {userDetails.lastName}
+            </Typography>
             <Box>
               {user.type === "employer" && <PostCard getPosts={getPosts} />}
             </Box>
@@ -129,9 +129,9 @@ const Home = () => {
             />
             <CardContent sx={{ textAlign: "center" }}>
               <Typography variant="h4" fontWeight="bold">
-              {userDetails.firstName} {userDetails.lastName}
+                {userDetails.firstName} {userDetails.lastName}
               </Typography>
-              <Typography variant="h6">{employerDetails.companyEmail}</Typography>
+              <Typography variant="h6">{userDetails.Email}</Typography>
             </CardContent>
           </SmallContainer>
           <SmallContainer sx={{ height: "270px" }}>
@@ -230,14 +230,13 @@ export const PostCard = ({ getPosts }) => {
   const handleOpenPost = () => setOpenPost(true);
   const handleClosePost = () => setOpenPost(false);
   const [userDetails, setUserDetails] = useState();
-  
 
-  const [job, setJob] = useState("");
   const handleChange = (event) => {
     setJob(event.target.value);
   };
 
   const [titleValue, setTitleValue] = useState("");
+  const [job, setJob] = useState("");
   const [descriptionValue, setdescriptionValue] = useState("");
   const [question1, setquestion1] = useState("");
   const [question2, setquestion2] = useState("");
@@ -273,19 +272,21 @@ export const PostCard = ({ getPosts }) => {
     if (user.isAuthenticated) {
       getPosts();
       const fetchUserDetails = async () => {
-        await axios.get(`http://localhost:8080/user/getUser?userId=${user.id}`)
-        .then(response => {
-          setUserDetails(response.data.data);
-        }).catch(error => {
-          console.log("Fetching UserDetails Error: ", error);
-        })
-      }
+        await axios
+          .get(`http://localhost:8080/user/getUser?userId=${user.id}`)
+          .then((response) => {
+            setUserDetails(response.data.data);
+          })
+          .catch((error) => {
+            console.log("Fetching UserDetails Error: ", error);
+          });
+      };
       fetchUserDetails();
     }
   }, [isLoading, user]);
 
-  if(!userDetails){
-    return "..."
+  if (!userDetails) {
+    return "...";
   }
 
   return (
@@ -293,7 +294,7 @@ export const PostCard = ({ getPosts }) => {
       <ButtonStyled onClick={handleOpenPost}>Post a Job</ButtonStyled>
       <Dialog fullWidth maxWidth="md" open={openPost} onClose={handleClosePost}>
         <DialogTitle
-          textAlign="center" 
+          textAlign="center"
           borderBottom="2px solid #808080"
           fontSize={30}
           fontWeight="bold"
@@ -307,8 +308,7 @@ export const PostCard = ({ getPosts }) => {
                 src={`http://localhost:8080/user/${user.userId}/image`}
                 sx={{ height: "60px", width: "60px" }}
                 aria-label="recipe"
-              >
-              </Avatar>
+              ></Avatar>
             }
             title={`${userDetails.firstName} ${userDetails.lastName}`}
             subheader={userDetails.email}
@@ -443,12 +443,13 @@ export const JobPost = ({ post, getPosts }) => {
   const [userDetails, setUserDetails] = useState();
 
   const [titleValue, setTitleValue] = useState("");
+  const [jobValue, setJobValue] = useState("");
   const [descriptionValue, setdescriptionValue] = useState("");
-  const [question1, setquestion1] = useState("");
-  const [question2, setquestion2] = useState("");
-  const [question3, setquestion3] = useState("");
-  const [question4, setquestion4] = useState("");
-  const [question5, setquestion5] = useState("");
+  const [question1Value, setquestion1Value] = useState("");
+  const [question2Value, setquestion2Value] = useState("");
+  const [question3Value, setquestion3Value] = useState("");
+  const [question4Value, setquestion4Value] = useState("");
+  const [question5Value, setquestion5Value] = useState("");
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -466,34 +467,51 @@ export const JobPost = ({ post, getPosts }) => {
       .catch((err) => console.log(err));
   };
 
+  const updatePost = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/post/updatePost?postId=${post.id}`,
+        {
+          title: titleValue,
+          jobId: jobValue,
+          description: descriptionValue,
+          posterId: user.id,
+          questions: [
+            { id: 1, question: question1Value },
+            { id: 2, question: question2Value },
+            { id: 3, question: question3Value },
+            { id: 4, question: question4Value },
+            { id: 5, question: question5Value },
+          ],
+        }
+      );
+      getPosts();
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error updating post!", error);
+    }
+  };
 
   useEffect(() => {
     if (user.isAuthenticated) {
       getPosts();
       const fetchUserDetails = async () => {
-        await axios.get(`http://localhost:8080/user/getUser?userId=${user.id}`)
-        .then(response => {
-          setUserDetails(response.data.data);
-        }).catch(error => {
-          console.log("Fetching UserDetails Error: ", error);
-        })
-      }
+        await axios
+          .get(`http://localhost:8080/user/getUser?userId=${user.id}`)
+          .then((response) => {
+            setUserDetails(response.data.data);
+          })
+          .catch((error) => {
+            console.log("Fetching UserDetails Error: ", error);
+          });
+      };
       fetchUserDetails();
     }
   }, [isLoading, user]);
 
-  if(!userDetails){
-    return "..."
+  if (!userDetails) {
+    return "...";
   }
-
-  // const updatePost = async () => {
-  //   try{
-  //     const response = await axios.put(
-  //       ``
-  //     )
-  //   }
-  // }
-
 
   return (
     <JobContainer key={post.id}>
@@ -563,16 +581,16 @@ export const JobPost = ({ post, getPosts }) => {
                 Edit Job Posting
               </DialogTitle>
               <DialogContent>
-              <CardHeader
-          avatar={
-            <Avatar
-            sx={{height:"80px", width:"80px"}}
-              src={`http://localhost:8080/user/${post.user.id}/image`}
-            ></Avatar>
-          }
-          title={`${userDetails.firstName} ${userDetails.lastName}`}
-          subheader={post.user.email}
-        />
+                <CardHeader
+                  avatar={
+                    <Avatar
+                      sx={{ height: "80px", width: "80px" }}
+                      src={`http://localhost:8080/user/${post.user.id}/image`}
+                    ></Avatar>
+                  }
+                  title={`${userDetails.firstName} ${userDetails.lastName}`}
+                  subheader={post.user.email}
+                />
                 <Stack
                   justifyContent="center"
                   alignItems="center"
@@ -581,11 +599,19 @@ export const JobPost = ({ post, getPosts }) => {
                 >
                   <Box>
                     <Typography fontWeight="bold">Title</Typography>
-                    <InputStyled disableUnderline={true} />
+                    <InputStyled
+                      disableUnderline={true}
+                      value={titleValue}
+                      onChange={(e) => setTitleValue(e.target.value)}
+                    />
                   </Box>
                   <FormControl sx={{ width: "300px" }}>
                     <InputLabel>Job Type</InputLabel>
-                    <Select label="job type">
+                    <Select
+                      label="job type"
+                      value={jobValue}
+                      onChange={(e) => setJobValue(e.target.value)}
+                    >
                       <MenuItem value={1}>UI/UX Designer</MenuItem>
                       <MenuItem value={2}>Front-End Developer</MenuItem>
                       <MenuItem value={3}>Back-End Developer</MenuItem>
@@ -594,6 +620,8 @@ export const JobPost = ({ post, getPosts }) => {
                   <Box>
                     <Typography fontWeight="bold">Description</Typography>
                     <textarea
+                      value={descriptionValue}
+                      onChange={(e) => setdescriptionValue(e.target.value)}
                       style={{
                         width: "650px",
                         height: "150px",
@@ -631,28 +659,39 @@ export const JobPost = ({ post, getPosts }) => {
                           <InputStyled
                             disableUnderline={true}
                             placeholder="Question 1"
+                            value={question1Value}
+                            onChange={(e) => setquestion1Value(e.target.value)}
                           />
                           <InputStyled
                             disableUnderline={true}
                             placeholder="Question 2"
+                            value={question2Value}
+                            onChange={(e) => setquestion2Value(e.target.value)}
                           />
                           <InputStyled
                             disableUnderline={true}
                             placeholder="Question 3"
+                            value={question3Value}
+                            onChange={(e) => setquestion3Value(e.target.value)}
                           />
                           <InputStyled
                             disableUnderline={true}
                             placeholder="Question 4"
+                            value={question4Value}
+                            onChange={(e) => setquestion4Value(e.target.value)}
                           />
                           <InputStyled
                             disableUnderline={true}
                             placeholder="Question 5"
+                            value={question5Value}
+                            onChange={(e) => setquestion5Value(e.target.value)}
                           />
                         </Stack>
                       </Box>
                     </Box>
                     <Box display="flex" justifyContent="end" marginTop="20px">
                       <Button
+                        onClick={updatePost}
                         sx={{
                           width: "160px",
                           height: "42px",
@@ -664,7 +703,7 @@ export const JobPost = ({ post, getPosts }) => {
                         }}
                       >
                         <Typography variant="h6" fontWeight="bold">
-                          Post
+                          Update Post
                         </Typography>
                       </Button>
                     </Box>
@@ -685,7 +724,11 @@ export const JobPost = ({ post, getPosts }) => {
           subheader={post.user.email}
         />
         <Box width="1020px">
-          <Typography variant="body1" textAlign="start" sx={{wordBreak:"break-word", whiteSpace:"pre-line"}}>
+          <Typography
+            variant="body1"
+            textAlign="start"
+            sx={{ wordBreak: "break-word", whiteSpace: "pre-line" }}
+          >
             {post.description}
           </Typography>
         </Box>

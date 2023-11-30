@@ -48,13 +48,13 @@ const RootLayout = () => {
     }
   };
 
-  useEffect(() => {
-    if (user.isAuthenticated) {
-      getPosts();
-      const intervalId = setInterval(getPosts, 0.01 * 60 * 1000);
-      return () => clearInterval(intervalId);
-    }
-  }, [isLoading, user]);
+  // useEffect(() => {
+  //   if (user.isAuthenticated) {
+  //     getPosts();
+  //     const intervalId = setInterval(getPosts, 0.01 * 60 * 1000);
+  //     return () => clearInterval(intervalId);
+  //   }
+  // }, [isLoading, user]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);

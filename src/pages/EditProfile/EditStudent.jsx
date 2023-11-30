@@ -93,7 +93,7 @@ const EditStudent = () => {
 };
 
 const EditUserProfile = () => {
-  const { user, isLoading, onLogout} = useAuth();
+  const { user, isLoading, onLogout } = useAuth();
   const [posts, setPosts] = useState([]);
   const [images, setImages] = useState(null);
   const [imageFile, setImageFile] = useState(null);
@@ -332,8 +332,6 @@ const EditUserProfile = () => {
             />
             <Box marginTop="10px" display="flex">
               <Button
-                component={Link}
-                to="/studentprofile"
                 onClick={handleSave}
                 sx={{
                   width: "200px",
@@ -348,6 +346,8 @@ const EditUserProfile = () => {
                 <Typography>Save</Typography>
               </Button>
               <Button
+              component={Link}
+              to="employerprofile"
                 sx={{
                   width: "200px",
                   height: "43px",
@@ -368,6 +368,63 @@ const EditUserProfile = () => {
 };
 
 const EditStudentProfile = () => {
+  const { user, isLoading, onLogout } = useAuth();
+  const [educationValue, setEducationValue] = useState("");
+  const [skillsValue, setSkillsValue] = useState("");
+  const [experienceValue, setExperienceValue] = useState("");
+  const [resumeValue, setResumeValue] = useState([]);
+
+  const updateStudentProfile = async () => {
+    try{
+      const response = await axios.put(
+        `http://localhost:8080/student/updateStudent?userId=${user.userId}`,
+        {
+          education: educationValue,
+          skills: skillsValue,
+          experience: experienceValue,
+        }
+      );
+      console.log(response.data);
+    }catch(error){
+      console.error("Error updating Student Profile");
+    }
+  };
+
+  const handleAddResume = async () => {
+    try {
+      const formDataForImage = new FormData();
+      formDataForImage.append("file", resumeValue);
+      const image = await axios.put(
+        `http://localhost:8080/student/uploadResume/${user.id}`,
+        formDataForImage,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (image.status === 200) {
+        console.log("Resume uploaded successfully!");
+      }
+    } catch (error) {
+      console.error("Error adding Resume", error.message);
+    }
+  }
+
+  const handleSave = async () => {
+    try{
+      updateStudentProfile();
+      handleAddResume();
+    }catch (error) {
+      console.error("Error Updating Profile", error.message);
+    }
+  };
+
+  if (isLoading) {
+    return "..."
+  } 
+
+
   return (
     <>
       <Box
@@ -376,76 +433,55 @@ const EditStudentProfile = () => {
         alignItems="center"
         columnGap={2}
       >
-        <Avatar sx={{ height: "70px", width: "70px" }} aria-label="recipe">
-          B
-        </Avatar>
-        <ButtonStyled>
-          <Typography>Upload New Picture</Typography>
-        </ButtonStyled>
-        <ButtonStyled sx={{ width: "120px" }}>
-          <Typography>Delete</Typography>
-        </ButtonStyled>
       </Box>
       <FormControl>
         <FormLabelStyled>Education:</FormLabelStyled>
-        <TextField
-          InputProps={{
-            sx: {
-              borderRadius: 20,
-              height: "39px",
-              border: "1px solid #000000",
-            },
-          }}
-          sx={{ width: "425px", "& fieldset": { border: "none" } }}
-        />
+        <TextFeidStyled
+              value={educationValue}
+              onChange={(e) => setEducationValue(e.target.value)}
+              InputProps={{
+                style: {
+                  borderRadius: "20px",
+                },
+              }}
+            />
         <br />
         <FormLabelStyled>Skills:</FormLabelStyled>
-        <TextField
-          InputProps={{
-            sx: {
-              borderRadius: 20,
-              height: "39px",
-              border: "1px solid #000000",
-            },
-          }}
-          sx={{ width: "425px", "& fieldset": { border: "none" } }}
-        />
+        <TextFeidStyled
+              value={skillsValue}
+              onChange={(e) => setSkillsValue(e.target.value)}      
+              InputProps={{
+                style: {
+                  borderRadius: "20px",
+                },
+              }}
+            />
         <br />
         <FormLabelStyled>Experiences:</FormLabelStyled>
-        <TextField
-          variant="outlined"
-          multiline
-          onFocus="none"
-          rows={4}
-          maxRows={5}
-          InputProps={{
-            sx: {
-              borderRadius: 4,
-              border: "1px solid #000000",
-              width: "425px",
-              "& fieldset": { border: "none" },
-            },
+        <textarea
+          value={experienceValue}
+          onChange={(e) => setExperienceValue(e.target.value)}  
+          style={{
+            padding:"20px",
+            fontSize:"15px",
+            height: "130px",
+            resize: "none",
+            borderRadius: "20px",
+            border: "1px solid #dadada",
           }}
         />
         <br />
         <FormLabelStyled>Resume:</FormLabelStyled>
-        <TextField
-          variant="outlined"
-          multiline
-          onFocus="none"
-          rows={3}
-          maxRows={3}
-          InputProps={{
-            sx: {
-              borderRadius: 4,
-              border: "1px solid #000000",
-              width: "425px",
-              "& fieldset": { border: "none" },
-            },
-          }}
+        <Input 
+        name="resumes"
+        type="file"
+        onChange={(e) => setResumeValue(e.target.files[0])}
         />
-        <Box marginTop="20px" display="flex" justifyContent="space-between">
+        <Box marginTop="20px" display="flex" width="500px" justifyContent="space-between">
           <Button
+          component={Link}
+          to="/studentprofile"
+          onClick={handleSave}
             sx={{
               width: "200px",
               height: "43px",
