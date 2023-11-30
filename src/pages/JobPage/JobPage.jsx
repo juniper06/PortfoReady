@@ -12,19 +12,19 @@ import {
   Input,
   InputLabel,
 } from "@mui/material";
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
-
 
 const JobPage = () => {
   const [posts, setPosts] = useState([]);
   const { user, isLoading } = useAuth();
   const [userDetails, setUserDetails] = useState();
   const [employerDetails, setEmployerDetails] = useState();
-
+  const [postDetails, setPostDetails] = useState([]);
+  const { postId } = useParams();
 
   const getPosts = async () => {
     await axios
@@ -36,9 +36,20 @@ const JobPage = () => {
       .catch((err) => console.log(err));
   };
 
+  const getPostDetails = async () => {
+    await axios
+      .get(`http://localhost:8080/post/${postId}`)
+      .then((response) => {
+        setPostDetails(response.data.data);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     if (user.isAuthenticated) {
       getPosts();
+      getPostDetails();
       const fetchUserDetails = async () => {
         await axios
           .get(`http://localhost:8080/user/getUser?userId=${user.id}`)
@@ -74,9 +85,11 @@ const JobPage = () => {
       <Box display="flex" flexDirection="column" width="1000px" rowGap={3}>
         <CardHeader
           avatar={
-            <Avatar sx={{ width: 80, height: 80 }} aria-label="recipe">
-              B
-            </Avatar>
+            <Avatar
+              sx={{ width: 80, height: 80 }}
+              aria-label="recipe"
+              src={`http://localhost:8080/user/${user.userId}/image`}
+            ></Avatar>
           }
           titleTypographyProps={{ variant: "h4", fontWeight: "bold" }}
           title={`${userDetails.firstName} ${userDetails.lastName}`}
@@ -84,10 +97,10 @@ const JobPage = () => {
           subheader={userDetails.email}
         />
         <Typography variant="h4" fontWeight="bold">
-          TITLE NI SIYA ARI
+          {postDetails.title}
         </Typography>
         <Typography variant="h5" fontWeight="bold">
-          Job Type:
+          Job Type:{postDetails.job.name}
         </Typography>
         <Box
           width="900px"
@@ -97,7 +110,7 @@ const JobPage = () => {
           padding="15px"
         >
           <Typography variant="h7" fontSize="21px">
-            Description
+            {postDetails.description}
           </Typography>
         </Box>
       </Box>
@@ -111,100 +124,80 @@ const JobPage = () => {
         alignItems="center"
       >
         <FactCheckOutlinedIcon sx={{ fontSize: "430px" }} />
-        <TakeExam />
+        <TakeExam examId={postDetails.examId} />
       </Box>
     </Box>
   );
 };
 
-const TakeExam = () => {
+const TakeExam = ({ examId }) => {
   const [TakeExam, setTakeExam] = React.useState(false);
   const handleTakeExam = () => setTakeExam(true);
   const handleCloseTakeExam = () => setTakeExam(false);
+  const { user, isLoading } = useAuth();
+  const [examQuestions, setExamQuestions] = useState([]);
+  const [answers, setAnswers] = useState([]);
+
+  const getExam = async () => {
+    await axios
+      .get(`http://localhost:8080/exam/getExam?examId=${examId}`)
+      .then((response) => {
+        setExamQuestions(response.data.data.questions);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    if (user.isAuthenticated) {
+      getExam();
+    }
+  }, [isLoading, user]);
+
+  const handleAnswerChange = (index, value) => {
+    const newAnswers = [...answers];
+    newAnswers[index] = value;
+    setAnswers(newAnswers);
+  };
+
+  const handleSubmit = () => {
+    // Now, 'answers' contains all the submitted answers
+    console.log(answers);
+  };
 
   return (
     <>
       <ButtonStyled onClick={handleTakeExam}>
         <Typography fontWeight="bold">Take Exam</Typography>
       </ButtonStyled>
+
       <Dialog
         fullWidth
         maxWidth="md"
         open={TakeExam}
         onClose={handleCloseTakeExam}
       >
-        <DialogTitle textAlign="center" borderBottom="2px solid #808080">
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{
-              fontSize: "32px",
-              fontWeight: "bold",
-            }}
-          >
-            Assesment
-          </Typography>
+        <DialogTitle textAlign="center" borderBottom="2px solid #808080" fontSize="40px" fontWeight="bold">
+          Assessment
         </DialogTitle>
         <DialogContent>
-          <Stack>
-            <InputLabel sx={{ paddingTop: "20px" }}>
-              <Typography variant="h6" paddingLeft="10px">
-                1. Question
-              </Typography>
-            </InputLabel>
-            <InputStyled
-              onFocus="none"
-              disableUnderline={true}
-              placeholder="Answer"
-            />
-            <br />
-            <InputLabel>
-              <Typography variant="h6" paddingLeft="10px">
-                2. Question
-              </Typography>
-            </InputLabel>
-            <InputStyled
-              onFocus="none"
-              disableUnderline={true}
-              placeholder="Answer"
-            />
-            <br />
-            <InputLabel>
-              <Typography variant="h6" paddingLeft="10px">
-                3. Question
-              </Typography>
-            </InputLabel>
-            <InputStyled
-              onFocus="none"
-              disableUnderline={true}
-              placeholder="Answer"
-            />
-            <br />
-            <InputLabel>
-              <Typography variant="h6" paddingLeft="10px">
-                4. Question
-              </Typography>
-            </InputLabel>
-            <InputStyled
-              onFocus="none"
-              disableUnderline={true}
-              placeholder="Answer"
-            />
-            <br />
-            <InputLabel>
-              <Typography variant="h6" paddingLeft="10px">
-                5. Question
-              </Typography>
-            </InputLabel>
-            <InputStyled
-              onFocus="none"
-              disableUnderline={true}
-              placeholder="Answer"
-            />
-          </Stack>
+          {examQuestions.map((question, i) => (
+            <Stack key={question.id}>
+              <InputLabel sx={{ paddingTop: "20px" }}>
+                <Typography variant="h6" paddingLeft="10px">
+                  {question.question}
+                </Typography>
+              </InputLabel>
+              <InputStyled
+                disableUnderline={true}
+                placeholder="Answer"
+                onChange={(e) => handleAnswerChange(i, e.target.value)}
+              />
+            </Stack>
+          ))}
           <br />
           <Box display="flex" justifyContent="end">
-            <ButtonStyled sx={{ width: "160px" }}>
+            <ButtonStyled sx={{ width: "160px" }} onClick={handleSubmit}>
               <Typography fontWeight="bold">Submit</Typography>
             </ButtonStyled>
           </Box>

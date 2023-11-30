@@ -395,7 +395,7 @@ const EditStudentProfile = () => {
       const formDataForImage = new FormData();
       formDataForImage.append("file", resumeValue);
       const image = await axios.put(
-        `http://localhost:8080/student/uploadResume/${user.userId}`,
+        `http://localhost:8080/student/uploadResume/${user.id}`,
         formDataForImage,
         {
           headers: {
