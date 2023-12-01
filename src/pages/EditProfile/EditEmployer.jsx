@@ -236,7 +236,7 @@ const EditUserProfile = () => {
           columnGap={2}
         >
           <Avatar
-            src={`http://localhost:8080/user/${user.userId}/image`}
+            src={images ? URL.createObjectURL(images) : `http://localhost:8080/user/${user.userId}/image`}
             sx={{ height: "70px", width: "70px" }}
           ></Avatar>
           <Button
@@ -396,7 +396,7 @@ const EditEmployerProfile = () => {
   const updateCompanyProfile = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/employer/updateEmployer?userId=${user.userId}`,
+        `http://localhost:8080/employer/updateEmployer?userId=${user.id}`,
         {
           companyName: companyNameValue,
           companyEmail: companyEmailValue,

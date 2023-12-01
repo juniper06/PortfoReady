@@ -26,28 +26,30 @@ const StudentProfile = () => {
   const [userDetails, setUserDetails] = useState();
   const [studentDetails, setStudentDetails] = useState();
 
+  const fetchUserDetails = async () => {
+    await axios
+      .get(`http://localhost:8080/user/getUser?userId=${user.userId}`)
+      .then((response) => {
+        setUserDetails(response.data.data);
+      })
+      .catch((error) => {
+        console.log("Fetching UserDetails Error: ", error);
+      });
+    await axios
+      .get(
+        `http://localhost:8080/student/getStudentByUserId?userId=${user.userId}`
+      )
+      .then((response) => {
+        setStudentDetails(response.data.data);
+      })
+      .catch((error) => {
+        console.log("Fetching Student Details Error: ", error);
+      });
+  };
+
   useEffect(() => {
     if (user.isAuthenticated) {
-      const fetchUserDetails = async () => {
-        await axios
-          .get(`http://localhost:8080/user/getUser?userId=${user.userId}`)
-          .then((response) => {
-            setUserDetails(response.data.data);
-          })
-          .catch((error) => {
-            console.log("Fetching UserDetails Error: ", error);
-          });
-        await axios
-          .get(
-            `http://localhost:8080/student/getStudentByUserId?userId=${user.userId}`
-          )
-          .then((response) => {
-            setStudentDetails(response.data.data);
-          })
-          .catch((error) => {
-            console.log("Fetching Student Details Error: ", error);
-          });
-      };
+      
       fetchUserDetails();
     }
   }, [isLoading, user]);
@@ -72,6 +74,7 @@ const StudentProfile = () => {
         }
       );
       if (image.status === 200) {
+        fetchUserDetails()
         console.log("Certificate uploaded successfully!");
       }
     } catch (error) {
@@ -187,6 +190,7 @@ const StudentProfile = () => {
                 >
                   Add Certificate
                   <VisuallyHiddenInput
+                    accept="image/*"
                     onChange={(e) => handleAddCertificate(e.target.files[0])}
                     name="certificates"
                     type="file"

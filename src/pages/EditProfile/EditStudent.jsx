@@ -204,7 +204,7 @@ const EditUserProfile = () => {
           columnGap={2}
         >
           <Avatar
-            src={`http://localhost:8080/user/${user.userId}/image`}
+             src={images ? URL.createObjectURL(images) : `http://localhost:8080/user/${user.userId}/image`}
             sx={{ height: "70px", width: "70px" }}
           ></Avatar>
           <Button
