@@ -51,8 +51,10 @@ public class DataInitializer implements CommandLineRunner {
                 .build();
         userRepository.saveAll(List.of(user1, user2, admin));
         Employer employer = Employer.builder().user(user1).build();
+        Employer employer1 = Employer.builder().user(admin).build();
         Student student = Student.builder().user(user2).build();
         employerRepository.save(employer);
+        employerRepository.save(employer1);
         studentRepository.save(student);
 
         Path root = Paths.get("uploads");
