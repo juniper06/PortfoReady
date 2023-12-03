@@ -16,6 +16,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -130,5 +131,9 @@ public class UserService {
 
     public byte[] getImage(User user) throws IOException {
         return fileService.downloadImageFromFileSystem(user.getImage().getName());
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }

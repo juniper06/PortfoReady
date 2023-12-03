@@ -59,4 +59,13 @@ public class StudentController {
                 .contentType(MediaType.valueOf(studentService.getStudentById(studentId).getResume().getType()))
                 .body(resumeData);
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Object> countAllStudent(){
+        try{
+            return ResponseHandler.generateResponse("Successfully Generated", HttpStatus.OK, studentService.countAllStudent());
+        } catch (Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

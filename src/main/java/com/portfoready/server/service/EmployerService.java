@@ -35,4 +35,8 @@ public class EmployerService {
     public List<Employer> getAllEmployer(String companyName){
         return employerRepository.findAllByCompanyNameContains(companyName);
     }
+
+    public Long countAllEmployer(){
+        return employerRepository.count();
+    }
 }

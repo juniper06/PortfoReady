@@ -126,4 +126,13 @@ public class PostController {
             return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Object> countAllPost(){
+        try{
+            return ResponseHandler.generateResponse("Successfully Generated", HttpStatus.OK, postService.countAllPost());
+        } catch (Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

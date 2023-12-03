@@ -5,7 +5,6 @@ import com.portfoready.server.dto.request.UserAuthRequest;
 import com.portfoready.server.dto.request.UserCreationRequest;
 import com.portfoready.server.dto.response.LoginResponse;
 import com.portfoready.server.dto.response.ResponseHandler;
-import com.portfoready.server.dto.response.StudentResponse;
 import com.portfoready.server.dto.response.UserResponse;
 import com.portfoready.server.entity.Employer;
 import com.portfoready.server.entity.Student;
@@ -50,7 +49,7 @@ public class UserController {
         try {
             User user = userService.checkUserAuth(request);
             Long id;
-            if(userService.getUserType(user).equals("student")){
+            if (userService.getUserType(user).equals("student")) {
                 Student student = userService.getStudentByUser(user);
                 id = student.getId();
             } else {
@@ -127,6 +126,15 @@ public class UserController {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.IMAGE_JPEG);
             return new ResponseEntity<>(image, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<Object> getAllUsers() {
+        try {
+            return ResponseHandler.generateResponse("Successfully Generated", HttpStatus.OK, userService.getAllUsers());
         } catch (Exception e) {
             return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

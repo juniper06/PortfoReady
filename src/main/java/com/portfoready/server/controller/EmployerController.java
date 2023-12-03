@@ -1,16 +1,10 @@
 package com.portfoready.server.controller;
 
 import com.portfoready.server.dto.request.UpdateEmployerRequest;
-import com.portfoready.server.dto.request.UpdateStudentRequest;
 import com.portfoready.server.dto.response.EmployerResponse;
 import com.portfoready.server.dto.response.ResponseHandler;
-import com.portfoready.server.dto.response.StudentResponse;
 import com.portfoready.server.entity.Employer;
-import com.portfoready.server.entity.Student;
-import com.portfoready.server.entity.User;
 import com.portfoready.server.service.EmployerService;
-import com.portfoready.server.service.StudentService;
-import com.portfoready.server.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +38,16 @@ public class EmployerController {
         List<Employer> employer = employerService.getAllEmployer(companyName);
         List<EmployerResponse> response = employer.stream().map(EmployerResponse::new).toList();
         return ResponseHandler.generateResponse("Successfully Generated", HttpStatus.OK, response);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Object> countAllEmployer() {
+        try {
+            return ResponseHandler.generateResponse(
+                    "Successfully Generated", HttpStatus.OK, employerService.countAllEmployer());
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

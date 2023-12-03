@@ -85,4 +85,8 @@ public class PostService {
         Job job = jobService.getJobById(jobId);
         return postRepository.findAllByJob(job);
     }
+
+    public Long countAllPost(){
+        return postRepository.count();
+    }
 }

@@ -52,4 +52,8 @@ public class StudentService {
         student.setResume(null);
         studentRepository.save(student);
     }
+
+    public Long countAllStudent(){
+        return studentRepository.count();
+    }
 }
