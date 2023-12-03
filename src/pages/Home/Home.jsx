@@ -22,6 +22,7 @@ import {
   Select,
   TextField,
   Input,
+  DialogActions,
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Link, useNavigate } from "react-router-dom";
@@ -441,6 +442,8 @@ export const JobPost = ({ post, getPosts }) => {
   const handleCloseEditPost = () => setOpenEditPost(false);
   const { user, isLoading } = useAuth();
   const [userDetails, setUserDetails] = useState();
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [confirmUpdateDialog, setConfirmUpdateDialog] = useState(false);
 
   const [titleValue, setTitleValue] = useState("");
   const [jobValue, setJobValue] = useState("");
@@ -458,7 +461,13 @@ export const JobPost = ({ post, getPosts }) => {
     setAnchorElUser(null);
   };
 
+  const handleOpenDeleteDialog = () => setOpenDeleteDialog(true);
+  const handleCloseDeleteDialog = () => setOpenDeleteDialog(false);
+  const handleConfirmUpdateDialog = () => setConfirmUpdateDialog(true);
+  const handleCloseConfirmUpdateDialog = () => setConfirmUpdateDialog(false);
+
   const deletePost = async () => {
+    handleCloseDeleteDialog();
     await axios
       .delete(`http://localhost:8080/post/deletePost?postId=${post.id}`)
       .then(() => {
@@ -551,21 +560,46 @@ export const JobPost = ({ post, getPosts }) => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {postSettings.map((postSettings) => (
+              {["Delete", "Edit"].map((action) => (
                 <MenuItem
-                  key={postSettings}
-                  onClick={handleCloseUserMenu}
+                  key={action}
+                  onClick={() => {
+                    setAnchorElUser(null);
+                    action === "Delete"
+                      ? handleOpenDeleteDialog()
+                      : handleOpenEditPost();
+                  }}
                   sx={{
                     display: "flex",
                     flexDirection: "column",
                     rowGap: "10px",
                   }}
                 >
-                  <button onClick={deletePost}>Delete</button>
-                  <button onClick={handleOpenEditPost}>Edit</button>
+                  {action}
                 </MenuItem>
               ))}
             </Menu>
+            <Dialog
+              open={openDeleteDialog}
+              onClose={handleCloseDeleteDialog}
+              maxWidth="sm"
+              fullWidth
+            >
+              <DialogTitle>Delete Post</DialogTitle>
+              <DialogContent>
+                <Typography>
+                  Are you sure you want to delete this post?
+                </Typography>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseDeleteDialog} color="primary">
+                  Cancel
+                </Button>
+                <Button onClick={deletePost} color="primary">
+                  Delete
+                </Button>
+              </DialogActions>
+            </Dialog>
             <Dialog
               fullWidth
               maxWidth="md"
@@ -691,7 +725,7 @@ export const JobPost = ({ post, getPosts }) => {
                     </Box>
                     <Box display="flex" justifyContent="end" marginTop="20px">
                       <Button
-                        onClick={updatePost}
+                        onClick={handleConfirmUpdateDialog}
                         sx={{
                           width: "160px",
                           height: "42px",
@@ -710,6 +744,33 @@ export const JobPost = ({ post, getPosts }) => {
                   </Box>
                 </Stack>
               </DialogContent>
+            </Dialog>
+            <Dialog
+              open={confirmUpdateDialog}
+              onClose={handleCloseConfirmUpdateDialog}
+              fullWidth
+              maxWidth="sm"
+            >
+              <DialogTitle>Confirm Update</DialogTitle>
+              <DialogContent>
+                <Typography>
+                  Are you sure you want to update this post?
+                </Typography>
+              </DialogContent>
+              <Box
+                sx={{ display: "flex", justifyContent: "space-between", p: 2 }}
+              >
+                <Button onClick={handleCloseConfirmUpdateDialog}>Cancel</Button>
+                <Button
+                  onClick={() => {
+                    handleCloseConfirmUpdateDialog();
+                    updatePost(); // Call the actual update function when confirmed
+                  }}
+                  variant="contained"
+                >
+                  Confirm Update
+                </Button>
+              </Box>
             </Dialog>
           </Box>
         </Box>

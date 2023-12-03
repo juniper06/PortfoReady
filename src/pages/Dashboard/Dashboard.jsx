@@ -1,9 +1,50 @@
-import { Box, Typography } from "@mui/material";
-import React from "react";
+import { Box, Button, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import dashboard from "../../assets/dashboard-logo.png";
 import logout from "../../assets/logout-logo.png";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 const Dashboard = () => {
+  const [countStudent, setCountStudent] = useState();
+  const [countEmployer, setEmployerStudent] = useState();
+  const [countPosts, setCountPosts] = useState();
+  const [users, setUsers] = useState([]);
+  const { user, onLogout, isLoading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchStudentCount = async () => {
+      await axios
+        .get("http://localhost:8080/student/count")
+        .then((response) => {
+          setCountStudent(response.data.data);
+        });
+    };
+    const fetchEmployerCount = async () => {
+      await axios
+        .get("http://localhost:8080/employer/count")
+        .then((response) => {
+          setEmployerStudent(response.data.data);
+        });
+    };
+    const fetchPostsCount = async () => {
+      await axios.get("http://localhost:8080/post/count").then((response) => {
+        setCountPosts(response.data.data);
+      });
+    };
+    const fetchUsers = async () => {
+      await axios.get("http://localhost:8080/user/all").then((response) => {
+        setUsers(response.data.data);
+      });
+    };
+    fetchStudentCount();
+    fetchEmployerCount();
+    fetchPostsCount();
+    fetchUsers();
+  }, []);
+
   return (
     <Box display="flex">
       <Box width="280px" height="100vh" sx={{ backgroundColor: "#1F2027" }}>
@@ -40,9 +81,17 @@ const Dashboard = () => {
             height="50px"
             sx={{ backgroundImage: `url(${logout})` }}
           ></Box>
-          <Typography color="#FFFFFF" fontSize="24px">
-            Logout
-          </Typography>
+          <Button
+            component={Link}
+            to="/login"
+            onClick={() => {
+              onLogout();
+            }}
+          >
+            <Typography color="#FFFFFF" fontSize="24px">
+              Logout
+            </Typography>
+          </Button>
         </Box>
       </Box>
       <Box
@@ -81,7 +130,7 @@ const Dashboard = () => {
                 color="#FFFFFF"
                 textAlign="center"
               >
-                20
+                {countStudent}
               </Typography>
             </Box>
             <Box
@@ -104,7 +153,7 @@ const Dashboard = () => {
                 color="#FFFFFF"
                 textAlign="center"
               >
-                20
+                {countEmployer}
               </Typography>
             </Box>
             <Box
@@ -127,7 +176,7 @@ const Dashboard = () => {
                 color="#FFFFFF"
                 textAlign="center"
               >
-                20
+                {countPosts}
               </Typography>
             </Box>
           </Box>
@@ -140,24 +189,119 @@ const Dashboard = () => {
             alignItems="center"
             sx={{ backgroundColor: "#1F2027" }}
           >
-            <Box height="300px" width="900px" display="flex" flexDirection="column" rowGap={1}>
+            <Box
+              height="300px"
+              width="900px"
+              display="flex"
+              flexDirection="column"
+              rowGap={1}
+              sx={{overflowY:"auto"}}
+            >
               <Typography fontSize="20px" color="#FFFFFF" paddingBottom="20px">
                 All Users
               </Typography>
               <Box width="880px" height="25px" display="flex" columnGap={10}>
-                <Box width="40px" borderRadius="5px" sx={{backgroundColor:"#FDFDFD"}}><Typography fontSize="20px" textAlign="center">ID</Typography></Box>
-                <Box width="113px" borderRadius="5px" sx={{backgroundColor:"#FDFDFD"}}><Typography fontSize="20px" textAlign="center">Firstname</Typography></Box>
-                <Box width="113px" borderRadius="5px" sx={{backgroundColor:"#FDFDFD"}}><Typography fontSize="20px" textAlign="center">Lastname</Typography></Box>
-                <Box width="260px" borderRadius="5px" sx={{backgroundColor:"#FDFDFD"}}><Typography fontSize="20px" textAlign="center">Email</Typography></Box>
-                <Box width="109px" borderRadius="5px" sx={{backgroundColor:"#FDFDFD"}}><Typography fontSize="20px" textAlign="center">Gender</Typography></Box>
+                <Box
+                  width="40px"
+                  borderRadius="5px"
+                  sx={{ backgroundColor: "#FDFDFD" }}
+                >
+                  <Typography fontSize="20px" textAlign="center">
+                    ID
+                  </Typography>
+                </Box>
+                <Box
+                  width="113px"
+                  borderRadius="5px"
+                  sx={{ backgroundColor: "#FDFDFD" }}
+                >
+                  <Typography fontSize="20px" textAlign="center">
+                    Firstname
+                  </Typography>
+                </Box>
+                <Box
+                  width="113px"
+                  borderRadius="5px"
+                  sx={{ backgroundColor: "#FDFDFD" }}
+                >
+                  <Typography fontSize="20px" textAlign="center">
+                    Lastname
+                  </Typography>
+                </Box>
+                <Box
+                  width="260px"
+                  borderRadius="5px"
+                  sx={{ backgroundColor: "#FDFDFD" }}
+                >
+                  <Typography fontSize="20px" textAlign="center">
+                    Email
+                  </Typography>
+                </Box>
+                <Box
+                  width="109px"
+                  borderRadius="5px"
+                  sx={{ backgroundColor: "#FDFDFD" }}
+                >
+                  <Typography fontSize="20px" textAlign="center">
+                    Gender
+                  </Typography>
+                </Box>
               </Box>
-              <Box width="880px" height="25px" display="flex" columnGap={10}>
-                <Box width="40px"><Typography fontSize="20px" textAlign="center" color="#FFFFFF">1</Typography></Box>
-                <Box width="113px"><Typography fontSize="20px" textAlign="center" color="#FFFFFF">Juniper</Typography></Box>
-                <Box width="113px"><Typography fontSize="20px" textAlign="center" color="#FFFFFF">Gabriel</Typography></Box>
-                <Box width="260px"><Typography fontSize="20px" textAlign="center" color="#FFFFFF">junipergabriel@gmail.com</Typography></Box>
-                <Box width="109px"><Typography fontSize="20px" textAlign="center" color="#FFFFFF">HER HER</Typography></Box>
-              </Box>
+              {users.map((user) => (
+                <Box
+                  width="880px"
+                  height="25px"
+                  display="flex"
+                  columnGap={10}
+                  key={user.id}
+                >
+                  <Box width="40px">
+                    <Typography
+                      fontSize="20px"
+                      textAlign="center"
+                      color="#FFFFFF"
+                    >
+                      {user.id}
+                    </Typography>
+                  </Box>
+                  <Box width="113px">
+                    <Typography
+                      fontSize="20px"
+                      textAlign="center"
+                      color="#FFFFFF"
+                    >
+                      {user.firstName}
+                    </Typography>
+                  </Box>
+                  <Box width="113px">
+                    <Typography
+                      fontSize="20px"
+                      textAlign="center"
+                      color="#FFFFFF"
+                    >
+                      {user.lastName}
+                    </Typography>
+                  </Box>
+                  <Box width="260px">
+                    <Typography
+                      fontSize="20px"
+                      textAlign="center"
+                      color="#FFFFFF"
+                    >
+                      {user.email}
+                    </Typography>
+                  </Box>
+                  <Box width="109px">
+                    <Typography
+                      fontSize="20px"
+                      textAlign="center"
+                      color="#FFFFFF"
+                    >
+                      HE HE
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
             </Box>
           </Box>
         </Box>

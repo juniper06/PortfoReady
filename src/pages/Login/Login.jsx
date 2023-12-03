@@ -39,12 +39,16 @@ const Login = () => {
 
       const data = response.data.data;
       onLogin(data.username, data.userId, data.id, data.type);
-      navigate("/");
-      console.log(data);
+      if (data.username === "admin") {
+        navigate("/dashboard")
+      }else navigate("/");
+      console.log(data);F
     } catch (error) {
       setLoginError("Account not registered. Please check your credentials.");
     }
   };
+
+  
 
   return (
     <Box
