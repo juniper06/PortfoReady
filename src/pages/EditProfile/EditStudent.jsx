@@ -18,7 +18,6 @@ import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
 
-
 const EditStudent = () => {
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
   const handleTabChange = (e, tabIndex) => {
@@ -104,7 +103,7 @@ const EditUserProfile = () => {
   const [emailvalue, setEmailValue] = useState("");
   const [passwordvalue, setPassowrdValue] = useState("");
   const [phoneNumbervalue, setPhoneNumberValue] = useState("");
-  const [contactLinksvalue, setContactLinksValue] = useState("");
+  const [contactLinksvalue, setContactLinksValue] = useState([]);
 
   const updateUser = async () => {
     try {
@@ -204,7 +203,11 @@ const EditUserProfile = () => {
           columnGap={2}
         >
           <Avatar
-             src={images ? URL.createObjectURL(images) : `http://localhost:8080/user/${user.userId}/image`}
+            src={
+              images
+                ? URL.createObjectURL(images)
+                : `http://localhost:8080/user/${user.userId}/image`
+            }
             sx={{ height: "70px", width: "70px" }}
           ></Avatar>
           <Button
@@ -346,14 +349,14 @@ const EditUserProfile = () => {
                 <Typography>Save</Typography>
               </Button>
               <Button
-              component={Link}
-              to="employerprofile"
+                component={Link}
+                to="employerprofile"
                 sx={{
                   width: "200px",
                   height: "43px",
                   borderRadius: "20px",
-                  backgroundColor: "#000000",
-                  color: "#FFFFFF",
+                  border: "1px solid #000000",
+                  color: "#000000",
                   textTransform: "none",
                 }}
               >
@@ -375,7 +378,7 @@ const EditStudentProfile = () => {
   const [resumeValue, setResumeValue] = useState([]);
 
   const updateStudentProfile = async () => {
-    try{
+    try {
       const response = await axios.put(
         `http://localhost:8080/student/updateStudent?userId=${user.userId}`,
         {
@@ -385,7 +388,7 @@ const EditStudentProfile = () => {
         }
       );
       console.log(response.data);
-    }catch(error){
+    } catch (error) {
       console.error("Error updating Student Profile");
     }
   };
@@ -409,21 +412,20 @@ const EditStudentProfile = () => {
     } catch (error) {
       console.error("Error adding Resume", error.message);
     }
-  }
+  };
 
   const handleSave = async () => {
-    try{
+    try {
       updateStudentProfile();
       handleAddResume();
-    }catch (error) {
+    } catch (error) {
       console.error("Error Updating Profile", error.message);
     }
   };
 
   if (isLoading) {
-    return "..."
-  } 
-
+    return "...";
+  }
 
   return (
     <>
@@ -432,38 +434,37 @@ const EditStudentProfile = () => {
         justifyContent="center"
         alignItems="center"
         columnGap={2}
-      >
-      </Box>
+      ></Box>
       <FormControl>
         <FormLabelStyled>Education:</FormLabelStyled>
         <TextFeidStyled
-              value={educationValue}
-              onChange={(e) => setEducationValue(e.target.value)}
-              InputProps={{
-                style: {
-                  borderRadius: "20px",
-                },
-              }}
-            />
+          value={educationValue}
+          onChange={(e) => setEducationValue(e.target.value)}
+          InputProps={{
+            style: {
+              borderRadius: "20px",
+            },
+          }}
+        />
         <br />
         <FormLabelStyled>Skills:</FormLabelStyled>
         <TextFeidStyled
-              value={skillsValue}
-              onChange={(e) => setSkillsValue(e.target.value)}      
-              InputProps={{
-                style: {
-                  borderRadius: "20px",
-                },
-              }}
-            />
+          value={skillsValue}
+          onChange={(e) => setSkillsValue(e.target.value)}
+          InputProps={{
+            style: {
+              borderRadius: "20px",
+            },
+          }}
+        />
         <br />
         <FormLabelStyled>Experiences:</FormLabelStyled>
         <textarea
           value={experienceValue}
-          onChange={(e) => setExperienceValue(e.target.value)}  
+          onChange={(e) => setExperienceValue(e.target.value)}
           style={{
-            padding:"20px",
-            fontSize:"15px",
+            padding: "20px",
+            fontSize: "15px",
             height: "130px",
             resize: "none",
             borderRadius: "20px",
@@ -472,16 +473,21 @@ const EditStudentProfile = () => {
         />
         <br />
         <FormLabelStyled>Resume:</FormLabelStyled>
-        <Input 
-        name="resumes"
-        type="file"
-        onChange={(e) => setResumeValue(e.target.files[0])}
+        <Input
+          name="resumes"
+          type="file"
+          onChange={(e) => setResumeValue(e.target.files[0])}
         />
-        <Box marginTop="20px" display="flex" width="500px" justifyContent="space-between">
+        <Box
+          marginTop="20px"
+          display="flex"
+          width="500px"
+          justifyContent="space-between"
+        >
           <Button
-          component={Link}
-          to="/studentprofile"
-          onClick={handleSave}
+            component={Link}
+            to="/studentprofile"
+            onClick={handleSave}
             sx={{
               width: "200px",
               height: "43px",
@@ -498,8 +504,8 @@ const EditStudentProfile = () => {
               width: "200px",
               height: "43px",
               borderRadius: "20px",
-              backgroundColor: "#000000",
-              color: "#FFFFFF",
+              border: "1px solid #000000",
+              color: "#000000",
               textTransform: "none",
             }}
           >

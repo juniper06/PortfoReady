@@ -316,13 +316,18 @@ const LandingPage = () => {
         }}
       >
         <Typography>©2023 PorfoReady</Typography>
-        <Typography>Terms</Typography>
-        <Typography>Privacy</Typography>
-        <Typography>Cookies</Typography>
+        <Button>Terms</Button>
+        <Button>Privacy</Button>
+        <Button>Cookies</Button>
+        <Button 
+        component={Link}
+        to="/contact">Contact Us</Button>
       </footer>
     </Box>
   );
 };
+
+
 
 const ButtonStlyed = styled(Button)({
   width: "377px",

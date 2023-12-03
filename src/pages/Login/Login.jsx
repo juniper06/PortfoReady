@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Box,
   Input,
@@ -6,8 +7,8 @@ import {
   OutlinedInput,
   InputAdornment,
   Button,
+  Alert,
 } from "@mui/material";
-import React from "react";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -17,29 +18,32 @@ import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-  const [usernameValue, setUsernameValue] = React.useState("");
-  const [passwordValue, setPasswordValue] = React.useState("");
+  const [usernameValue, setUsernameValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+  const [loginError, setLoginError] = useState(""); // New state for login error
   const { onLogin } = useAuth();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // function to login
   const loginUser = async () => {
-    await axios
-      .post("http://localhost:8080/user/login", {
+    try {
+      const response = await axios.post("http://localhost:8080/user/login", {
         username: usernameValue,
-        password: passwordValue
-      })
-      .then((response) => {
-          const data = response.data.data
-          onLogin(data.username, data.userId, data.id, data.type);
-        navigate("/"); 
-        console.log(data);
+        password: passwordValue,
       });
+
+      const data = response.data.data;
+      onLogin(data.username, data.userId, data.id, data.type);
+      navigate("/");
+      console.log(data);
+    } catch (error) {
+      setLoginError("Account not registered. Please check your credentials.");
+    }
   };
 
   return (
@@ -71,7 +75,9 @@ const Login = () => {
           backdropFilter: "blur(5px)",
           boxShadow: 10,
           bgcolor: (theme) =>
-            theme.palette.mode === "dark" ? "#FFF" : "rgb(255, 255, 255,0.5)",
+            theme.palette.mode === "dark"
+              ? "#FFF"
+              : "rgb(255, 255, 255,0.5)",
           color: (theme) =>
             theme.palette.mode === "dark" ? "grey.300" : "grey.800",
         }}
@@ -102,6 +108,11 @@ const Login = () => {
             </InputAdornment>
           }
         />
+        {loginError && (
+          <Alert severity="error" sx={{ width: "470px", marginTop: "10px" }}>
+            {loginError}
+          </Alert>
+        )}
         <LoginBtnStyled onClick={loginUser}>
           <Typography variant="h5" fontWeight="bold">
             Log In
