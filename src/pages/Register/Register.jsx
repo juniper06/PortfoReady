@@ -6,8 +6,9 @@ import {
   styled,
   InputAdornment,
   Button,
+  Alert,
 } from "@mui/material";
-import React from "react";
+import React, {useState}from "react";
 import background from "../../assets/bg-img.png";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
@@ -16,33 +17,49 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Register = () => {
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const handleClickShowConfirmPassword = () =>
     setShowConfirmPassword((show) => !show);
   const handleMouseDownConfirmPassword = (event) => {
     event.preventDefault();
   };
 
-  const [usernameValue, setUsernameValue] = React.useState("");
-  const [emailValue, setEmailValue] = React.useState("");
-  const [passwordValue, setPasswordValue] = React.useState("");
-  const [confirmPasswordValue, setConfirmPasswordValue] = React.useState("");
+  const [usernameValue, setUsernameValue] = useState("");
+  const [emailValue, setEmailValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+  const [confirmPasswordValue, setConfirmPasswordValue] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
+  const validatePassword = () => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(passwordValue)) {
+      setPasswordError(
+        "Password must be at least 8 characters, with uppercase, lowercase, and special characters."
+      );
+      return false;
+    }
+    return true;
+  };
+
   const registerUser = async () => {
+    if (!validatePassword()) {
+      return; // Do not proceed if the password is not valid
+    }
+
     await axios.post("http://localhost:8080/user/register", {
       username: usernameValue,
       email: emailValue,
       password: passwordValue,
-      type: location.state
+      type: location.state,
     }).then(() => {
-      navigate("/login")
+      navigate("/login");
     });
   };
 
@@ -144,6 +161,11 @@ const Register = () => {
             }
           />
         </Box>
+        {passwordError && (
+          <Alert severity="error" sx={{ width: "662px", marginBottom: "10px" }}>
+            {passwordError}
+          </Alert>
+        )}
         <RegisterBtnStyled onClick={registerUser}>
           <Typography variant="h6" fontWeight="bold">
             Create Account

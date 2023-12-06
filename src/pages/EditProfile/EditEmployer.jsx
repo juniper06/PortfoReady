@@ -211,6 +211,12 @@ const EditUserProfile = ({ userDetails }) => {
   };
 
   const handleSave = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to save the changes?"
+    );
+    if (!confirmed) {
+      return;
+    }
     try {
       updateUser();
       handleAddProfile();
@@ -236,7 +242,11 @@ const EditUserProfile = ({ userDetails }) => {
           columnGap={2}
         >
           <Avatar
-            src={images ? URL.createObjectURL(images) : `http://localhost:8080/user/${user.userId}/image`}
+            src={
+              images
+                ? URL.createObjectURL(images)
+                : `http://localhost:8080/user/${user.userId}/image`
+            }
             sx={{ height: "70px", width: "70px" }}
           ></Avatar>
           <Button
@@ -355,6 +365,7 @@ const EditUserProfile = ({ userDetails }) => {
                 to="/employerprofile"
                 onClick={handleSave}
                 sx={{
+                  border: "1px solid #000000",
                   width: "200px",
                   height: "43px",
                   borderRadius: "20px",
@@ -367,13 +378,12 @@ const EditUserProfile = ({ userDetails }) => {
                 <Typography>Save</Typography>
               </Button>
               <Button
-
                 sx={{
                   width: "200px",
                   height: "43px",
                   borderRadius: "20px",
-                  backgroundColor: "#000000",
-                  color: "#FFFFFF",
+                  border: "1px solid #000000",
+                  color: "#000000",
                   textTransform: "none",
                 }}
               >
@@ -410,6 +420,12 @@ const EditEmployerProfile = () => {
   };
 
   const handleSave = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to save the changes?"
+    );
+    if (!confirmed) {
+      return;
+    }
     try {
       updateCompanyProfile();
     } catch (error) {
@@ -417,9 +433,9 @@ const EditEmployerProfile = () => {
     }
   };
 
-    if (isLoading) {
-      return "..."
-    } 
+  if (isLoading) {
+    return "...";
+  }
 
   return (
     <>
@@ -457,8 +473,8 @@ const EditEmployerProfile = () => {
           value={companyDescriptionValue}
           onChange={(e) => setCompanyDescriptionValue(e.target.value)}
           style={{
-            padding:"20px",
-            fontSize:"15px",
+            padding: "20px",
+            fontSize: "15px",
             height: "130px",
             resize: "none",
             borderRadius: "20px",
@@ -489,8 +505,8 @@ const EditEmployerProfile = () => {
               width: "200px",
               height: "43px",
               borderRadius: "20px",
-              backgroundColor: "#000000",
-              color: "#FFFFFF",
+              border: "1px solid #000000",
+              color: "#000000",
               textTransform: "none",
             }}
           >

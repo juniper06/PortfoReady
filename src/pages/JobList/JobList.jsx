@@ -13,19 +13,14 @@ import {
   Avatar,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import WorkIcon from "@mui/icons-material/Work";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import PersonIcon from "@mui/icons-material/Person";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 
-
 const JobList = () => {
   const [open, setOpen] = React.useState(true);
   const [posts, setPosts] = useState([]);
+  const [selectedJobType, setSelectedJobType] = useState("all"); // Default to "all" or any other appropriate default value
   const { user, isLoading } = useAuth();
 
   const handleClick = () => {
@@ -43,6 +38,10 @@ const JobList = () => {
       .catch((err) => console.log(err));
   };
 
+  const handleJobTypeChange = (event) => {
+    setSelectedJobType(event.target.value);
+  };
+
   useEffect(() => {
     if (user.isAuthenticated) {
       getPosts();
@@ -50,99 +49,53 @@ const JobList = () => {
   }, [isLoading, user]);
 
   return (
-    // Container
     <Box height="91.6vh" display="flex">
-      <Box
-        display="flex"
-        flexDirection="column"
-        height="100%"
-        width="300px"
-        boxShadow={13}
-        rowGap={1}
-        sx={{ backgroundColor: "white", backdropFilter: "blur" }}
-      >
-        <Box display="flex" alignItems="end" height="50px" paddingLeft="10px">
-          <Typography variant="h5">Filters</Typography>
-        </Box>
-        <List
-          sx={{
-            width: "100%",
-            maxWidth: 360,
-            bgcolor: "background.paper",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <ListItemButton>
-            <ListItemIcon>
-              <PersonIcon />
-            </ListItemIcon>
-            <ListItemText primary="People" />
-          </ListItemButton>
-
-          <ListItemButton onClick={handleClick}>
-            <ListItemIcon>
-              <WorkIcon />
-            </ListItemIcon>
-            <ListItemText primary="Inbox" />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <RadioGroup name="job-list" defaultValue="first">
-                  <FormControlLabel
-                    value="UI/UX designer"
-                    control={<Radio />}
-                    label="UI/UX designer"
-                  />
-                  <FormControlLabel
-                    value="Web designer"
-                    control={<Radio />}
-                    label="Web designer"
-                  />
-                  <FormControlLabel
-                    value="Engineer"
-                    control={<Radio />}
-                    label="Engineer"
-                  />
-                  <FormControlLabel
-                    value="Product designer"
-                    control={<Radio />}
-                    label="Product designer"
-                  />
-                  <FormControlLabel
-                    value="Specialist"
-                    control={<Radio />}
-                    label="Specialist"
-                  />
-                </RadioGroup>
-              </ListItemButton>
-            </List>
-          </Collapse>
-        </List>
-      </Box>
-      <Box>
-        <Box width="1000px" height="100px" display="flex" padding="30px">
-          <Typography variant="h3" fontWeight="bold">
-            Job List
-          </Typography>
-        </Box>
-        <Box
-          width="1620px"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          paddingLeft="20px"
-        >
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-
+      <List component="div" disablePadding>
+        <ListItemButton sx={{ pl: 4 }}>
+          <RadioGroup
+            name="job-list"
+            defaultValue="all"
+            value={selectedJobType}
+            onChange={handleJobTypeChange}
           >
-            {posts.map((post) => (
-              <Grid item xs={2} sm={4} md={4} key={post.id}>
+            <FormControlLabel value="all" control={<Radio />} label="All" />
+            <FormControlLabel
+              value="UI/UX Designer"
+              control={<Radio />}
+              label="UI/UX Designer"
+            />
+            <FormControlLabel
+              value="Front-End Developer"
+              control={<Radio />}
+              label="Front-End Developer"
+            />
+            <FormControlLabel
+              value="Back-End Developer"
+              control={<Radio />}
+              label="Back-End Developer"
+            />
+          </RadioGroup>
+        </ListItemButton>
+      </List>
+      <Box marginTop={10} marginLeft={4}>
+        <Grid
+          container
+          spacing={{ xs: 1, md: 4 }}
+          columns={{ xs: 4, sm: 8, md: 6 }}
+        >
+          {posts
+            .filter(
+              (post) =>
+                selectedJobType === "all" || post.job.name === selectedJobType
+            )
+            .map((post) => (
+              <Grid
+                item
+                xs={4}
+                sm={4}
+                md={4}
+                key={post.id}
+              >
                 <JobContainer
                   display="flex"
                   onClick={() => navigate(`/jobpage/${post.id}`)}
@@ -156,13 +109,16 @@ const JobList = () => {
                       alignItems: "center",
                     }}
                   >
-                    <Avatar sx={{ width: "50px", height: "50px" }}>B</Avatar>
+                    <Avatar
+                      sx={{ width: "50px", height: "50px" }}
+                      src={`http://localhost:8080/user/${post.user.id}/image`}
+                    ></Avatar>
                   </Box>
                   <Box
                     width="370px"
                     display="flex"
-                    paddingLeft="20px"
-                    paddingTop="10px"
+                    justifyContent="center"
+                    alignItems="start"
                     flexDirection="column"
                     rowGap={1}
                   >
@@ -174,8 +130,7 @@ const JobList = () => {
                 </JobContainer>
               </Grid>
             ))}
-          </Grid>
-        </Box>
+        </Grid>
       </Box>
     </Box>
   );

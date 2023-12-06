@@ -21,8 +21,6 @@ import EditEmployer from "./pages/EditProfile/EditEmployer";
 import { AuthProvider } from "./hooks/useAuth";
 import axios from "axios";
 import Dashboard from "./pages/Dashboard/Dashboard";
-import Analytics from "./pages/Dashboard/Analytics";
-import Dingdongbitch from "./pages/Dashboard/Dingdongbitch";
 
 const router = createBrowserRouter([
   {
@@ -32,10 +30,6 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
-      },
-      {
-        path: "/contact",
-        element: <ContactForm />,
       },
       {
         path: "/studentprofile",
@@ -54,18 +48,6 @@ const router = createBrowserRouter([
         element: <JobPage />,
       },
       {
-        path: "/dashboard",
-        element: <Dashboard />,
-      },
-      {
-        path: "/dashboard/analytics",
-        element: <Analytics />,
-      },
-      {
-        path: "/dashboard/dingdongbitch",
-        element: <Dingdongbitch />,
-      },
-      {
         path: "/joblist",
         element: <JobList />,
       },
@@ -82,6 +64,14 @@ const router = createBrowserRouter([
   {
     path: "/landingpage",
     element: <LandingPage />,
+  },
+  {
+    path:"/dashboard",
+    element:<Dashboard/>
+  },
+  {
+    path: "/contact",
+    element: <ContactForm />,
   },
   {
     path: "/login",

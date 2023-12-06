@@ -18,8 +18,7 @@ import {
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
-import palo from "../../assets/palo.png";
-import { PostAddSharp } from "@mui/icons-material";
+
 
 const StudentProfile = () => {
   const { user, isLoading } = useAuth();

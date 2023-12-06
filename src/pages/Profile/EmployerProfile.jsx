@@ -26,9 +26,9 @@ const EmployerProfile = () => {
 
   const getPosts = async () => {
     await axios
-      .get(`http://localhost:8080/post/posts?userId=${user.userId}`)
+      .get(`http://localhost:8080/post/${user.id}/employer`)
       .then((response) => {
-        setPosts(response.data.data.content);
+        setPosts(response.data.data);
         console.log(response);
       })
       .catch((err) => console.log(err));
@@ -129,7 +129,11 @@ const EmployerProfile = () => {
                 <Typography variant="h5" fontWeight="bold">
                   About Us
                 </Typography>
-                <Typography variant="p" paddingBottom="15px"  sx={{wordBreak:"break-word"}}>
+                <Typography
+                  variant="p"
+                  paddingBottom="15px"
+                  sx={{ wordBreak: "break-word" }}
+                >
                   {employerDetails.companyDescription}
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
@@ -173,7 +177,7 @@ const EmployerProfile = () => {
                 <Typography variant="h5" fontWeight="bold" color="#FF0404">
                   2
                 </Typography>
-                <ApplicantsCard />
+                <ApplicantsCard id={user.id} />
               </Box>
               <Box
                 borderRadius="15px"
@@ -223,10 +227,27 @@ const EmployerProfile = () => {
   );
 };
 
-const ApplicantsCard = () => {
+const ApplicantsCard = ({ id }) => {
   const [openApplicants, SetOpenApplicants] = React.useState(false);
   const handleOpenApplicant = () => SetOpenApplicants(true);
   const handleCloseApplicant = () => SetOpenApplicants(false);
+  const [appliedPosts, setAppliedPosts] = useState();
+
+  useEffect(() => {
+    const fetchAppliedPosts = async () => {
+      await axios
+        .get(
+          `http://localhost:8080/application/getApplicants?postId=${id}`
+        )
+        .then((response) => {
+          setAppliedPosts(response.data.data);
+        })
+        .catch((error) => {
+          console.log("Fetching Applied Posts Error: ", error);
+        });
+    };
+    fetchAppliedPosts();
+  });
 
   return (
     <>
@@ -251,10 +272,13 @@ const ApplicantsCard = () => {
         open={openApplicants}
         onClose={handleCloseApplicant}
       >
-        <DialogTitle textAlign="center" borderBottom="2px solid #808080">
-          <Typography variant="h4" fontWeight="bold">
-            Applicants
-          </Typography>
+        <DialogTitle
+          textAlign="center"
+          borderBottom="2px solid #808080"
+          fontSize="30px"
+          fontWeight="bold"
+        >
+          Applicants
         </DialogTitle>
         <DialogContent>
           <Stack

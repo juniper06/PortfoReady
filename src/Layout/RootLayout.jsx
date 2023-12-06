@@ -162,12 +162,6 @@ const RootLayout = () => {
         >
           <Typography>Profile</Typography>
         </LinkStyled>
-        <LinkStyled to="/contact">
-          <Typography>Contact Us</Typography>
-        </LinkStyled>
-        <LinkStyled to="/dashboard">
-          <Typography>Dashboard</Typography>
-        </LinkStyled>
         <LinkStyled to="/joblist">
           <Typography>Job List</Typography>
         </LinkStyled>
