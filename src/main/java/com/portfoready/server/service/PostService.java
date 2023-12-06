@@ -89,4 +89,12 @@ public class PostService {
     public Long countAllPost(){
         return postRepository.count();
     }
+
+    public List<Post> getRecommendedJobs(){
+        return postRepository.recommendedJobs();
+    }
+
+    public List<Post> getPostByPosterId(Long posterId){
+        return postRepository.findAllByPosterId(posterId);
+    }
 }

@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long>{
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
 
-    @Query("SELECT u FROM User u WHERE u.id <> :userId AND u.id NOT IN (SELECT f.to.id FROM Follower f WHERE f.from = :user) ORDER BY RAND()")
+    @Query("SELECT u FROM User u WHERE u.id <> :userId AND u.id NOT IN (SELECT f.to.id FROM Follower f WHERE f.from = :user) ORDER BY RAND() LIMIT 2")
     List<User> findRandomUsersNotFollowing(@Param("user") User user, @Param("userId") Long userId, Pageable pageable);
 
 }

@@ -24,6 +24,7 @@ public class UserResponse {
     private String phoneNumber;
     private FileResponse imageFile;
     private List<String> links;
+    private String password;
 
     public UserResponse(User user) {
         id = user.getId();
@@ -33,6 +34,7 @@ public class UserResponse {
         lastName = user.getLastName();
         phoneNumber = user.getPhoneNumber();
         links = user.getLinks();
+        password = user.getPassword();
         if(user.getImage() != null)
             imageFile = new FileResponse(user.getImage());
     }

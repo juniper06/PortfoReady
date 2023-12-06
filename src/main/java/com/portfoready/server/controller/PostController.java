@@ -135,4 +135,27 @@ public class PostController {
             return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+
+    @GetMapping("/recommended")
+    public ResponseEntity<Object> recommendedJob(){
+        try{
+            List<Post> posts = postService.getRecommendedJobs();
+            List<PostResponse> response = posts.stream().map(PostResponse::new).toList();
+            return ResponseHandler.generateResponse("Successfully Generated", HttpStatus.OK, response);
+        } catch (Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/{posterId}/employer")
+    public ResponseEntity<Object> getPostByPosterId(@PathVariable Long posterId){
+        try{
+            List<Post> posts = postService.getPostByPosterId(posterId);
+            List<PostResponse> response = posts.stream().map(PostResponse::new).toList();
+            return ResponseHandler.generateResponse("Successfully Generated", HttpStatus.OK, response);
+        } catch (Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
