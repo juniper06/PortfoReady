@@ -118,7 +118,7 @@ const EditEmployer = () => {
           justifyContent="center"
           rowGap={1}
         >
-          {currentTabIndex === 0 && <EditUserProfile />}
+          {currentTabIndex === 0 && <EditUserProfile userDetails={userDetails}/>}
           {currentTabIndex === 1 && <EditEmployerProfile />}
         </Box>
       </Box>
@@ -126,7 +126,7 @@ const EditEmployer = () => {
   );
 };
 
-const EditUserProfile = () => {
+const EditUserProfile = ({ userDetails }) => {
   const { user, isLoading, onLogout } = useAuth();
   const [posts, setPosts] = useState([]);
   const [images, setImages] = useState(null);
@@ -144,12 +144,12 @@ const EditUserProfile = () => {
       const response = await axios.put(
         `http://localhost:8080/user/updateUser/${user.userId}`,
         {
-          firstName: firstNameValue,
-          lastName: lastNameValue,
-          username: usernameValue,
-          email: emailvalue,
-          password: passwordvalue,
-          phoneNumber: phoneNumbervalue,
+          firstName: firstNameValue.length > 0 ? firstNameValue : userDetails.firstName,
+          lastName: lastNameValue.length > 0 ? lastNameValue : userDetails.lastName,
+          username: usernameValue.length > 0 ? usernameValue : userDetails.username,
+          email: emailvalue.length > 0 ? email : userDetails.email,
+          password: passwordvalue.length > 0 ? passwordvalue : userDetails.password,
+          phoneNumber: phoneNumbervalue.length > 0 ? phoneNumbervalue : userDetails.phoneNumber,
         }
       );
 

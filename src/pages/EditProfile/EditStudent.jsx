@@ -84,7 +84,7 @@ const EditStudent = () => {
           justifyContent="center"
           rowGap={1}
         >
-          {currentTabIndex === 0 && <EditUserProfile />}
+          {currentTabIndex === 0 && <EditUserProfile userDetails={userDetails} />}
           {currentTabIndex === 1 && <EditStudentProfile />}
         </Box>
       </Box>
@@ -92,7 +92,7 @@ const EditStudent = () => {
   );
 };
 
-const EditUserProfile = () => {
+const EditUserProfile = ({ userDetails }) => {
   const { user, isLoading, onLogout } = useAuth();
   const [posts, setPosts] = useState([]);
   const [images, setImages] = useState(null);
@@ -104,20 +104,18 @@ const EditUserProfile = () => {
   const [emailvalue, setEmailValue] = useState("");
   const [passwordvalue, setPassowrdValue] = useState("");
   const [phoneNumbervalue, setPhoneNumberValue] = useState("");
-  const [contactLinksvalue, setContactLinksValue] = useState("");
 
   const updateUser = async () => {
     try {
       const response = await axios.put(
         `http://localhost:8080/user/updateUser/${user.userId}`,
         {
-          firstName: firstNameValue,
-          lastName: lastNameValue,
-          username: usernameValue,
-          email: emailvalue,
-          password: passwordvalue,
-          phoneNumber: phoneNumbervalue,
-          contactLinks: contactLinksvalue,
+          firstName: firstNameValue.length > 0 ? firstNameValue : userDetails.firstName,
+          lastName: lastNameValue.length > 0 ? lastNameValue : userDetails.lastName,
+          username: usernameValue.length > 0 ? usernameValue : userDetails.username,
+          email: emailvalue.length > 0 ? email : userDetails.email,
+          password: passwordvalue.length > 0 ? passwordvalue : userDetails.password,
+          phoneNumber: phoneNumbervalue.length > 0 ? phoneNumbervalue : userDetails.phoneNumber,
         }
       );
 
@@ -204,7 +202,7 @@ const EditUserProfile = () => {
           columnGap={2}
         >
           <Avatar
-             src={images ? URL.createObjectURL(images) : `http://localhost:8080/user/${user.userId}/image`}
+            src={images ? URL.createObjectURL(images) : `http://localhost:8080/user/${user.userId}/image`}
             sx={{ height: "70px", width: "70px" }}
           ></Avatar>
           <Button
@@ -249,9 +247,6 @@ const EditUserProfile = () => {
             </Typography>
             <Typography fontWeight="bold" variant="h5">
               Phone Number:
-            </Typography>
-            <Typography fontWeight="bold" variant="h5">
-              Contact Links:
             </Typography>
           </Box>
           <Box width="400px" display="flex" flexDirection="column" rowGap={3}>
@@ -320,18 +315,10 @@ const EditUserProfile = () => {
                 },
               }}
             />
-            <TextFeidStyled
-              value={contactLinksvalue}
-              onChange={(e) => setContactLinksValue(e.target.value)}
-              placeholder="e.g. https://www.Instagram.com/portfoready/"
-              InputProps={{
-                style: {
-                  borderRadius: "20px",
-                },
-              }}
-            />
             <Box marginTop="10px" display="flex">
               <Button
+                component={Link}
+                to="/employerprofile"
                 onClick={handleSave}
                 sx={{
                   width: "200px",
@@ -346,8 +333,7 @@ const EditUserProfile = () => {
                 <Typography>Save</Typography>
               </Button>
               <Button
-              component={Link}
-              to="employerprofile"
+
                 sx={{
                   width: "200px",
                   height: "43px",
