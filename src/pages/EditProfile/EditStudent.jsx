@@ -124,6 +124,7 @@ const EditUserProfile = ({ userDetails }) => {
   const [emailvalue, setEmailValue] = useState("");
   const [passwordvalue, setPassowrdValue] = useState("");
   const [phoneNumbervalue, setPhoneNumberValue] = useState("");
+  const [contactLinksValue, setContactLinksValue] = useState("");
 
   const updateUser = async () => {
     try {
@@ -206,7 +207,11 @@ const EditUserProfile = ({ userDetails }) => {
           columnGap={2}
         >
           <Avatar
-            src={images ? URL.createObjectURL(images) : `http://localhost:8080/user/${user.userId}/image`}
+            src={
+              images
+                ? URL.createObjectURL(images)
+                : `http://localhost:8080/user/${user.userId}/image`
+            }
             sx={{ height: "70px", width: "70px" }}
           ></Avatar>
           <Button
@@ -251,6 +256,9 @@ const EditUserProfile = ({ userDetails }) => {
             </Typography>
             <Typography fontWeight="bold" variant="h5">
               Phone Number:
+            </Typography>
+            <Typography fontWeight="bold" variant="h5">
+              Contact Link:
             </Typography>
           </Box>
           <Box width="400px" display="flex" flexDirection="column" rowGap={3}>
@@ -313,6 +321,16 @@ const EditUserProfile = ({ userDetails }) => {
               value={phoneNumbervalue}
               onChange={(e) => setPhoneNumberValue(e.target.value)}
               placeholder="e.g. +63342345312"
+              InputProps={{
+                style: {
+                  borderRadius: "20px",
+                },
+              }}
+            />
+            <TextFeidStyled
+              value={contactLinksValue}
+              onChange={(e) => setContactLinksValue(e.target.value)}
+              placeholder="www.facebook/PortfoReady.com"
               InputProps={{
                 style: {
                   borderRadius: "20px",

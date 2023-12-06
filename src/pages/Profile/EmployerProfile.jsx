@@ -228,17 +228,18 @@ const EmployerProfile = () => {
 };
 
 const ApplicantsCard = ({ id }) => {
+  const [openJobPostings, SetopenJobPostings] = React.useState(false);
+  const handleOpenJobPostings = () => SetopenJobPostings(true);
+  const handleCloseJobPosting = () => SetopenJobPostings(false);
   const [openApplicants, SetOpenApplicants] = React.useState(false);
-  const handleOpenApplicant = () => SetOpenApplicants(true);
-  const handleCloseApplicant = () => SetOpenApplicants(false);
+  const handleOpenApplicants = () => SetOpenApplicants(true);
+  const handleCloseApplicants = () => SetOpenApplicants(false);
   const [appliedPosts, setAppliedPosts] = useState();
 
   useEffect(() => {
     const fetchAppliedPosts = async () => {
       await axios
-        .get(
-          `http://localhost:8080/application/getApplicants?postId=${id}`
-        )
+        .get(`http://localhost:8080/application/getApplicants?postId=${id}`)
         .then((response) => {
           setAppliedPosts(response.data.data);
         })
@@ -252,7 +253,7 @@ const ApplicantsCard = ({ id }) => {
   return (
     <>
       <Button
-        onClick={handleOpenApplicant}
+        onClick={handleOpenJobPostings}
         sx={{
           width: "150px",
           height: "27px",
@@ -263,14 +264,72 @@ const ApplicantsCard = ({ id }) => {
         }}
       >
         <Typography variant="p" color="#20A4E6">
-          View Applicants
+          View Job Postings
         </Typography>
       </Button>
       <Dialog
         fullWidth
         maxWidth="md"
+        open={openJobPostings}
+        onClose={handleCloseJobPosting}
+      >
+        <DialogTitle
+          textAlign="center"
+          borderBottom="2px solid #808080"
+          fontSize="30px"
+          fontWeight="bold"
+        >
+          Job Postings
+        </DialogTitle>
+        <DialogContent>
+          <Stack
+            spacing={3}
+            justifyContent="center"
+            alignItems="center"
+            paddingTop="20px"
+          >
+            <Box
+              width="800px"
+              height="126px"
+              border="2px solid #808080"
+              borderRadius="20px"
+              display="flex"
+              alignItems="center"
+              paddingLeft="30px"
+            >
+              <Stack direction="row" columnGap="180px" alignItems="center">
+                <Box width="400px">
+                  <Typography variant="h4" fontWeight="bold">
+                    Title ni sa post
+                  </Typography>
+                </Box>
+                <Box textAlign="center">
+                  <Button
+                    onClick={handleOpenApplicants}
+                    sx={{
+                      width: "190px",
+                      height: "42px",
+                      backgroundColor: "#000000",
+                      color: "#FFFFFF",
+                      borderRadius: "20px",
+                      "&:hover": { backgroundColor: "#000000" },
+                    }}
+                  >
+                    <Typography fontWeight="bold">
+                      <LinkStyled>View</LinkStyled>
+                    </Typography>
+                  </Button>
+                </Box>
+              </Stack>
+            </Box>
+          </Stack>
+        </DialogContent>
+      </Dialog>
+      <Dialog
+        fullWidth
+        maxWidth="md"
         open={openApplicants}
-        onClose={handleCloseApplicant}
+        onClose={handleCloseApplicants}
       >
         <DialogTitle
           textAlign="center"
@@ -299,7 +358,7 @@ const ApplicantsCard = ({ id }) => {
               <Stack direction="row" columnGap="180px" alignItems="center">
                 <Box width="400px">
                   <Typography variant="h4" fontWeight="bold">
-                    John Palo
+                    Applicants name
                   </Typography>
                 </Box>
                 <Box textAlign="center">
