@@ -43,9 +43,9 @@ public class DataInitializer implements CommandLineRunner {
         Job job3 = Job.builder().name("Back-End Developer").build();
         List<Job> jobs = jobRepository.saveAll(List.of(job1, job2, job3));
         log.info(jobs.toString());
-        User user1 = User.builder().username("juniper06").email("juniper06@gmail.com").password("juniper06password")
+        User user1 = User.builder().username("employer").email("juniper06@gmail.com").password("12345")
                 .build();
-        User user2 = User.builder().username("moraxfunk").email("moraxfunk@gmail.com").password("moraxfunkpassword")
+        User user2 = User.builder().username("student").email("moraxfunk@gmail.com").password("12345")
                 .build();
         User admin = User.builder().username("admin").email("admin@gmail.com").password("1234")
                 .build();

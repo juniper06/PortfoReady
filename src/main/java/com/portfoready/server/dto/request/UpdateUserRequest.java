@@ -29,7 +29,7 @@ public class UpdateUserRequest {
             user.setLastName(lastName);
         if(!phoneNumber.isBlank())
             user.setPhoneNumber(phoneNumber);
-        if(!links.isEmpty())
+        if(links!=null)
             user.setLinks(links);
         return user;
     }

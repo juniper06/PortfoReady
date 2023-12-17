@@ -12,10 +12,14 @@ public class UpdateStudentRequest {
     private String language;
 
     public Student updateStudent(Student student){
-        student.setEducation(education);
-        student.setSkills(skills);
-        student.setExperience(experience);
-        student.setLanguage(language);
+        if(!education.isBlank())
+            student.setEducation(education);
+        if(!skills.isBlank())
+            student.setSkills(skills);
+        if(!experience.isBlank())
+            student.setExperience(experience);
+        if(!language.isBlank())
+            student.setLanguage(language);
         return student;
     }
 }

@@ -13,9 +13,12 @@ public class UpdateEmployerRequest {
 
 
     public Employer updateEmployer(Employer employer){
-        employer.setCompanyName(companyName);
-        employer.setCompanyDescription(companyDescription);
-        employer.setCompanyEmail(companyEmail);
+        if(!companyName.isBlank())
+            employer.setCompanyName(companyName);
+        if(!companyDescription.isBlank())
+            employer.setCompanyDescription(companyDescription);
+        if(!companyEmail.isBlank())
+            employer.setCompanyEmail(companyEmail);
         return employer;
     }
 }
