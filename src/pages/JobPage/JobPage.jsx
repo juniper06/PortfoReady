@@ -24,6 +24,7 @@ const JobPage = () => {
   const [employerDetails, setEmployerDetails] = useState();
   const [postDetails, setPostDetails] = useState(null);
   const { postId } = useParams();
+  console.log("POST ID: ", postId)
 
   useEffect(() => {
     const getPostDetails = async () => {
@@ -153,8 +154,7 @@ const TakeExam = ({ examId, postId }) => {
   };
 
   const handleSubmit = async () => {
-    console.log(answers);
-    console.log(user.id, postId);
+    console.log("Submitting: ", user.id, postId)
     try {
       await axios.post("http://localhost:8080/post/applyPost", {
         studentId: user.id,
