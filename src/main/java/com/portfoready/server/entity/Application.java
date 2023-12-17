@@ -39,6 +39,6 @@ public class Application {
     }
 
     public void reject(){
-        status = ApplicationStatus.APPROVED;
+        status = ApplicationStatus.REJECTED;
     }
 }

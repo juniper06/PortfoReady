@@ -50,4 +50,8 @@ public class ApplicationService {
     public List<Student> getApplicantsByPost(Long postId) {
         return applicationRepository.getAllApplicantsByPostId(postId);
     }
+
+    public List<Application> getApplicationsByPostId(Long postId) {
+        return applicationRepository.findAllByAppliedPost_Id(postId);
+    }
 }

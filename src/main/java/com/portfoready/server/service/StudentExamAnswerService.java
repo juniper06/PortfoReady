@@ -8,6 +8,8 @@ import com.portfoready.server.repository.StudentExamAnswerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class StudentExamAnswerService {
@@ -17,5 +19,9 @@ public class StudentExamAnswerService {
         StudentExamAnswer studentExamAnswer = StudentExamAnswer.builder().exam(exam).student(student).question(question)
                 .studentAnswer(studentAnswer).build();
         studentExamAnswerRepository.save(studentExamAnswer);
+    }
+
+    public List<StudentExamAnswer> getExamAnswersByExamId(Long examId){
+        return studentExamAnswerRepository.findByExamId(examId);
     }
 }

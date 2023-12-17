@@ -4,6 +4,7 @@ import com.portfoready.server.dto.response.ApplicationResponse;
 import com.portfoready.server.dto.response.ResponseHandler;
 import com.portfoready.server.dto.response.StudentResponse;
 import com.portfoready.server.entity.Application;
+import com.portfoready.server.entity.Post;
 import com.portfoready.server.entity.Student;
 import com.portfoready.server.service.ApplicationService;
 import lombok.AllArgsConstructor;
@@ -50,11 +51,11 @@ public class ApplicationController {
         }
     }
 
-    @GetMapping("/getApplicants")
-    public ResponseEntity<Object> getApplicants(@RequestParam(name = "postId") Long postId) {
+    @GetMapping("/getApplications")
+    public ResponseEntity<Object> getApplications(@RequestParam(name = "postId") Long postId) {
         try{
-            List<Student> students = applicationService.getApplicantsByPost(postId);
-            List<StudentResponse> response = students.stream().map(StudentResponse::new).toList();
+            List<Application> applications = applicationService.getApplicationsByPostId(postId);
+            List<ApplicationResponse> response = applications.stream().map(ApplicationResponse::new).toList();
             return ResponseHandler.generateResponse("Successfully Approved", HttpStatus.OK, response);
         } catch (Exception e){
             return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);

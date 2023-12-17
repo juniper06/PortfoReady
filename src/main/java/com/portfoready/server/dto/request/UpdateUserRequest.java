@@ -17,13 +17,20 @@ public class UpdateUserRequest {
     private List<String> links;
 
     public User updateUser(User user){
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setEmail(email);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setPhoneNumber(phoneNumber);
-        user.setLinks(links);
+        if(!username.isBlank())
+            user.setUsername(username);
+        if(!password.isBlank())
+            user.setPassword(password);
+        if(!email.isBlank())
+            user.setEmail(email);
+        if(!firstName.isBlank())
+            user.setFirstName(firstName);
+        if(!lastName.isBlank())
+            user.setLastName(lastName);
+        if(!phoneNumber.isBlank())
+            user.setPhoneNumber(phoneNumber);
+        if(!links.isEmpty())
+            user.setLinks(links);
         return user;
     }
 }
