@@ -27,8 +27,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    @ElementCollection
-    private List<String> links = new ArrayList<>();
+    private String contact;
     @OneToOne(orphanRemoval = true)
     private File image;
     @OneToMany(mappedBy = "to", fetch = FetchType.LAZY)

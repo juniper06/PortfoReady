@@ -20,7 +20,6 @@ public class Follower {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fromUserId")
     private User from;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "toUserId")
     private User to;

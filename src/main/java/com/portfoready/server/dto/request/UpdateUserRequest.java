@@ -14,7 +14,7 @@ public class UpdateUserRequest {
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private List<String> links;
+    private String contact;
 
     public User updateUser(User user){
         if(!username.isBlank())
@@ -29,8 +29,8 @@ public class UpdateUserRequest {
             user.setLastName(lastName);
         if(!phoneNumber.isBlank())
             user.setPhoneNumber(phoneNumber);
-        if(links!=null)
-            user.setLinks(links);
+        if(!contact.isBlank())
+            user.setContact(contact);
         return user;
     }
 }

@@ -23,7 +23,7 @@ public class UserResponse {
     private String lastName;
     private String phoneNumber;
     private FileResponse imageFile;
-    private List<String> links;
+    private String contact;
     private String password;
 
     public UserResponse(User user) {
@@ -33,7 +33,7 @@ public class UserResponse {
         firstName = user.getFirstName();
         lastName = user.getLastName();
         phoneNumber = user.getPhoneNumber();
-        links = user.getLinks();
+        contact = user.getContact();
         password = user.getPassword();
         if(user.getImage() != null)
             imageFile = new FileResponse(user.getImage());
