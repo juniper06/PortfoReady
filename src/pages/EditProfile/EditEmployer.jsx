@@ -128,7 +128,6 @@ const EditEmployer = () => {
 
 const EditUserProfile = ({ userDetails }) => {
   const { user, isLoading, onLogout } = useAuth();
-  const [posts, setPosts] = useState([]);
   const [images, setImages] = useState(null);
   const [imageFile, setImageFile] = useState(null);
 
@@ -138,6 +137,7 @@ const EditUserProfile = ({ userDetails }) => {
   const [emailvalue, setEmailValue] = useState("");
   const [passwordvalue, setPassowrdValue] = useState("");
   const [phoneNumbervalue, setPhoneNumberValue] = useState("");
+  const [contactLinksValue, setContactLinksValue] = useState("");
 
   const updateUser = async () => {
     try {
@@ -150,6 +150,7 @@ const EditUserProfile = ({ userDetails }) => {
           email: emailvalue.length > 0 ? emailvalue : userDetails.email,
           password: passwordvalue.length > 0 ? passwordvalue : userDetails.password,
           phoneNumber: phoneNumbervalue.length > 0 ? phoneNumbervalue : userDetails.phoneNumber,
+          contact: contactLinksValue.length > 0 ? contactLinksValue : userDetails.contact,
         }
       );
 
@@ -170,22 +171,6 @@ const EditUserProfile = ({ userDetails }) => {
     whiteSpace: "nowrap",
     width: 1,
   });
-
-  const getPosts = async () => {
-    await axios
-      .get(`http://localhost:8080/post/posts?userId=${user.userId}`)
-      .then((response) => {
-        setPosts(response.data.data.content);
-        console.log(response);
-      })
-      .catch((err) => console.log(err));
-  };
-
-  useEffect(() => {
-    if (user.isAuthenticated) {
-      getPosts();
-    }
-  }, [isLoading, user]);
 
   const handleAddProfile = async () => {
     try {
@@ -211,12 +196,6 @@ const EditUserProfile = ({ userDetails }) => {
   };
 
   const handleSave = async () => {
-    const confirmed = window.confirm(
-      "Are you sure you want to save the changes?"
-    );
-    if (!confirmed) {
-      return;
-    }
     try {
       updateUser();
       handleAddProfile();
@@ -292,6 +271,9 @@ const EditUserProfile = ({ userDetails }) => {
             <Typography fontWeight="bold" variant="h5">
               Phone Number:
             </Typography>
+            <Typography fontWeight="bold" variant="h5">
+              Contact Link:
+            </Typography>
           </Box>
           <Box width="400px" display="flex" flexDirection="column" rowGap={3}>
             <Box height="50px" display="flex">
@@ -359,13 +341,22 @@ const EditUserProfile = ({ userDetails }) => {
                 },
               }}
             />
+            <TextFeidStyled
+              value={contactLinksValue}
+              onChange={(e) => setContactLinksValue(e.target.value)}
+              placeholder="www.facebook/PortfoReady.com"
+              InputProps={{
+                style: {
+                  borderRadius: "20px",
+                },
+              }}
+            />
             <Box marginTop="10px" display="flex">
               <Button
                 component={Link}
                 to="/employerprofile"
                 onClick={handleSave}
                 sx={{
-                  border: "1px solid #000000",
                   width: "200px",
                   height: "43px",
                   borderRadius: "20px",
@@ -378,8 +369,8 @@ const EditUserProfile = ({ userDetails }) => {
                 <Typography>Save</Typography>
               </Button>
               <Button
-              component={Link}
-              to="/employerprofile"
+                component={Link}
+                to="/studentprofile"
                 sx={{
                   width: "200px",
                   height: "43px",
