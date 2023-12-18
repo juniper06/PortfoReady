@@ -21,7 +21,7 @@ public class StudentExamAnswerService {
         studentExamAnswerRepository.save(studentExamAnswer);
     }
 
-    public List<StudentExamAnswer> getExamAnswersByExamId(Long examId){
-        return studentExamAnswerRepository.findByExamId(examId);
+    public List<StudentExamAnswer> getExamAnswersByExamId(Long examId, Long studentId){
+        return studentExamAnswerRepository.findByExamIdAndStudentId(examId, studentId);
     }
 }

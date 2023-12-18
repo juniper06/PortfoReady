@@ -39,9 +39,10 @@ public class CertificateService {
         return certificateRepository.findAllByStudent(student);
     }
 
-    public Certificate deleteCertificate(Long id){
+    public Certificate deleteCertificate(Long id) throws Exception {
         Certificate certificate = certificateRepository.findById(id).orElseThrow();
         certificateRepository.deleteById(id);
+        fileService.deleteFile(certificate.getImage());
         return certificate;
     }
 

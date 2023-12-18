@@ -20,6 +20,7 @@ public class StudentExamAnswer {
     @JoinColumn(name = "exam_id")
     private Exam exam;
     @ManyToOne
+    @JoinColumn(name = "student_id")
     private Student student;
     @ManyToOne
     private Question question;

@@ -65,8 +65,13 @@ public class CertificateController {
 
     @DeleteMapping("/deleteCertificate")
     public ResponseEntity<Object> deleteCertificate(@RequestParam(name = "id") Long id) {
-        Certificate certificate = certificateService.deleteCertificate(id);
-        CertificateResponse response = new CertificateResponse(certificate);
-        return ResponseHandler.generateResponse("Successfully Generated", HttpStatus.OK, response);
+        try {
+            Certificate certificate = certificateService.deleteCertificate(id);
+            CertificateResponse response = new CertificateResponse(certificate);
+            return ResponseHandler.generateResponse("Successfully Generated", HttpStatus.OK, response);
+        }
+        catch(Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 }
