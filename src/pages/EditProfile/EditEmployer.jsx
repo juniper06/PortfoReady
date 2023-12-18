@@ -147,7 +147,7 @@ const EditUserProfile = ({ userDetails }) => {
           firstName: firstNameValue.length > 0 ? firstNameValue : userDetails.firstName,
           lastName: lastNameValue.length > 0 ? lastNameValue : userDetails.lastName,
           username: usernameValue.length > 0 ? usernameValue : userDetails.username,
-          email: emailvalue.length > 0 ? email : userDetails.email,
+          email: emailvalue.length > 0 ? emailvalue : userDetails.email,
           password: passwordvalue.length > 0 ? passwordvalue : userDetails.password,
           phoneNumber: phoneNumbervalue.length > 0 ? phoneNumbervalue : userDetails.phoneNumber,
         }
@@ -378,6 +378,8 @@ const EditUserProfile = ({ userDetails }) => {
                 <Typography>Save</Typography>
               </Button>
               <Button
+              component="link"
+              to="/employerprofile"
                 sx={{
                   width: "200px",
                   height: "43px",

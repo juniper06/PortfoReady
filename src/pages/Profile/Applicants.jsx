@@ -22,11 +22,11 @@ const Applicants = () => {
 		const fetchStudentDetails = async () => {
 			await axios
 				.get(
-					`http://localhost:8080/exam/getStudentExamAnswer?examId=${state.app.post.examId}`
+					`http://localhost:8080/exam/getStudentExamAnswer?examId=${state.app.post.examId}&studentId=${state.app.student.id}`
 				)
 				.then(response => {
 					setStudentExamAnswer(response.data.data);
-					console.log(response);
+					console.log("label",response);
 				})
 				.catch(error => {
 					console.log("Fetching Student Details Error: ", error);
@@ -133,7 +133,7 @@ const Applicants = () => {
 							color: "#FFFFFF",
 							borderRadius: "20px",
 						}}>
-						<Typography fontWeight="bold">Download Resume</Typography>
+						<Typography fontWeight="bold">View Resume</Typography>
 					</Button>
 				</Box>
 				{/* Approve or Reject */}

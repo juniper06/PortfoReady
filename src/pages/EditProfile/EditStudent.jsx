@@ -71,7 +71,7 @@ const EditStudent = () => {
       {/* Name Text */}
       <Box marginLeft="400px" marginTop="50px">
         <Typography variant="h4" fontWeight="bold">
-          John Doe/Student Profile
+        {`${userDetails.firstName} ${userDetails.lastName}`} /Student Profile
         </Typography>
       </Box>
       <Box marginTop="50px" display="flex">

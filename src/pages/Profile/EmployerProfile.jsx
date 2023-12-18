@@ -186,14 +186,8 @@ const EmployerProfile = () => {
 								<Typography
 									variant="h6"
 									fontWeight="bold">
-									Number of Applicants
-								</Typography>
-								<Typography
-									variant="h5"
-									fontWeight="bold"
-									color="#FF0404">
-									2
-								</Typography>
+									Applicants
+								</Typography><br />
 								<ApplicantsCard posts={posts} />
 							</Box>
 							<Box
