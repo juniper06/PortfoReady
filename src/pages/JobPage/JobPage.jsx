@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 
@@ -130,6 +130,7 @@ const TakeExam = ({ examId, postId }) => {
   const { user, isLoading } = useAuth();
   const [examQuestions, setExamQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
+  const navigate = useNavigate();
 
   const getExam = async () => {
     await axios
@@ -161,6 +162,7 @@ const TakeExam = ({ examId, postId }) => {
         postId: postId,
         questionResponses: answers,
       });
+      navigate("/joblist")
     } catch (error) {
       console.error("Error submitting post application:", error);
     }

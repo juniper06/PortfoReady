@@ -187,7 +187,7 @@ const Home = () => {
 							</Typography>
 							<Typography variant="h6">{userDetails.Email}</Typography>
 						</CardContent>
-					</SmallContainer>
+					</SmallContainer> 
 					<SmallContainer sx={{ height: "270px" }}>
 						<Box sx={{ padding: "20px" }}>
 							<Typography>People You May Know</Typography>
@@ -201,8 +201,8 @@ const Home = () => {
 												aria-label="recipe"
 												src={`http://localhost:8080/user/${user.userId}/image`}></Avatar>
 										}
-										title="John Doe"
-										subheader="John.doe@cit.edu"
+										title={user.username}
+										subheader={user.email}
 									/>
 									<Button
 										onClick={() => followUser(user.id)}

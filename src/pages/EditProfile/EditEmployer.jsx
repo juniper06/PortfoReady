@@ -378,7 +378,7 @@ const EditUserProfile = ({ userDetails }) => {
                 <Typography>Save</Typography>
               </Button>
               <Button
-              component="link"
+              component={Link}
               to="/employerprofile"
                 sx={{
                   width: "200px",

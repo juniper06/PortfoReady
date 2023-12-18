@@ -10,7 +10,7 @@ import {
 	styled,
 	Button,
 } from "@mui/material";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Applicants = () => {
@@ -126,6 +126,8 @@ const Applicants = () => {
 						display: "flex",
 					}}>
 					<Button
+            component={Link}
+            to={`http://localhost:8080/student/getResume/${state.app.student.id}`}
 						sx={{
 							width: "315px",
 							height: "40px",

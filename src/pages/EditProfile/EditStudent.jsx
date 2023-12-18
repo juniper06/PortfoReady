@@ -137,6 +137,7 @@ const EditUserProfile = ({ userDetails }) => {
           email: emailvalue.length > 0 ? emailvalue : userDetails.email,
           password: passwordvalue.length > 0 ? passwordvalue : userDetails.password,
           phoneNumber: phoneNumbervalue.length > 0 ? phoneNumbervalue : userDetails.phoneNumber,
+          contact: contactLinksValue.length > 0 ? contactLinksValue : userDetails.contact,
         }
       );
 
@@ -356,7 +357,7 @@ const EditUserProfile = ({ userDetails }) => {
               </Button>
               <Button
                 component={Link}
-                to="employerprofile"
+                to="/studentprofile"
                 sx={{
                   width: "200px",
                   height: "43px",

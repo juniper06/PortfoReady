@@ -18,7 +18,7 @@ import {
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 
 const StudentProfile = () => {
 	const { user, isLoading } = useAuth();
@@ -31,6 +31,7 @@ const StudentProfile = () => {
 			.get(`http://localhost:8080/user/getUser?userId=${user.userId}`)
 			.then(response => {
 				setUserDetails(response.data.data);
+        console.log("User Details", response.data.data)
 			})
 			.catch(error => {
 				console.log("Fetching UserDetails Error: ", error);
@@ -46,7 +47,9 @@ const StudentProfile = () => {
 				console.log("Fetching Student Details Error: ", error);
 			});
 		await axios
-			.get(`http://localhost:8080/application/getAppliedPosts?studentId=${user.id}`)
+			.get(
+				`http://localhost:8080/application/getAppliedPosts?studentId=${user.id}`
+			)
 			.then(response => {
 				setAppliedPost(response.data.data);
 			});
@@ -98,11 +101,11 @@ const StudentProfile = () => {
 		width: 1,
 	});
 
-	const handleDeleteCertificate = async(id) => {
-		await axios.delete(`http://localhost:8080/certificate/deleteCertificate?id=${id}`)
-		.then(() => 
-		fetchUserDetails())
-	}
+	const handleDeleteCertificate = async id => {
+		await axios
+			.delete(`http://localhost:8080/certificate/deleteCertificate?id=${id}`)
+			.then(() => fetchUserDetails());
+	};
 
 	return (
 		<>
@@ -241,11 +244,15 @@ const StudentProfile = () => {
 							sx={{ overflowX: "scroll" }}>
 							{studentDetails.certificates.map(certificate => (
 								<Box
-								position="relative"
+									position="relative"
 									key={certificate.id}
 									width="150px"
 									height="200px">
-										<IconButton sx={{position:"absolute", top:"-10px", left:"170px"}} onClick={() => handleDeleteCertificate(certificate.id)}><CloseIcon sx={{color:"red"}}/></IconButton>
+									<IconButton
+										sx={{ position: "absolute", top: "-10px", left: "170px" }}
+										onClick={() => handleDeleteCertificate(certificate.id)}>
+										<CloseIcon sx={{ color: "red" }} />
+									</IconButton>
 									<img
 										style={{ maxWidth: "200px", maxHeight: "200px" }}
 										src={`http://localhost:8080/certificate/getCertificate?id=${certificate.id}`}
@@ -341,7 +348,7 @@ const StudentProfile = () => {
 							Contact Info
 						</Typography>
 						<Typography>
-							<LinkStlyed>{userDetails.links}</LinkStlyed>
+							<LinkStlyed>{userDetails.contact}</LinkStlyed>
 						</Typography>
 					</SmallBoxStyled>
 				</Box>
